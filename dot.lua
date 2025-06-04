@@ -4,6 +4,13 @@ local P,R = lpeg.P, lpeg.R
 local G = {}
 local M = {}
 
+local ws = lpeg.S(" \t\r\n")
+local space0 = ws^0
+local space1 = ws^1
+local letter = R("az", "AZ")
+local digit = R("09")
+local EOF = P(-1)
+
 G.strict = P("strict")
 G.graph = P("graph")
 G.digraph = P("digraph")
@@ -11,36 +18,22 @@ G.node = P("node")
 G.edge = P("edge")
 G.subgraph = P("subgraph")
 
-local ws = lpeg.S(" \t\r\n")
-local letter = R("az", "AZ")
-local digit = R("09")
 
--- local ID = lpeg.C(letter + (letter+digit)^0)
--- local number = P"-"^-1 * (P"." * digit^1 + digit^1 * (P"." * digit^0)^-1)
-
-
-G.graph = ws^0 * G.strict * (G.graph + G.digraph) * P('{') * P('}')
+G.graph_ = space0 * (G.strict * space1)^-1 * (G.graph + G.digraph) * space1 * P('{') * space0 * P('}')
+G.graph = space0 * G.graph_ * space0 * -1
 
 M.parse = function (input)
     local success, result = pcall(lpeg.match, G.graph, input)
     if success then
         if result then
-            return result, nil
+						print(result)
+            return true, nil
         else
-            local err_pos = #input_string + 1
-            for i = #input_string, 1, -1 do
-                if not lpeg.match(G.dot_grammar, input_string:sub(1, i)) then
-                    err_pos = i
-                    break
-                end
-            end
-            return nil, "Parsing failed near position " .. err_pos
+            return false, "LPEG parsing failed"
         end
     else
-        return nil, "LPEG internal error: " .. tostring(result)
+        return false, "LPEG internal error: " .. tostring(result)
     end
 end
 
-return {
-    parse = parse,
-}
+return M
