@@ -1,4 +1,4 @@
-local lpeg = require 'lpeglabel'
+local lpeg = require 'lpeg'
 local P,R = lpeg.P, lpeg.R
 
 local G = {}
