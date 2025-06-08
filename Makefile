@@ -1,4 +1,4 @@
-LUA = lua
+LUA = ./lua
 LUAROCKS = luarocks
 EXAMPLES_DIR = examples
 ANTLR_DIR = antlr
