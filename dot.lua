@@ -24,7 +24,7 @@ G.id = ID
 
 G.stmt = (G.id * space0 * P('=') * space0 * G.id)
 
-G.stmt_list = (G.stmt * P(';')^-1)^0
+G.stmt_list = (G.stmt * P(';')^-1 * space0)^0
 
 
 G.graph_ = space0 * (G.strict * space1)^-1 * (G.graph + G.digraph) * space1 * P('{') * space0 * G.stmt_list * space0 * P('}')
