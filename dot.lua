@@ -10,6 +10,7 @@ local space1 = ws^1
 local letter = R("az", "AZ")
 local digit = R("09")
 local EOF = P(-1)
+local ID = letter * (letter + digit)^0
 
 G.strict = P("strict")
 G.graph = P("graph")
@@ -18,9 +19,15 @@ G.node = P("node")
 G.edge = P("edge")
 G.subgraph = P("subgraph")
 
+G.id = ID
 
-G.graph_ = space0 * (G.strict * space1)^-1 * (G.graph + G.digraph) * space1 * P('{') * space0 * P('}')
-G.graph = space0 * G.graph_ * space0 * -1
+G.stmt = G.id
+
+G.stmt_list = (G.stmt * P(';')^-1)^0
+
+
+G.graph_ = space0 * (G.strict * space1)^-1 * (G.graph + G.digraph) * space1 * P('{') * space0 * G.stmt_list * space0 * P('}')
+G.graph = space0 * G.graph_ * space0 * EOF
 
 M.parse = function (input)
     local success, result = pcall(lpeg.match, G.graph, input)
