@@ -11,10 +11,10 @@ test:
 	@echo "--- Running validation for both Lua and ANTLR parsers ---"
 	@for file in $(EXAMPLE_FILES); do \
 		echo "  Testing $$file..."; \
-		( $(LUA) main.lua $$file && \
-		  echo "    - Lua: OK" && \
-		  antlr4-parse $(ANTLR_DIR)/DOT.g4 graph -tree $$file > /dev/null && \
-		  echo "    - ANTLR: OK" ); \
+		( antlr4-parse $(ANTLR_DIR)/DOT.g4 graph -tree $$file > /dev/null && \
+		  echo "    - ANTLR: OK" && \
+			$(LUA) main.lua $$file && \
+		  echo "    - Lua: OK" );\
 	done
 
 clean:
