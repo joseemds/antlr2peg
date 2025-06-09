@@ -13,6 +13,10 @@ local digit = loc.digit
 local EOF = P(-1)
 local ID = letter * (letter + digit)^0
 
+local quote = P('"')
+local not_quote = 1 - quote
+local STRING = quote * lpeg.C(not_quote^0) * quote
+
 G.strict = P("strict")
 G.graph = P("graph")
 G.digraph = P("digraph")
@@ -20,7 +24,7 @@ G.node = P("node")
 G.edge = P("edge")
 G.subgraph = P("subgraph")
 
-G.id = ID
+G.id = ID + STRING
 
 G.stmt = (G.id * space0 * P('=') * space0 * G.id)
 
@@ -38,7 +42,7 @@ M.parse = function (input)
             return true, nil
         else
 						print("Errpos " .. errpos)
-            return false, "LPEG parsing failed"
+            return false, "LPEG parsing failed at label and pos " .. errpos .. " " .. lab
         end
     else
         return false, "LPEG internal error: " .. tostring(result)
