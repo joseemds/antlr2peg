@@ -22,7 +22,7 @@ end
 -- You can use it to read data using the same methods (e.g., input_file:read(), input_file:lines())
 
 local content = input_file:read("*all")
-print(content)
+--print(content)
 
 
 print(assert(dot.parse(content)))
