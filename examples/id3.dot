@@ -1,1 +1,1 @@
-graph {a =a; b=c; c=d; x=test; z="teste"}
+graph {a =a; b=c; c=d; x=test; z="teste"; um=1; meio=.05}

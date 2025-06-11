@@ -17,6 +17,10 @@ local quote = P('"')
 local not_quote = 1 - quote
 local STRING = quote * lpeg.C(not_quote^0) * quote
 
+local decimal = P(".") * loc.digit^1
+
+local NUMBER = P("-")^-1 * (decimal + (loc.digit^1 * (P(".") * digit^0)^-1))
+
 G.strict = P("strict")
 G.graph = P("graph")
 G.digraph = P("digraph")
@@ -24,7 +28,7 @@ G.node = P("node")
 G.edge = P("edge")
 G.subgraph = P("subgraph")
 
-G.id = ID + STRING
+G.id = ID + STRING + NUMBER
 
 G.stmt = (G.id * space0 * P('=') * space0 * G.id)
 
