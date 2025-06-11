@@ -35,6 +35,12 @@ G.stmt = (G.id * space0 * P('=') * space0 * G.id)
 G.stmt_list = (G.stmt * P(';')^-1 * space0)^0
 
 
+G.a_list = (G.id * (space1 * P"=" * space1 * G.id^-1) *space1 * (P";" + P",")^-1)^-1
+
+G.attr_list = (P"[" * space0 * G.a_list^-1 * space0 * P"]")^1
+
+G.attr_stmt = (G.graph + G.node + G.edge) * space0  * G.attr_list
+
 G.graph_ = space0 * (G.strict * space1)^-1 * (G.graph + G.digraph) * space1 * P('{') * space0 * G.stmt_list * space0 * P('}')
 G.graph = space0 * G.graph_ * space0 * EOF
 
