@@ -42,7 +42,7 @@ local G = {
  start = space0 * V"graph" * EOF,
  graph =  (V"strict_kw")^-1 * (V"graph_kw" + V"digraph_kw") * V"id"^-1 * tk'{' * V"stmt_list" * tk'}',
  stmt_list = (V"stmt" * tk';'^-1)^0,
- stmt = V"edge_stmt" + V"attr_stmt" + (V"id" * tk'=' * V"id"),
+ stmt = V"edge_stmt" + V"attr_stmt" + (V"id" * tk'=' * V"id") + V"subgraph",
 
  edge_stmt = (V"node_id" + V"subgraph") * V"edgeRHS" * V"attr_list"^-1,
  subgraph = (V"subgraph_kw" * V"id"^-1) * tk"{" * V"stmt_list" * "}",
