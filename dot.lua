@@ -24,6 +24,11 @@ local decimal = P(".") * loc.digit^1
 
 local NUMBER = P("-")^-1 * (decimal + (loc.digit^1 * (P(".") * digit^0)^-1)) * space0
 
+
+local not_close_tag = 1 - P">"
+
+local TAG = P"<" * not_close_tag^1 * P">"
+
 local function kw (s)
   return P(s) * -IDRest *space0
 end
@@ -43,7 +48,7 @@ local G = {
  attr_list = (tk"[" * V"a_list"^-1 * tk"]")^1,
  attr_stmt = (V"graph" + V"node" + V"edge") *  V"attr_list",
  
- id = ID + STRING + NUMBER,
+ id = ID + STRING + NUMBER + TAG,
  
  -- Tokens
  strict = kw"strict",
