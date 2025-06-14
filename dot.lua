@@ -24,7 +24,6 @@ local decimal = P(".") * loc.digit^1
 
 local NUMBER = P("-")^-1 * (decimal + (loc.digit^1 * (P(".") * digit^0)^-1)) * space0
 
-
 local not_close_tag = 1 - P">"
 
 local TAG = P"<" * not_close_tag^1 * P">"
@@ -40,23 +39,32 @@ end
 
 local G = {
  "start",
- start = space0 * V"graph_" * EOF,
- graph_ =  (V"strict")^-1 * (V"graph" + V"digraph") * V"id"^-1 * tk'{' * V"stmt_list" * tk'}',
+ start = space0 * V"graph" * EOF,
+ graph =  (V"strict_kw")^-1 * (V"graph_kw" + V"digraph_kw") * V"id"^-1 * tk'{' * V"stmt_list" * tk'}',
  stmt_list = (V"stmt" * tk';'^-1)^0,
- stmt = V"attr_stmt" + (V"id" * tk'=' * V"id"),
+ stmt = V"edge_stmt" + V"attr_stmt" + (V"id" * tk'=' * V"id"),
+
+ edge_stmt = (V"node_id" + V"subgraph") * V"edgeRHS" * V"attr_list"^-1,
+ subgraph = (V"subgraph_kw" * V"id"^-1) * tk"{" * V"stmt_list" * "}",
+ edgeRHS = V"edgeop"  * (V"node_id" + V"subgraph")^1,
+ edgeop = tk"->" + tk"--",
+
+ node_id = V"id" * V"port"^-1 ,
+ port = tk":" * V"id" * (tk":" * V"id")^-1,
+
  a_list = (V"id" * (tk"=" * V"id")^-1 * (tk";" + tk",")^-1)^1,
  attr_list = (tk"[" * V"a_list"^-1 * tk"]")^1,
- attr_stmt = (V"graph" + V"node" + V"edge") *  V"attr_list",
+ attr_stmt = (V"graph_kw" + V"node_kw" + V"edge_kw") *  V"attr_list",
  
  id = ID + STRING + NUMBER + TAG,
  
  -- Tokens
- strict = kw"strict",
- graph = kw"graph",
- digraph = kw"digraph",
- node = kw"node",
- edge = kw"edge",
- subgraph = kw"subgraph",
+ strict_kw = kw"strict",
+ graph_kw = kw"graph",
+ digraph_kw = kw"digraph",
+ node_kw = kw"node",
+ edge_kw = kw"edge",
+ subgraph_kw = kw"subgraph",
 }
 
 
