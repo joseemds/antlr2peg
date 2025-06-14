@@ -41,10 +41,10 @@ end
 local G = {
  "start",
  start = space0 * V"graph_" * EOF,
- graph_ =  (V"strict")^-1 * (V"graph" + V"digraph") * tk'{' * V"stmt_list" * tk'}',
+ graph_ =  (V"strict")^-1 * (V"graph" + V"digraph") * V"id"^-1 * tk'{' * V"stmt_list" * tk'}',
  stmt_list = (V"stmt" * tk';'^-1)^0,
- stmt = V"id" * tk'=' * V"id",
- a_list = (V"id" * (tk"=" * V"id"^-1) * (tk";" + tk",")^-1)^-1,
+ stmt = V"attr_stmt" + (V"id" * tk'=' * V"id"),
+ a_list = (V"id" * (tk"=" * V"id")^-1 * (tk";" + tk",")^-1)^1,
  attr_list = (tk"[" * V"a_list"^-1 * tk"]")^1,
  attr_stmt = (V"graph" + V"node" + V"edge") *  V"attr_list",
  
