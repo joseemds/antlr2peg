@@ -1,4 +1,5 @@
 local lpeg = require 'lpeglabel'
+local re = require 'relabel'
 local P,R,V = lpeg.P, lpeg.R, lpeg.V
 
 --local G = {}
@@ -11,8 +12,8 @@ local space1 = ws^1
 local letter = loc.alpha
 local digit = loc.digit
 local EOF = P(-1)
-local IDBegin = letter
-local IDRest = letter + digit
+local IDBegin = letter + "_"
+local IDRest = letter + digit + "_"
 local ID = IDBegin * IDRest^0 * space0
 
 local quote = P('"')
@@ -42,11 +43,11 @@ local G = {
  start = space0 * V"graph" * EOF,
  graph =  (V"strict_kw")^-1 * (V"graph_kw" + V"digraph_kw") * V"id"^-1 * tk'{' * V"stmt_list" * tk'}',
  stmt_list = (V"stmt" * tk';'^-1)^0,
- stmt = V"node_stmt" + V"edge_stmt" + V"attr_stmt" + (V"id" * tk'=' * V"id") + V"subgraph",
+ stmt = (V"id" * tk'=' * V"id") +  V"edge_stmt" +  V"node_stmt" + V"attr_stmt" +  V"subgraph",
  node_stmt = V"node_id" * V"attr_list"^-1,
  edge_stmt = (V"node_id" + V"subgraph") * V"edgeRHS" * V"attr_list"^-1,
- subgraph = (V"subgraph_kw" * V"id"^-1) * tk"{" * V"stmt_list" * "}",
- edgeRHS = V"edgeop"  * (V"node_id" + V"subgraph")^1,
+ subgraph = (V"subgraph_kw" * V"id"^-1)^-1 * tk"{" * V"stmt_list" * tk"}",
+ edgeRHS = (V"edgeop"  * (V"node_id" + V"subgraph"))^1,
  edgeop = tk"->" + tk"--",
 
  node_id = V"id" * V"port"^-1 ,
@@ -79,8 +80,9 @@ M.parse = function (input)
 	    --print(result)
             return true, nil
         else
+            local line, col = re.calcline(input, errpos)
 	    print("Errpos " .. errpos)
-            return false, "LPEG parsing failed at label and pos " .. errpos .. " " .. lab
+            return false, "LPEG parsing failed at line " .. line .. ", col " .. col .. " with label " .. lab
         end
     else
         return false, "LPEG internal error: " .. tostring(result)
