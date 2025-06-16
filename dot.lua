@@ -42,8 +42,8 @@ local G = {
  start = space0 * V"graph" * EOF,
  graph =  (V"strict_kw")^-1 * (V"graph_kw" + V"digraph_kw") * V"id"^-1 * tk'{' * V"stmt_list" * tk'}',
  stmt_list = (V"stmt" * tk';'^-1)^0,
- stmt = V"edge_stmt" + V"attr_stmt" + (V"id" * tk'=' * V"id") + V"subgraph",
-
+ stmt = V"node_stmt" + V"edge_stmt" + V"attr_stmt" + (V"id" * tk'=' * V"id") + V"subgraph",
+ node_stmt = V"node_id" * V"attr_list"^-1,
  edge_stmt = (V"node_id" + V"subgraph") * V"edgeRHS" * V"attr_list"^-1,
  subgraph = (V"subgraph_kw" * V"id"^-1) * tk"{" * V"stmt_list" * "}",
  edgeRHS = V"edgeop"  * (V"node_id" + V"subgraph")^1,
