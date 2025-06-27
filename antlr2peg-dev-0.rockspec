@@ -1,12 +1,12 @@
 package = "antlr2peg"
-version = "0.0.1"
+version = "dev-0"
 source = {
    url = "github.com/joseemds/antlr2peg"
 }
 build = {
    type = "builtin",
    modules = {
-      dot = "dot.lua"
+      dot = "dot.lua",
 			main = "main.lua"
    }
 }

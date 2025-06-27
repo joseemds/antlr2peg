@@ -4,3 +4,4 @@
 /.luarocks
 /antlr/gen/
 *.out
+.venv

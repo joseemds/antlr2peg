@@ -1,0 +1,10 @@
+[project]
+name = "antlr2peg"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "antlr4-tools>=0.2.2",
+    "grammarinator>=23.7",
+]

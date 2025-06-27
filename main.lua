@@ -7,7 +7,7 @@ if input_filename then
     local file, err = io.open(input_filename, "r")
     if file then
         input_file = file
-        print("Reading from file:", input_filename)
+        -- print("Reading from file:", input_filename)
     else
         io.stderr:write("Error: Could not open file '" .. input_filename .. "': " .. err .. "\n")
         print("Falling back to reading from stdin.")
@@ -25,4 +25,5 @@ local content = input_file:read("*all")
 --print(content)
 
 
-print(assert(dot.parse(content)))
+-- print(assert(dot.parse(content)))
+assert(dot.parse(content))

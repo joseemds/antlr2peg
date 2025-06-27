@@ -19,15 +19,11 @@ local ID = IDBegin * IDRest^0 * space0
 local quote = P('"')
 local not_quote = 1 - quote
 --local STRING = quote * lpeg.C(not_quote^0) * quote * space0
-local STRING = quote * not_quote^0 * quote * space0
+local STRING = quote * ((P"\\" * P(1)) + not_quote)^0 * quote * space0
 
 local decimal = P(".") * loc.digit^1
 
 local NUMBER = P("-")^-1 * (decimal + (loc.digit^1 * (P(".") * digit^0)^-1)) * space0
-
-local not_close_tag = 1 - P">"
-
-local TAG = P"<" * not_close_tag^1 * P">"
 
 local function kw (s)
   return P(s) * -IDRest *space0
@@ -36,6 +32,16 @@ end
 local function tk (s)
   return P(s) * space0
 end
+
+local not_close_tag = P(1) - P">"
+local not_tag = P(1) - lpeg.S"<>"
+local TAG = tk"<" * not_close_tag^0 * tk">"
+
+local HTML_STRING = tk"<" * (TAG + not_tag)^0 * tk">"
+
+
+local LINE_COMMENT = P"//" * (P(1) - P"\n")
+local COMMENT = P"/*" * (P(1)^-1) * P"*/"
 
 
 local G = {
@@ -47,7 +53,7 @@ local G = {
  node_stmt = V"node_id" * V"attr_list"^-1,
  edge_stmt = (V"node_id" + V"subgraph") * V"edgeRHS" * V"attr_list"^-1,
  subgraph = (V"subgraph_kw" * V"id"^-1)^-1 * tk"{" * V"stmt_list" * tk"}",
- edgeRHS = (V"edgeop"  * (V"node_id" + V"subgraph"))^1,
+ edgeRHS = (V"edgeop"  * (V"subgraph" + V"node_id"))^1,
  edgeop = tk"->" + tk"--",
 
  node_id = V"id" * V"port"^-1 ,
@@ -57,7 +63,8 @@ local G = {
  attr_list = (tk"[" * V"a_list"^-1 * tk"]")^1,
  attr_stmt = (V"graph_kw" + V"node_kw" + V"edge_kw") *  V"attr_list",
  
- id = ID + STRING + NUMBER + TAG,
+ 
+ id = ID + STRING + NUMBER + HTML_STRING,
  
  -- Tokens
  strict_kw = kw"strict",
@@ -74,7 +81,7 @@ G = P(G)
 
 M.parse = function (input)
     local success, result, lab, errpos = pcall(lpeg.match, G, input)
-    print("result", result)
+    -- print("result", result)
     if success then
         if result == #input + 1 then
 	    --print(result)
