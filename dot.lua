@@ -53,7 +53,7 @@ local G = {
  node_stmt = V"node_id" * V"attr_list"^-1,
  edge_stmt = (V"node_id" + V"subgraph") * V"edgeRHS" * V"attr_list"^-1,
  subgraph = (V"subgraph_kw" * V"id"^-1)^-1 * tk"{" * V"stmt_list" * tk"}",
- edgeRHS = (V"edgeop"  * (V"subgraph" + V"node_id"))^1,
+ edgeRHS = (V"edgeop"  * (V"node_id" + V"subgraph"))^1,
  edgeop = tk"->" + tk"--",
 
  node_id = V"id" * V"port"^-1 ,
@@ -64,7 +64,10 @@ local G = {
  attr_stmt = (V"graph_kw" + V"node_kw" + V"edge_kw") *  V"attr_list",
  
  
- id = ID + STRING + NUMBER + HTML_STRING,
+ id = -V"Keyword_alt" * ID + STRING + NUMBER + HTML_STRING,
+ 
+ Keyword = kw"strict" + kw"graph" + kw"digraph" + kw"node" + kw"edge" + kw"subgraph",
+ Keyword_alt = (P"strict" + P"graph" + P"digraph" + P"node" + P"edge" + P"subgraph") * -IDRest,
  
  -- Tokens
  strict_kw = kw"strict",
