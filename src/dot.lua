@@ -2,7 +2,6 @@ local lpeg = require 'lpeglabel'
 local re = require 'relabel'
 local P,R,V = lpeg.P, lpeg.R, lpeg.V
 
---local G = {}
 local M = {}
 local loc = lpeg.locale()
 
@@ -18,11 +17,9 @@ local ID = IDBegin * IDRest^0 * space0
 
 local quote = P('"')
 local not_quote = 1 - quote
---local STRING = quote * lpeg.C(not_quote^0) * quote * space0
 local STRING = quote * ((P"\\" * P(1)) + not_quote)^0 * quote * space0
 
 local decimal = P(".") * loc.digit^1
-
 local NUMBER = P("-")^-1 * (decimal + (loc.digit^1 * (P(".") * digit^0)^-1)) * space0
 
 local function kw (s)

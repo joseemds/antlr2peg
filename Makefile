@@ -20,7 +20,7 @@ test-generated:
 		echo "  Testing $$file..."; \
 		( antlr4-parse $(ANTLR_DIR)/DOT.g4 graph -tree $$file > /dev/null && \
 		  echo -e "    - ANTLR: $(GREEN)OK$(NC)" && \
-			$(LUA) main.lua $$file && \
+			$(LUA) src/main.lua $$file && \
 		  echo -e "    - Lua: $(GREEN)OK$(NC)" );\
 	done
 
@@ -30,7 +30,7 @@ test-handcrafted:
 		echo "  Testing $$file..."; \
 		( antlr4-parse $(ANTLR_DIR)/DOT.g4 graph -tree $$file > /dev/null && \
 		  echo -e "    - ANTLR: $(GREEN)OK$(NC)" && \
-			$(LUA) main.lua $$file && \
+			$(LUA) src/main.lua $$file && \
 		  echo -e "    - Lua: $(GREEN)OK$(NC)" );\
 	done
 

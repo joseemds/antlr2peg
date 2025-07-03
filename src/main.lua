@@ -1,4 +1,4 @@
-local dot = require"dot"
+local dot = require("src.dot")
 
 local input_filename = arg[1]
 local input_file
