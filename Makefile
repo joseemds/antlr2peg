@@ -1,64 +1,116 @@
-LUA = lua
-LUAROCKS = luarocks
-EXAMPLES_DIR = examples
-ANTLR_DIR = antlr
-ANTLR = antlr4
-ANTLR-PARSE = antlr4-parse
-GRAMMARINATOR_GEN = grammarinator-generate
-RED=\033[0;31m
-GREEN=\033[0;32m
-NC=\033[0m
+LUA ?= lua
+LUAROCKS ?= luarocks
+EXAMPLES_DIR ?= examples
+ANTLR_DIR ?= antlr
+ANTLR ?= antlr4
+ANTLR_PARSE ?= antlr4-parse
+GRAMMARINATOR_GEN ?= grammarinator-generate
+
+LANGUAGE ?= dot
+START_RULE ?= graph
 
 
-LANGUAGE?=dot
-START_RULE?=graph
+IS_TTY:=$(if $(MAKE_TERMOUT),1,0)
 
-EXAMPLE_FILES = $(wildcard $(ANTLR_DIR)/$(LANGUAGE)/$(EXAMPLES_DIR)/*.$(LANGUAGE))
-GENERATED_INPUTS = $(wildcard $(ANTLR_DIR)/$(LANGUAGE)/$(EXAMPLES_DIR)/gen/*.gen.$(LANGUAGE))
+ifeq ($(IS_TTY),1)
+    RED = $(shell tput setaf 1)
+    GREEN = $(shell tput setaf 2)
+    YELLOW = $(shell tput setaf 3)
+    BLUE = $(shell tput setaf 4)
+    NC = $(shell tput sgr0)
+else
+    RED = 
+    GREEN = 
+    YELLOW = 
+    BLUE = 
+    NC = 
+endif
+
+EXAMPLE_FILES := $(wildcard $(ANTLR_DIR)/$(LANGUAGE)/$(EXAMPLES_DIR)/*.$(LANGUAGE))
+GENERATED_INPUTS := $(wildcard $(ANTLR_DIR)/$(LANGUAGE)/$(EXAMPLES_DIR)/gen/*.gen.$(LANGUAGE))
+GRAMMAR_FILE := $(ANTLR_DIR)/$(LANGUAGE)/$(LANGUAGE).g4
+GEN_DIR := $(ANTLR_DIR)/$(LANGUAGE)/$(EXAMPLES_DIR)/gen
+
+.PHONY: all
+all: test
+
+.PHONY: test test-handcrafted test-generated
 
 test: test-handcrafted test-generated
-
-test-generated:
-	@echo "--- Running validation for both Lua and ANTLR parsers on generated files ---"
-	@for file in $(GENERATED_INPUTS); do \
-		echo "  Testing $$file..."; \
-		( antlr4-parse $(ANTLR_DIR)/$(LANGUAGE)/$(LANGUAGE).g4 $(START_RULE) -tree $$file > /dev/null && \
-		  echo -e "    - ANTLR: $(GREEN)OK$(NC)" && \
-			$(LUA) main.lua $$file && \
-		  echo -e "    - Lua: $(GREEN)OK$(NC)" );\
-	done
+	@echo -e "$(GREEN)All tests completed$(NC)"
 
 test-handcrafted:
-	@echo "--- Running validation for both Lua and ANTLR parsers on handcrafted files---"
+	@echo -e "$(BLUE)--- Running validation for both Lua and ANTLR parsers on handcrafted files ---$(NC)"
 	@for file in $(EXAMPLE_FILES); do \
-		echo "  Testing $$file..."; \
-		( antlr4-parse $(ANTLR_DIR)/$(LANGUAGE)/$(LANGUAGE).g4 $(START_RULE) -tree $$file > /dev/null && \
-		  echo -e "    - ANTLR: $(GREEN)OK$(NC)" && \
-			$(LUA) main.lua ./$$file && \
-		  echo -e "    - Lua: $(GREEN)OK$(NC)" );\
+		echo -e "$(YELLOW)Testing $$file...$(NC)"; \
+		if $(ANTLR_PARSE) $(GRAMMAR_FILE) $(START_RULE) -tree $$file > /dev/null 2>&1; then \
+			echo -e "  - ANTLR: $(GREEN)OK$(NC)"; \
+			if $(LUA) main.lua $$file $(LANGUAGE) > /dev/null 2>&1; then \
+				echo -e "  - Lua: $(GREEN)OK$(NC)"; \
+			else \
+				echo -e "  - Lua: $(RED)FAILED$(NC)"; \
+			fi; \
+		else \
+			echo -e "  - ANTLR: $(RED)FAILED$(NC)"; \
+		fi; \
 	done
 
-clean:
-	@rm -rf $(ANTLR_DIR)/**/gen/
-	@rm -f $(EXAMPLES_DIR)/**/*.lua.out $(EXAMPLES_DIR)/**/*.antlr.out
+test-generated:
+	@echo -e "$(BLUE)--- Running validation for both Lua and ANTLR parsers on generated files ---$(NC)"
+	@for file in $(GENERATED_INPUTS); do \
+		echo -e "$(YELLOW)Testing $$file...$(NC)"; \
+		if $(ANTLR_PARSE) $(GRAMMAR_FILE) $(START_RULE) -tree $$file > /dev/null 2>&1; then \
+			echo -e "  - ANTLR: $(GREEN)OK$(NC)"; \
+			if $(LUA) main.lua $$file $(LANGUAGE) > /dev/null 2>&1; then \
+				echo -e "  - Lua: $(GREEN)OK$(NC)"; \
+			else \
+				echo -e "  - Lua: $(RED)FAILED$(NC)"; \
+			fi; \
+		else \
+			echo -e "  - ANTLR: $(RED)FAILED$(NC)"; \
+		fi; \
+	done
+
+.PHONY: gen gen-all gen-antlr gen-grammarinator gen-grammarinator-tests
 
 gen: gen-antlr gen-grammarinator
 
 gen-all: gen-antlr gen-grammarinator gen-grammarinator-tests
 
 gen-antlr:
-	@echo "Generating Antlr4 parser..."
-	$(ANTLR) $(ANTLR_DIR)/$(LANGUAGE)/$(LANGUAGE).g4 -o $(ANTLR_DIR)/$(LANGUAGE)/gen
+	@echo -e "$(BLUE)Generating Antlr4 parser...$(NC)"
+	@mkdir -p $(ANTLR_DIR)/$(LANGUAGE)/gen
+	$(ANTLR) $(GRAMMAR_FILE) -o $(ANTLR_DIR)/$(LANGUAGE)/gen
 
 gen-grammarinator:
-	@echo "Generating grammarinator files"
-	grammarinator-process $(ANTLR_DIR)/$(LANGUAGE)/$(LANGUAGE).g4 -o $(ANTLR_DIR)/$(LANGUAGE)/examples/gen/   
+	@echo -e "$(BLUE)Generating grammarinator files$(NC)"
+	@mkdir -p $(GEN_DIR)
+	grammarinator-process $(GRAMMAR_FILE) -o $(GEN_DIR)
+
 gen-grammarinator-tests: gen-grammarinator
-	@echo "Generating gen-grammarinator tests..."
+	@echo -e "$(BLUE)Generating grammarinator tests...$(NC)"
 	@SEED=$$(od -An -N4 -tu4 < /dev/urandom | tr -d ' '); \
-	echo $$SEED > antlr/$(LANGUAGE)/examples/gen/seed; \
-	echo "Running with seed: $$SEED"; \
+	echo $$SEED > $(GEN_DIR)/seed; \
+	echo -e "$(YELLOW)Running with seed: $$SEED$(NC)"; \
 	$(GRAMMARINATOR_GEN) $(LANGUAGE)Generator.$(LANGUAGE)Generator -d 20 -o antlr/$(LANGUAGE)/examples/gen/test_%d.gen.$(LANGUAGE) -n 100 \
 	--random-seed $$SEED \
 	-s grammarinator.runtime.simple_space_serializer \
 	--sys-path antlr/$(LANGUAGE)/examples/gen/
+
+.PHONY: clean
+clean:
+	@echo -e "$(BLUE)Cleaning generated files...$(NC)"
+	@rm -rf $(ANTLR_DIR)/*/gen/
+	@rm -f $(EXAMPLES_DIR)/*/*.lua.out $(EXAMPLES_DIR)/*/*.antlr.out
+
+.PHONY: help
+help:
+	@echo -e "$(BLUE)Available targets:$(NC)"
+	@echo -e "  all        - Run all tests (default target)"
+	@echo -e "  test       - Run all tests"
+	@echo -e "  test-handcrafted - Test handcrafted example files"
+	@echo -e "  test-generated   - Test generated example files"
+	@echo -e "  gen        - Generate parser and grammarinator files"
+	@echo -e "  gen-all    - Generate everything including test files"
+	@echo -e "  clean      - Clean generated files"
+	@echo -e "  help       - Show this help message"

@@ -1,1 +1,1 @@
-strict digraph o  { subgraph { edge [ ] [ "\H\+"   ] [ ] [ ] [ ]     }   ;  } 
+strict graph {  } 

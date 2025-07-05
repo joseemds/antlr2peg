@@ -1,1 +1,1 @@
-strict digraph 419.  {  } 
+strict graph { subgraph "7"  {  }   node [ ]     } 

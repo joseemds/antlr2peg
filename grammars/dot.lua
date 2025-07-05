@@ -1,4 +1,4 @@
-local lpeg = require 'lpeglabel'
+local lpeg = require("lpeglabel")
 local re = require 'relabel'
 local P,R,V = lpeg.P, lpeg.R, lpeg.V
 
@@ -7,7 +7,8 @@ local loc = lpeg.locale()
 
 local ws = loc.space
 local space0 = ws^0
-local space1 = ws^1
+local space1 = ws ^ 1
+
 local letter = loc.alpha
 local digit = loc.digit
 local EOF = P(-1)
