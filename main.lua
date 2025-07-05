@@ -1,8 +1,9 @@
 local dot = require("grammars.dot")
 local abnf = require("grammars.abnf")
+local grammars = require"grammars"
 
--- local lang = arg[1]
 local input_filename = arg[1]
+local language = arg[2] or "dot"
 local input_file
 
 if input_filename then
@@ -20,12 +21,5 @@ else
     input_file = io.stdin
 end
 
--- Now, 'input_file' will be either the opened file handle or io.stdin
--- You can use it to read data using the same methods (e.g., input_file:read(), input_file:lines())
-
 local content = input_file:read("*all")
--- print(content)
-
-
--- print(assert(dot.parse(content)))
-print(assert(abnf.parse(content)))
+print(assert(grammars.parse(content, language)))

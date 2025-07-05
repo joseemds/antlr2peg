@@ -1,14 +1,14 @@
 local lpeg = require"lpeglabel"
 local re = require"relabel"
-local dot = require"dot"
-local abnf = require"abnf"
+local dot = require"grammars.dot"
+local abnf = require"grammars.abnf"
 
-local parse = function (input)
-    local success, result, lab, errpos = pcall(lpeg.match, G, input)
-    -- print("result", result)
+
+local parse = function (input, lang)
+		local l = require("grammars." .. lang) -- muita gambiarra
+    local success, result, lab, errpos = pcall(lpeg.match, l.grammar, input)
     if success then
         if result == #input + 1 then
-	    --print(result)
             return true, nil
         else
             local line, col = re.calcline(input, errpos)

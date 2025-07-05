@@ -96,4 +96,6 @@ M.parse = function (input)
     end
 end
 
+M.grammar = G
+
 return M
