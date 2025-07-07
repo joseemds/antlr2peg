@@ -21,9 +21,9 @@ local function tk (s)
 end
 
 
-local BIT = lpeg.S"01" * space0
-local HEX_DIGIT = R("09", "af", "AF") * space0
-local INT = digit^1 * space0
+local BIT = lpeg.S"01" --* space0
+local HEX_DIGIT = R("09", "af", "AF") --* space0
+local INT = digit^1 --* space0
 
 local quote = P('"')
 local not_quote = P(1) - quote
@@ -33,10 +33,10 @@ local marker = P"%" * lpeg.S"si"
 
 local STRING = marker^-1 * quote * not_quote^0 * quote * space0
 
-local BINARY_VALUE = tk"b" * BIT^1 * ((tk"." * BIT^1)^1 + (tk"-" * BIT^1))^-1
-local DECIMAL_VALUE = tk"d" * digit^1 * ((tk"." * digit^1)^1 + (tk"-" * digit^1))^-1
-local HEX_VALUE = tk"x" * HEX_DIGIT^0 * ((tk"." * HEX_DIGIT^1)^1 + (tk"-" * HEX_DIGIT^1))^-1
-local NUMBER_VALUE = tk"%" * (BINARY_VALUE + DECIMAL_VALUE + HEX_VALUE) * space0
+local BINARY_VALUE = P"b" * BIT^1 * ((P"." * BIT^1)^1 + (P"-" * BIT^1))^-1
+local DECIMAL_VALUE = P"d" * digit^1 * ((P"." * digit^1)^1 + (P"-" * digit^1))^-1
+local HEX_VALUE = P"x" * HEX_DIGIT^0 * ((P"." * HEX_DIGIT^1)^1 + (P"-" * HEX_DIGIT^1))^-1
+local NUMBER_VALUE = P"%" * (BINARY_VALUE + DECIMAL_VALUE + HEX_VALUE) * space0
 
 local not_close = 1 - P">"
 local PROSE_VALUE =  tk"<" * not_close^0 * tk">"
