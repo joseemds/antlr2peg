@@ -2,7 +2,7 @@ LUA ?= lua
 LUAROCKS ?= luarocks
 EXAMPLES_DIR ?= examples
 ANTLR_DIR ?= antlr
-ANTLR ?= antlr4
+ANTLR ?= antlr
 ANTLR_PARSE ?= antlr4-parse
 GRAMMARINATOR_GEN ?= grammarinator-generate
 
