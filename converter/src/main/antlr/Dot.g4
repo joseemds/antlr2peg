@@ -36,7 +36,7 @@
 // $antlr-format allowShortRulesOnASingleLine false, allowShortBlocksOnASingleLine true, alignSemicolons hanging, alignColons hanging
 // Andrzej Borucki: characters
 
-grammar dot;
+grammar Dot;
 
 options {
     caseInsensitive = true;

@@ -5,9 +5,8 @@
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.14.3/samples
  */
 
-
-
 plugins {
+	id "application"
 	id "java"
 	id "antlr"
 }
@@ -18,4 +17,8 @@ dependencies {
 
 repositories {
 	mavenCentral()
+}
+
+application {
+	mainClass = 'Converter'
 }

@@ -12,6 +12,7 @@
 /build/
 /.gradle/
 /out/
+/bin/
 
 gradle-wrapper.jar
 .gradle
