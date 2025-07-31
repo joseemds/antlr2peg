@@ -22,3 +22,20 @@ repositories {
 application {
 	mainClass = 'Converter'
 }
+
+def copyAntlrGrammarDeps = tasks.register("copyAntlrGrammarDeps", Copy) {
+    from("src/main/antlr/predefined.tokens", "src/main/antlr/LexerAdaptor.java")
+    into(layout.buildDirectory.dir("generated-src/antlr/main"))
+}
+
+generateGrammarSource {
+    dependsOn copyAntlrGrammarDeps
+
+    arguments += ['-visitor']
+
+    outputDirectory = file("build/generated-src/antlr/main")
+}
+
+run {
+    standardInput = System.in
+}
