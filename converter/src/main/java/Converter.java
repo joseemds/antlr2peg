@@ -13,5 +13,7 @@ public class Converter {
 		ParseTree ast = parser.grammarSpec(); // grammarSpec = start rule
 		AntlrListener listener = new AntlrListener();
 		walker.walk(listener, ast);
+
+		listener.printBuf();
 	}
 }
