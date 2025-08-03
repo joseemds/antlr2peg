@@ -95,7 +95,7 @@ public class AntlrListener extends ANTLRv4ParserBaseListener{
 				altList.add(parseTreeProperty.get(lexerEl));
 			}
 
-			String alts = String.join(" / ", altList);
+			String alts = String.join(" ", altList);
 			buf.append(alts);
 			parseTreeProperty.put(ctx, buf.toString());
 	}
@@ -119,7 +119,9 @@ public class AntlrListener extends ANTLRv4ParserBaseListener{
 			}
 
 			String alts = String.join(" / ", altList);
+			buf.append("(");
 			buf.append(alts);
+			buf.append(")");
 			buf.append(suffix);
 			parseTreeProperty.put(ctx, buf.toString());
 		} else if(ctx.actionBlock() != null){}
