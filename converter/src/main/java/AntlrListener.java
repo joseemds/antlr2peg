@@ -3,6 +3,7 @@ import java.util.List;
 
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
+
 /**
  * AntlrListener
  */
@@ -130,13 +131,62 @@ public class AntlrListener extends ANTLRv4ParserBaseListener{
 
 	@Override
 	public void exitLexerAtom(ANTLRv4Parser.LexerAtomContext ctx){
+		StringBuilder buf = new StringBuilder();
 		if(ctx.characterRange() != null ){
 			parseTreeProperty.put(ctx, parseTreeProperty.get(ctx.characterRange()));
 		} else if(ctx.LEXER_CHAR_SET() != null){
 			parseTreeProperty.put(ctx, ctx.LEXER_CHAR_SET().getText());
 		} else if(ctx.terminalDef() != null){
 			parseTreeProperty.put(ctx, ctx.terminalDef().getText());
+		} else if(ctx.notSet() != null){
+			buf.append(parseTreeProperty.get(ctx.notSet()));
 
+			parseTreeProperty.put(ctx, buf.toString());
+		} else if(ctx.wildcard() != null) {
+			parseTreeProperty.put(ctx, ctx.wildcard().getText());
+		}
+	}
+
+
+	@Override
+	public void exitNotSet(ANTLRv4Parser.NotSetContext ctx){
+		if(ctx.setElement() != null){
+			parseTreeProperty.put(ctx, ctx.NOT().getText() + parseTreeProperty.get(ctx.setElement()));
+		} else if (ctx.blockSet() != null) {
+			parseTreeProperty.put(ctx, ctx.NOT().getText() + parseTreeProperty.get(ctx.blockSet()));
+		}
+	}
+
+	@Override
+	public void exitBlockSet(ANTLRv4Parser.BlockSetContext ctx){
+		StringBuilder buf = new StringBuilder();
+		buf.append("(");
+		List<String> setElements = new ArrayList<>();
+		for(var setEl : ctx.setElement()){
+			setElements.add(parseTreeProperty.get(setEl));
+		}
+
+		buf.append(String.join(" ", setElements));
+		buf.append(")");
+
+		parseTreeProperty.put(ctx, buf.toString());
+
+	}
+
+
+	@Override
+	public void exitSetElement(ANTLRv4Parser.SetElementContext ctx){
+		if(ctx.TOKEN_REF() != null){
+			parseTreeProperty.put(ctx, ctx.TOKEN_REF().getText());
+			
+		} else if (ctx.STRING_LITERAL() != null){
+			parseTreeProperty.put(ctx, ctx.STRING_LITERAL().getText());
+
+		} else if (ctx.characterRange() != null){
+			parseTreeProperty.put(ctx, parseTreeProperty.get(ctx.characterRange()));
+
+		} else if (ctx.LEXER_CHAR_SET() != null){
+			parseTreeProperty.put(ctx, ctx.LEXER_CHAR_SET().getText());
 		}
 	}
 
