@@ -31,8 +31,8 @@ public class AntlrListener extends ANTLRv4ParserBaseListener{
 			var childNode = parseTreeProperty.get(ctx.parserRuleSpec());
 			parseTreeProperty.put(ctx, childNode);
 		} else if (ctx.lexerRuleSpec() != null){
-			// var childNode = ctx.lexerRuleSpec();
-			parseTreeProperty.put(ctx, "unimplemented");
+			var childNode = parseTreeProperty.get(ctx.lexerRuleSpec());
+			parseTreeProperty.put(ctx, childNode);
 		}
 	}
 
@@ -50,6 +50,104 @@ public class AntlrListener extends ANTLRv4ParserBaseListener{
 		buf.append(body);
 		parseTreeProperty.put(ctx, buf.toString());
 	}
+
+	@Override
+	public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx){
+		StringBuilder buf = new StringBuilder();
+		buf.append(ctx.TOKEN_REF().getText() + " <- ");
+		buf.append(parseTreeProperty.get(ctx.lexerRuleBlock()));
+		parseTreeProperty.put(ctx, buf.toString());
+	}
+
+	@Override
+	public void exitLexerRuleBlock(ANTLRv4Parser.LexerRuleBlockContext ctx){
+		StringBuilder buf = new StringBuilder();
+		buf.append(parseTreeProperty.get(ctx.lexerAltList()));
+		parseTreeProperty.put(ctx, buf.toString());
+	}
+
+
+	@Override
+	public void exitLexerAltList(ANTLRv4Parser.LexerAltListContext ctx) {
+			StringBuilder buf = new StringBuilder();
+			List<String> altList = new ArrayList<>();
+			for(var lexerAlt : ctx.lexerAlt()){
+				altList.add(parseTreeProperty.get(lexerAlt));
+			}
+
+			String alts = String.join(" / ", altList);
+			buf.append(alts);
+			parseTreeProperty.put(ctx, buf.toString());
+	}
+	 
+
+	@Override
+	public void exitLexerAlt(ANTLRv4Parser.LexerAltContext ctx) {
+		parseTreeProperty.put(ctx, parseTreeProperty.get(ctx.lexerElements()));
+	}
+
+	@Override
+	public void exitLexerElements(ANTLRv4Parser.LexerElementsContext ctx) {
+			StringBuilder buf = new StringBuilder();
+			var lexerElements = ctx.lexerElement();
+			List<String> altList = new ArrayList<>();
+			for(var lexerEl : lexerElements){
+				altList.add(parseTreeProperty.get(lexerEl));
+			}
+
+			String alts = String.join(" / ", altList);
+			buf.append(alts);
+			parseTreeProperty.put(ctx, buf.toString());
+	}
+
+	@Override
+	public void exitLexerElement(ANTLRv4Parser.LexerElementContext ctx) {
+		StringBuilder buf = new StringBuilder();
+		String suffix = "";
+		if (ctx.ebnfSuffix() != null){
+			suffix = ctx.ebnfSuffix().getText();
+		}
+		if(ctx.lexerAtom() != null) {
+			parseTreeProperty.put(ctx, parseTreeProperty.get(ctx.lexerAtom()) + suffix);
+
+
+		} else if(ctx.lexerBlock() != null) {
+			var blockCtx = ctx.lexerBlock();
+			List<String> altList = new ArrayList<>();
+			for(var lexerAlt : blockCtx.lexerAltList().lexerAlt()){
+				altList.add(parseTreeProperty.get(lexerAlt));
+			}
+
+			String alts = String.join(" / ", altList);
+			buf.append(alts);
+			buf.append(suffix);
+			parseTreeProperty.put(ctx, buf.toString());
+		} else if(ctx.actionBlock() != null){}
+	}
+
+
+	@Override
+	public void exitLexerAtom(ANTLRv4Parser.LexerAtomContext ctx){
+		if(ctx.characterRange() != null ){
+			parseTreeProperty.put(ctx, parseTreeProperty.get(ctx.characterRange()));
+		} else if(ctx.LEXER_CHAR_SET() != null){
+			parseTreeProperty.put(ctx, ctx.LEXER_CHAR_SET().getText());
+		} else if(ctx.terminalDef() != null){
+			parseTreeProperty.put(ctx, ctx.terminalDef().getText());
+
+		}
+	}
+
+
+	@Override
+	public void exitCharacterRange(ANTLRv4Parser.CharacterRangeContext ctx){
+		StringBuilder buf = new StringBuilder();
+		buf.append(ctx.STRING_LITERAL(0).getText());
+		buf.append(ctx.RANGE().getText());
+		buf.append(ctx.STRING_LITERAL(1).getText());
+		parseTreeProperty.put(ctx, buf.toString());
+	}
+
 
 	@Override
 	public void exitRuleAltList(ANTLRv4Parser.RuleAltListContext ctx){
@@ -113,11 +211,6 @@ public class AntlrListener extends ANTLRv4ParserBaseListener{
 	public void exitBlock(ANTLRv4Parser.BlockContext ctx){
 		StringBuilder buf = new StringBuilder();
 		buf.append(ctx.LPAREN().getText());
-		// for(var ruleAction : ctx.ruleAction()){
-		//
-		// }
-		//
-
 		buf.append(parseTreeProperty.get(ctx.altList()));
 		buf.append(ctx.RPAREN().getText());
 		parseTreeProperty.put(ctx, buf.toString());
