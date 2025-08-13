@@ -3,6 +3,8 @@ import java.io.IOException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import peg.PegPrinter;
+
 public class Converter {
 	public static void main(String[] args) throws IOException {
 		CharStream input = CharStreams.fromStream(System.in);
@@ -12,8 +14,13 @@ public class Converter {
 		ParseTreeWalker walker = new ParseTreeWalker();
 		ParseTree ast = parser.grammarSpec(); // grammarSpec = start rule
 		AntlrListener listener = new AntlrListener();
-		walker.walk(listener, ast);
+		AntlrToPegListener pegListener = new AntlrToPegListener();
+		PegPrinter pegPrinter = new PegPrinter();
 
-		listener.printBuf();
+		// walker.walk(listener, ast);
+		walker.walk(pegListener, ast);
+
+		// listener.printBuf();
+		pegListener.printAst();
 	}
 }
