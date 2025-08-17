@@ -5,15 +5,13 @@ import java.util.Optional;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
-import peg.Node;
-import peg.Operator;
 import peg.PegAst;
+import peg.node.*;
 import peg.PegPrinter;
 
 
 public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
-	private Node root;
 	private final PegAst ast = new PegAst();
 	private ParseTreeProperty<Node> properties = new ParseTreeProperty<>();
 
@@ -36,8 +34,8 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 		System.out.println(out);
 	}
 
-	public Node getRoot(){
-		return this.root;
+	public PegAst getAst(){
+		return this.ast;
 	}
 
 
@@ -133,10 +131,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 		if(ctx.characterRange() != null ){
 			copyNode(ctx, ctx.characterRange());
 		} else if(ctx.LEXER_CHAR_SET() != null){
-			var ident = ast.mkIdent(ctx.LEXER_CHAR_SET().getText());
+			var ident = ast.mkCharset(ctx.LEXER_CHAR_SET().getText());
 			properties.put(ctx, ident);
 		} else if(ctx.terminalDef() != null){
-			var ident = ast.mkIdent(ctx.terminalDef().getText());
+			var ident = ast.mkLiteral(ctx.terminalDef().getText());
 			properties.put(ctx, ident);
 		} else if(ctx.notSet() != null){
 			copyNode(ctx, ctx.notSet());
@@ -173,7 +171,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 			properties.put(ctx, ident);
 			
 		} else if (ctx.STRING_LITERAL() != null){
-			var ident = ast.mkIdent(ctx.STRING_LITERAL().getText());
+			var ident = ast.mkLiteral(ctx.STRING_LITERAL().getText());
 			properties.put(ctx, ident);
 		} else if (ctx.characterRange() != null){
 			copyNode(ctx, ctx.characterRange());
@@ -225,13 +223,34 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
 		if(ctx.labeledElement() != null){
 		} else if(ctx.atom() != null){
-			ANTLRv4Parser.AtomContext atomCtx = ctx.atom();
-			var ident = ast.mkIdent(atomCtx.getText());
-			var term = ast.mkTerm(ident, suffix);
+			var node = properties.get(ctx.atom());
+			var term = ast.mkTerm(node, suffix);
 			properties.put(ctx, term);
 		} else if(ctx.ebnf() != null){
 			copyNode(ctx, ctx.ebnf());
 		} else if(ctx.actionBlock() != null){}
+	}
+
+	
+	@Override
+	public void exitAtom(ANTLRv4Parser.AtomContext ctx){
+		if(ctx.terminalDef() != null){
+			var terminalText = ctx.terminalDef().getText();
+			Node ident = ast.mkLiteral(terminalText);
+			if(terminalText.equals("EOF")) {
+				ident = ast.mkIdent("EOF");
+			}
+			properties.put(ctx, ident);
+		} else if (ctx.ruleref() != null){
+			var ruleRef = ast.mkIdent(ctx.getText());
+			properties.put(ctx, ruleRef);
+		} else if(ctx.notSet() != null){
+			copyNode(ctx, ctx.notSet());
+		} else if(ctx.wildcard() != null) {
+			var ident = ast.mkIdent(ctx.wildcard().getText());
+			properties.put(ctx, ident);
+			
+		}
 	}
 
 

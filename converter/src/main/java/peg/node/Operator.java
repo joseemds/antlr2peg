@@ -1,4 +1,4 @@
-package peg;
+package peg.node;
 
 public enum Operator {
 	STAR,

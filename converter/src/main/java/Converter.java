@@ -1,9 +1,13 @@
 import java.io.IOException;
+import java.util.List;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import backend.LpegBackend;
+import peg.PegAst;
 import peg.PegPrinter;
+import peg.node.*;
 
 public class Converter {
 	public static void main(String[] args) throws IOException {
@@ -21,6 +25,10 @@ public class Converter {
 		walker.walk(pegListener, ast);
 
 		// listener.printBuf();
-		pegListener.printAst();
+		// pegListener.printAst();
+		List<Node> rules = pegListener.getAst().getAst();
+		LpegBackend lpegBackend = new LpegBackend();
+		System.out.println(lpegBackend.convert(rules));
+		
 	}
 }

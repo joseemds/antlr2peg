@@ -1,4 +1,5 @@
 package peg;
+import peg.node.*;
 
 public class PegPrinter {
     
@@ -14,11 +15,12 @@ public class PegPrinter {
     public String printNode(Node node) {
         return switch (node) {
             case Rule rule -> printRule(rule);
+						case Literal lit -> lit.content();
             case Term term -> printTerm(term);
             case Ident ident -> printIdent(ident);
             case Sequence seq -> printSequence(seq);
             case OrderedChoice choice -> printOrderedChoice(choice);
-            case Modifier mod -> printModifier(mod);
+						case Charset charset -> charset.content();
         };
     }
     
@@ -87,9 +89,5 @@ public class PegPrinter {
             sb.append(printNode(choice.nodes().get(i)));
         }
         return sb.toString();
-    }
-    
-    private String printModifier(Modifier mod) {
-        return "";
     }
 }

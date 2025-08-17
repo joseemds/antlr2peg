@@ -3,13 +3,8 @@ package peg;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import peg.node.*;
 
-record Term(Node node, Optional<Operator> op) implements Node {}
-record Rule(String name, Node rhs) implements Node {}
-record Ident(String name) implements Node {}
-record Sequence(List<Node> nodes) implements Node {}
-record OrderedChoice(List<Node> nodes) implements Node {}
-record Modifier() implements Node {}
 
 public class PegAst {
 	private List<Node> ast = new ArrayList<>();
@@ -38,6 +33,14 @@ public class PegAst {
 
 	public Ident mkIdent(String name){
 		return new Ident(name);
+	}
+	
+	public Literal mkLiteral(String content){
+		return new Literal(content);
+	}
+	
+	public Charset mkCharset(String content){
+		return new Charset(content);
 	}
 
 	public Rule mkRule(String lhs, Node rhs){
