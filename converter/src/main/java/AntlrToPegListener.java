@@ -235,12 +235,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 	@Override
 	public void exitAtom(ANTLRv4Parser.AtomContext ctx){
 		if(ctx.terminalDef() != null){
-			var terminalText = ctx.terminalDef().getText();
-			Node ident = ast.mkLiteral(terminalText);
-			if(terminalText.equals("EOF")) {
-				ident = ast.mkIdent("EOF");
-			}
-			properties.put(ctx, ident);
+			copyNode(ctx, ctx.terminalDef());
 		} else if (ctx.ruleref() != null){
 			var ruleRef = ast.mkIdent(ctx.getText());
 			properties.put(ctx, ruleRef);
@@ -250,6 +245,17 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 			var ident = ast.mkIdent(ctx.wildcard().getText());
 			properties.put(ctx, ident);
 			
+		}
+	}
+
+	@Override
+	public void exitTerminalDef(ANTLRv4Parser.TerminalDefContext ctx){
+		if(ctx.STRING_LITERAL() != null){
+			var node = ast.mkLiteral(ctx.getText());
+			properties.put(ctx, node);
+		} else if(ctx.TOKEN_REF() != null){
+			var node = ast.mkIdent(ctx.getText());
+			properties.put(ctx, node);
 		}
 	}
 
