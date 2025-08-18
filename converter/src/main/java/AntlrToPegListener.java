@@ -134,11 +134,11 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 			var ident = ast.mkCharset(ctx.LEXER_CHAR_SET().getText());
 			properties.put(ctx, ident);
 		} else if(ctx.terminalDef() != null){
-			var ident = ast.mkLiteral(ctx.terminalDef().getText());
-			properties.put(ctx, ident);
+			copyNode(ctx, ctx.terminalDef());
 		} else if(ctx.notSet() != null){
 			copyNode(ctx, ctx.notSet());
 		} else if(ctx.wildcard() != null) {
+			// FIXME
 			var ident = ast.mkIdent(ctx.wildcard().getText());
 			properties.put(ctx, ident);
 			
@@ -242,6 +242,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 		} else if(ctx.notSet() != null){
 			copyNode(ctx, ctx.notSet());
 		} else if(ctx.wildcard() != null) {
+			// FIXME
 			var ident = ast.mkIdent(ctx.wildcard().getText());
 			properties.put(ctx, ident);
 			

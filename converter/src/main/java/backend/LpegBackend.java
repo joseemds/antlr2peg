@@ -132,7 +132,13 @@ public class LpegBackend {
             if (i > 0) {
                 sb.append(" + ");
             }
-            sb.append(printNode(choice.nodes().get(i)));
+						var node = choice.nodes().get(i);
+						String nodeStr = printNode(node);
+						 if (node instanceof Sequence && ((Sequence) node).nodes().size() > 1) {
+							nodeStr = "(" + nodeStr + ")";
+						}
+						
+            sb.append(nodeStr);
         }
         return sb.toString();
     }
