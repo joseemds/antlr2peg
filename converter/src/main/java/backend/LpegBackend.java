@@ -13,6 +13,9 @@ public class LpegBackend {
 		local lpeg = require "lpeg"
 		local re = require "re"
 		local P, S, V = lpeg.P, lpeg.S, lpeg.V
+		local regex = function (s)
+			return re.compile(s)
+		end
 		local tk = function (s)
 			return P(s) * V"WS"^0
 		end 
@@ -71,7 +74,7 @@ public class LpegBackend {
 
 	private String printCharset(Charset c){
 		String out = c.content().substring(1, c.content().length() - 1);
-		return "S\"" + out + "\"";
+		return "regex\"" + out + "\"";
 	}
 
 	private String printTerm(Term term) {

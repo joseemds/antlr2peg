@@ -131,7 +131,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 		if(ctx.characterRange() != null ){
 			copyNode(ctx, ctx.characterRange());
 		} else if(ctx.LEXER_CHAR_SET() != null){
-			var ident = ast.mkCharset(ctx.LEXER_CHAR_SET().getText());
+			var ident = ast.mkCharset("[" + ctx.LEXER_CHAR_SET().getText() + "]");
 			properties.put(ctx, ident);
 		} else if(ctx.terminalDef() != null){
 			copyNode(ctx, ctx.terminalDef());
