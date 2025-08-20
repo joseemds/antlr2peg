@@ -3,14 +3,14 @@ grammar Calc;
 program: expr EOF;
 
 expr:
-    term '+' term
-    | term '-' term
+    term '+' expr
+    | term '-' expr
     | term
     ;
 
 term:
-    factor '*' factor
-    | factor '/' factor
+    factor '*' term
+    | factor '/' term
 		| factor
     ;
 
