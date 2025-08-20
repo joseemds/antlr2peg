@@ -15,6 +15,9 @@ public class LpegBackend {
 		local regex = function (s)
 			return re.compile(s)
 		end
+		local rule = function (s)
+			return V(s) * V"WS"^0
+		end
 		local tk = function (s)
 			return P(s) * V"WS"^0
 		end
@@ -94,7 +97,7 @@ public class LpegBackend {
   }
 
   private String printIdent(Ident ident) {
-    return "V\"" + ident.name() + "\"";
+    return "rule\"" + ident.name() + "\"";
   }
 
   private String printSequence(Sequence seq) {
