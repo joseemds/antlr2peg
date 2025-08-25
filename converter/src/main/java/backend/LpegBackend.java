@@ -12,6 +12,7 @@ public class LpegBackend {
 		local lpeg = require "lpeg"
 		local re = require "re"
 		local P, S, V = lpeg.P, lpeg.S, lpeg.V
+    local EMPTY = P''
 		local regex = function (s)
 			return re.compile(s)
 		end
@@ -27,6 +28,7 @@ public class LpegBackend {
 			\"%s\",
 			%s
 			EOF = EOF,
+      EMPTY = EMPTY,
 		}
 
 		local parse = function (input)
@@ -56,7 +58,7 @@ public class LpegBackend {
   public String printRules(List<Node> nodes) {
     StringBuilder sb = new StringBuilder();
     for (Node node : nodes) {
-      sb.append(printNode(node));
+      sb.append("  " + printNode(node));
       sb.append(",\n");
     }
     return sb.toString().trim();
@@ -71,6 +73,9 @@ public class LpegBackend {
       case OrderedChoice choice -> printOrderedChoice(choice);
       case Charset charset -> printCharset(charset);
       case Literal lit -> printLiteral(lit);
+      case Empty e -> "empty";
+      case Not term -> "-" + printNode(term.node());
+      case Wildcard w -> "P(1)";
     };
   }
 
@@ -89,8 +94,15 @@ public class LpegBackend {
 
   private String printTerm(Term term) {
     String nodeStr = printNode(term.node());
+    // if (term.node() instanceof Term term2){
+    // 	System.out.println("here");
+    //     nodeStr = "(" + printNode(term2) + ")";
+    // } else {
+    //    nodeStr = printNode(term.node());
+    //   }
+
     if (term.op().isPresent()) {
-      return nodeStr + printOperator(term.op().get());
+      return "(" + nodeStr + ")" + printOperator(term.op().get());
     }
     return nodeStr;
   }
@@ -104,7 +116,7 @@ public class LpegBackend {
   }
 
   private String printIdent(Ident ident) {
-    return "rule\"" + ident.name() + "\"";
+    return "V\"" + ident.name() + "\"";
   }
 
   private String printSequence(Sequence seq) {

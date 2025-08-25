@@ -22,6 +22,9 @@ public class PegPrinter {
       case Sequence seq -> printSequence(seq);
       case OrderedChoice choice -> printOrderedChoice(choice);
       case Charset charset -> charset.content();
+      case Not term -> "~" + printNode(term);
+      case Empty e -> "ε";
+      case Wildcard w -> "*";
     };
   }
 

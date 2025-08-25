@@ -129,20 +129,21 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     } else if (ctx.notSet() != null) {
       copyNode(ctx, ctx.notSet());
     } else if (ctx.wildcard() != null) {
-      // FIXME
-      var ident = ast.mkIdent(ctx.wildcard().getText());
-      properties.put(ctx, ident);
+      var wildcard = ast.mkWildcard();
+      properties.put(ctx, wildcard);
     }
   }
 
   @Override
   public void exitNotSet(ANTLRv4Parser.NotSetContext ctx) {
+    Node node;
     if (ctx.setElement() != null) {
-      // TODO: support not
-      copyNode(ctx, ctx.setElement());
-    } else if (ctx.blockSet() != null) {
-      copyNode(ctx, ctx.blockSet());
+      node = properties.get(ctx.setElement());
+    } else {
+      node = properties.get(ctx.blockSet());
     }
+    var notNote = ast.mkNot(node);
+    properties.put(ctx, notNote);
   }
 
   @Override

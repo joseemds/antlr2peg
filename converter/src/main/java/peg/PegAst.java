@@ -53,6 +53,18 @@ public class PegAst {
     return new Sequence(nodes);
   }
 
+  public Empty mkEmpty() {
+    return new Empty();
+  }
+
+  public Not mkNot(Node node) {
+    return new Not(node);
+  }
+
+  public Wildcard mkWildcard() {
+    return new Wildcard();
+  }
+
   public void addNode(Node node) {
     this.ast.add(node);
   }
