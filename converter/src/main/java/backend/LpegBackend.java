@@ -32,6 +32,7 @@ public class LpegBackend {
 		local parse = function (input)
 			return lpeg.match(grammar, input)
 		end
+
     while true do
      local line = io.read()
      if not line then break end

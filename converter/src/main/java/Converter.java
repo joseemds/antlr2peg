@@ -1,5 +1,7 @@
 import backend.LpegBackend;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
@@ -7,24 +9,30 @@ import peg.PegPrinter;
 import peg.node.*;
 
 public class Converter {
+  private static void printHelp() {
+    System.out.println("""
+    antlr2peg -i input.g4 -o output.lua
+   """);
+  }
+
   public static void main(String[] args) throws IOException {
-    CharStream input = CharStreams.fromStream(System.in);
-    ANTLRv4Lexer lexer = new ANTLRv4Lexer(input);
+    if (args.length == 1) {
+      printHelp();
+    }
+
+    Path inputFile = Path.of(args[1]);
+    Path outputFile = Path.of(args[3]);
+    String input = Files.readString(inputFile);
+    CharStream inputStream = CharStreams.fromString(input);
+    ANTLRv4Lexer lexer = new ANTLRv4Lexer(inputStream);
     CommonTokenStream tokenStream = new CommonTokenStream(lexer);
     ANTLRv4Parser parser = new ANTLRv4Parser(tokenStream);
     ParseTreeWalker walker = new ParseTreeWalker();
     ParseTree ast = parser.grammarSpec(); // grammarSpec = start rule
-    AntlrListener listener = new AntlrListener();
     AntlrToPegListener pegListener = new AntlrToPegListener();
-    PegPrinter pegPrinter = new PegPrinter();
-
-    // walker.walk(listener, ast);
     walker.walk(pegListener, ast);
-
-    // listener.printBuf();
-    // pegListener.printAst();
     List<Node> rules = pegListener.getAst().getAst();
     LpegBackend lpegBackend = new LpegBackend();
-    System.out.println(lpegBackend.convert(rules));
+    Files.writeString(outputFile, lpegBackend.convert(rules));
   }
 }
