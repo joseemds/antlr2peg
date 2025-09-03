@@ -3,6 +3,7 @@ package backend;
 import java.util.List;
 import peg.node.*;
 import peg.node.Node;
+import utils.Utils;
 
 public class LpegBackend {
 
@@ -13,6 +14,9 @@ public class LpegBackend {
 		local re = require "re"
 		local P, S, V = lpeg.P, lpeg.S, lpeg.V
     local EMPTY = P''
+    local neg = function (pat)
+     return P(1) - pat
+    end
 		local regex = function (s)
 			return re.compile(s)
 		end
@@ -74,7 +78,7 @@ public class LpegBackend {
       case Charset charset -> printCharset(charset);
       case Literal lit -> printLiteral(lit);
       case Empty e -> "empty";
-      case Not term -> "-" + printNode(term.node());
+      case Not term -> "neg(" + printNode(term.node()) + ")";
       case Wildcard w -> "P(1)";
     };
   }
@@ -89,7 +93,7 @@ public class LpegBackend {
 
   private String printCharset(Charset c) {
     String out = c.content().substring(1, c.content().length() - 1);
-    return "regex\"" + out + "\"";
+    return "regex\"" + Utils.sanitizeString(out) + "\"";
   }
 
   private String printTerm(Term term) {
