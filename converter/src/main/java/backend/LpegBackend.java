@@ -39,12 +39,8 @@ public class LpegBackend {
 			return lpeg.match(grammar, input)
 		end
 
-    while true do
-     local line = io.read()
-     if not line then break end
-     if line == "exit" then break end
-     print(parse(line))
-    end
+	 local input = io.read("*a")
+	 print(parse(input))
 		""",
         getFirstRule(rules), printRules(rules));
   }
