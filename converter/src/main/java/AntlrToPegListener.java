@@ -10,7 +10,7 @@ import peg.node.*;
 public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   private final PegAst ast = new PegAst();
-	private boolean isFragment = false;
+  private boolean isFragment = false;
   private ParseTreeProperty<Node> properties = new ParseTreeProperty<>();
 
   private void copyNode(ParserRuleContext parent, ParserRuleContext child) {
@@ -70,11 +70,11 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
     var ident = ctx.TOKEN_REF().getText();
     var rhs = properties.get(ctx.lexerRuleBlock());
-		if(ctx.FRAGMENT() != null){
-			this.isFragment = true;
-		}
+    if (ctx.FRAGMENT() != null) {
+      this.isFragment = true;
+    }
     properties.put(ctx, ast.mkRule(ident, rhs));
-		this.isFragment = false;
+    this.isFragment = false;
   }
 
   @Override

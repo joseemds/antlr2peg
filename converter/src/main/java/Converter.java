@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.util.List;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
-
 import peg.GraphvizPrinter;
 import peg.node.*;
 
@@ -33,9 +32,9 @@ public class Converter {
     AntlrToPegListener pegListener = new AntlrToPegListener();
     walker.walk(pegListener, ast);
     List<Node> rules = pegListener.getAst().getAst();
-		GraphvizPrinter graphPrinter = new GraphvizPrinter();
+    GraphvizPrinter graphPrinter = new GraphvizPrinter();
     LpegBackend lpegBackend = new LpegBackend();
     Files.writeString(outputFile, lpegBackend.convert(rules));
-		Files.writeString(Path.of("ast.dot"), graphPrinter.print(rules));
+    Files.writeString(Path.of("ast.dot"), graphPrinter.print(rules));
   }
 }
