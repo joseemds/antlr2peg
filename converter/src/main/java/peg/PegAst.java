@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import peg.node.*;
+import transformation.Transformation;
 
 public class PegAst {
   private List<Node> ast = new ArrayList<>();
@@ -67,5 +68,10 @@ public class PegAst {
 
   public void addNode(Node node) {
     this.ast.add(node);
+  }
+
+  public List<Node> transform(Transformation transformation) {
+    this.ast = transformation.apply(this.ast);
+    return this.ast;
   }
 }

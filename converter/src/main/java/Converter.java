@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import peg.GraphvizPrinter;
 import peg.node.*;
+import transformation.MoveEmpty;
 
 public class Converter {
   private static void printHelp() {
@@ -31,7 +32,7 @@ public class Converter {
     ParseTree ast = parser.grammarSpec(); // grammarSpec = start rule
     AntlrToPegListener pegListener = new AntlrToPegListener();
     walker.walk(pegListener, ast);
-    List<Node> rules = pegListener.getAst().getAst();
+    List<Node> rules = pegListener.getAst().transform(new MoveEmpty());
     GraphvizPrinter graphPrinter = new GraphvizPrinter();
     LpegBackend lpegBackend = new LpegBackend();
     Files.writeString(outputFile, lpegBackend.convert(rules));

@@ -200,6 +200,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   @Override
   public void exitAlternative(ANTLRv4Parser.AlternativeContext ctx) {
+    if (ctx.element().isEmpty()) {
+      properties.put(ctx, ast.mkEmpty());
+      return;
+    }
     List<Node> nodes = mkNodeList(ctx.element());
     var node = ast.mkSequence(nodes);
     properties.put(ctx, node);

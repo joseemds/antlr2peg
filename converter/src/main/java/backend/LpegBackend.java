@@ -73,7 +73,7 @@ public class LpegBackend {
       case OrderedChoice choice -> printOrderedChoice(choice);
       case Charset charset -> printCharset(charset);
       case Literal lit -> printLiteral(lit);
-      case Empty e -> "empty";
+      case Empty e -> "EMPTY";
       case Not term -> "neg(" + printNode(term.node()) + ")";
       case Wildcard w -> "P(1)";
     };

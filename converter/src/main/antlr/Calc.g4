@@ -3,7 +3,7 @@ grammar Calc;
 program: expr EOF;
 
 expr:
-    term '+' expr
+    | term '+' expr
     | term '-' expr
     | term
     ;
