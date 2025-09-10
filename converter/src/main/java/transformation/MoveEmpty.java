@@ -28,7 +28,8 @@ public class MoveEmpty implements Transformation {
         List<Node> empties = new ArrayList<>();
         for (Node alt : choice.nodes()) {
           Node tAlt = transformNode(alt);
-          if (tAlt instanceof Empty || isPossiblyEmpty(tAlt)) {
+          if (isPossiblyEmpty(tAlt)) {
+            //Dar warning se empties já tiver algum elemento (mais de uma alternativa casa a cadeia vazia)
             empties.add(tAlt);
           } else {
             transformed.add(tAlt);
@@ -48,9 +49,9 @@ public class MoveEmpty implements Transformation {
 
   private boolean isPossiblyEmpty(Node n) {
     return switch (n) {
-      case Rule r -> isPossiblyEmpty(r.rhs());
+      case Rule r -> throw new Error("Não deveria ter Rule aqui");
       case Term t -> {
-        if (t.op().isPresent() && t.op().get() == Operator.OPTIONAL) {
+        if (t.op().isPresent() && (t.op().get() == Operator.OPTIONAL || t.op().get() == Operator.STAR)) {
           yield true;
         }
         yield isPossiblyEmpty(t.node());
