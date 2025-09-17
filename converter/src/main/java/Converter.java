@@ -33,6 +33,9 @@ public class Converter {
     AntlrToPegListener pegListener = new AntlrToPegListener();
     walker.walk(pegListener, ast);
     List<Rule> rules = pegListener.getGrammar().transform(new MoveEmpty());
+    PegGrammar grammar = pegListener.getGrammar();
+    grammar.computeNonTerminals();
+    grammar.computeFirst();
     GraphvizPrinter graphPrinter = new GraphvizPrinter();
     LpegBackend lpegBackend = new LpegBackend();
     Files.writeString(outputFile, lpegBackend.convert(rules));

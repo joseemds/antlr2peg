@@ -1,13 +1,19 @@
 package peg;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import peg.node.*;
 import transformation.Transformation;
 
 public class PegGrammar {
   private List<Rule> rules = new ArrayList<>();
+  private Map<String, Set<Node>> first = new HashMap<>();
+  public Map<String, Node> nonTerminals = new HashMap<>();
 
   public Term mkTerm(Node node, Optional<Operator> op) {
     return new Term(node, op);
@@ -15,6 +21,10 @@ public class PegGrammar {
 
   public List<Rule> getRules() {
     return this.rules;
+  }
+
+  public Map<String, Set<Node>> getFirsts() {
+    return this.first;
   }
 
   public Operator operatorOfString(String op) {
@@ -74,5 +84,91 @@ public class PegGrammar {
     return this.rules.stream()
         .map(rule -> new Rule(rule.name(), transformation.apply(rule.rhs())))
         .toList();
+  }
+
+  public void computeFirst() {
+    boolean changed;
+    do {
+      changed = false;
+      for (Rule rule : rules) {
+        Set<Node> firstSet = first.computeIfAbsent(rule.name(), k -> new HashSet<>());
+        List<Node> rhsFirst = firstOf(rule.rhs());
+        if (firstSet.addAll(rhsFirst)) {
+          changed = true;
+        }
+      }
+    } while (changed);
+  }
+
+  private List<Node> firstOf(Node node) {
+    List<Node> result = new ArrayList<>();
+    if (node instanceof Literal || node instanceof Charset || node instanceof Wildcard) {
+      result.add(node);
+    } else if (node instanceof Empty) {
+      result.add(node); // ?
+    } else if (node instanceof Ident) {
+      Ident ident = (Ident) node;
+      result.addAll(first.getOrDefault(ident.name(), Set.of()));
+    } else if (node instanceof Sequence) {
+      Sequence seq = (Sequence) node;
+      for (Node part : seq.nodes()) {
+        List<Node> partFirst = firstOf(part);
+        result.addAll(partFirst.stream().filter(x -> !(x instanceof Empty)).toList());
+        if (!isPossiblyEmpty(part)) break;
+      }
+      if (seq.nodes().stream().allMatch(this::isPossiblyEmpty)) {
+        result.add(new Empty());
+      }
+    } else if (node instanceof OrderedChoice) {
+      OrderedChoice oc = (OrderedChoice) node;
+      for (Node option : oc.nodes()) {
+        result.addAll(firstOf(option));
+      }
+    } else if (node instanceof Term) {
+
+      Term t = (Term) node;
+      if (t.op().isPresent()) {
+        switch (t.op().get()) {
+          case Operator.OPTIONAL:
+          case Operator.STAR:
+            result.addAll(firstOf(t.node()));
+            result.add(new Empty());
+            break;
+          case Operator.PLUS:
+            result.addAll(firstOf(t.node()));
+            break;
+          default:
+            result.addAll(firstOf(t.node()));
+        }
+      } else {
+        result.addAll(firstOf(t.node()));
+      }
+    }
+    return result;
+  }
+
+  private boolean isPossiblyEmpty(Node n) {
+    return switch (n) {
+      case Term t -> {
+        if (t.op().isPresent() && t.op().get() == Operator.OPTIONAL) {
+          yield true;
+        }
+        yield isPossiblyEmpty(t.node());
+      }
+      case Ident ident -> false;
+      case Sequence seq -> seq.nodes().stream().allMatch(this::isPossiblyEmpty);
+      case OrderedChoice choice -> choice.nodes().stream().anyMatch(this::isPossiblyEmpty);
+      case Literal lit -> lit.content().isEmpty();
+      case Charset charset -> false;
+      case Not not -> true;
+      case Empty e -> true;
+      case Wildcard w -> false;
+    };
+  }
+
+  public void computeNonTerminals() {
+    for (Rule r : rules) {
+      nonTerminals.put(r.name(), r.rhs());
+    }
   }
 }
