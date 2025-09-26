@@ -4,10 +4,10 @@ import peg.node.*;
 
 public class PegPrinter {
 
-  public String print(PegAst ast) {
+  public String print(PegGrammar grammar) {
     StringBuilder sb = new StringBuilder();
-    for (Node node : ast.getAst()) {
-      sb.append(printNode(node));
+    for (Rule rule : grammar.getRules()) {
+      sb.append(printRule(rule));
       sb.append("\n");
     }
     return sb.toString().trim();
@@ -15,7 +15,6 @@ public class PegPrinter {
 
   public String printNode(Node node) {
     return switch (node) {
-      case Rule rule -> printRule(rule);
       case Literal lit -> lit.content();
       case Term term -> printTerm(term);
       case Ident ident -> printIdent(ident);

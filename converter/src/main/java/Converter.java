@@ -32,7 +32,7 @@ public class Converter {
     ParseTree ast = parser.grammarSpec(); // grammarSpec = start rule
     AntlrToPegListener pegListener = new AntlrToPegListener();
     walker.walk(pegListener, ast);
-    List<Node> rules = pegListener.getAst().transform(new MoveEmpty());
+    List<Rule> rules = pegListener.getGrammar().transform(new MoveEmpty());
     GraphvizPrinter graphPrinter = new GraphvizPrinter();
     LpegBackend lpegBackend = new LpegBackend();
     Files.writeString(outputFile, lpegBackend.convert(rules));

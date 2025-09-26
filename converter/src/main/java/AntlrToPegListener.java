@@ -3,13 +3,13 @@ import java.util.List;
 import java.util.Optional;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
-import peg.PegAst;
+import peg.PegGrammar;
 import peg.PegPrinter;
 import peg.node.*;
 
 public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
-  private final PegAst ast = new PegAst();
+  private final PegGrammar grammar = new PegGrammar();
   private boolean isFragment = false;
   private ParseTreeProperty<Node> properties = new ParseTreeProperty<>();
 
@@ -26,20 +26,20 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     return nodes;
   }
 
-  public void printAst() {
+  public void printgrammar() {
     PegPrinter pegPrinter = new PegPrinter();
-    String out = pegPrinter.print(ast);
+    String out = pegPrinter.print(this.grammar);
     System.out.println(out);
   }
 
-  public PegAst getAst() {
-    return this.ast;
+  public PegGrammar getGrammar() {
+    return this.grammar;
   }
 
   @Override
   public void exitRules(ANTLRv4Parser.RulesContext ctx) {
     for (var rule : ctx.ruleSpec()) {
-      ast.addNode(properties.get(rule));
+      // grammar.addRule(properties.get(rule));
     }
   }
 
@@ -58,7 +58,8 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
     var ident = ctx.RULE_REF().getText();
     var rhs = properties.get(ctx.ruleBlock());
-    properties.put(ctx, ast.mkRule(ident, rhs));
+    var rule = grammar.mkRule(ident, rhs);
+    grammar.addRule(rule);
   }
 
   @Override
@@ -73,7 +74,9 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     if (ctx.FRAGMENT() != null) {
       this.isFragment = true;
     }
-    properties.put(ctx, ast.mkRule(ident, rhs));
+    var rule = grammar.mkRule(ident, rhs);
+    grammar.addRule(rule);
+
     this.isFragment = false;
   }
 
@@ -85,7 +88,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   @Override
   public void exitLexerAltList(ANTLRv4Parser.LexerAltListContext ctx) {
     var nodes = mkNodeList(ctx.lexerAlt());
-    var node = ast.mkOrderedChoice(nodes);
+    var node = grammar.mkOrderedChoice(nodes);
     properties.put(ctx, node);
   }
 
@@ -97,7 +100,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   @Override
   public void exitLexerElements(ANTLRv4Parser.LexerElementsContext ctx) {
     var nodes = mkNodeList(ctx.lexerElement());
-    var node = ast.mkSequence(nodes);
+    var node = grammar.mkSequence(nodes);
     properties.put(ctx, node);
   }
 
@@ -106,17 +109,17 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     Optional<Operator> suffix = Optional.empty();
     if (ctx.ebnfSuffix() != null) {
       // TODO: operadores com > 1
-      suffix = Optional.of(ast.operatorOfString(ctx.ebnfSuffix().getText().substring(0, 1)));
+      suffix = Optional.of(grammar.operatorOfString(ctx.ebnfSuffix().getText().substring(0, 1)));
     }
     if (ctx.lexerAtom() != null) {
-      var node = ast.mkTerm(properties.get(ctx.lexerAtom()), suffix);
+      var node = grammar.mkTerm(properties.get(ctx.lexerAtom()), suffix);
       properties.put(ctx, node);
 
     } else if (ctx.lexerBlock() != null) {
       var blockCtx = ctx.lexerBlock();
       var nodes = mkNodeList(blockCtx.lexerAltList().lexerAlt());
-      var choice = ast.mkOrderedChoice(nodes);
-      var node = ast.mkTerm(choice, suffix);
+      var choice = grammar.mkOrderedChoice(nodes);
+      var node = grammar.mkTerm(choice, suffix);
       properties.put(ctx, node);
     } else if (ctx.actionBlock() != null) {
     }
@@ -127,14 +130,14 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     if (ctx.characterRange() != null) {
       copyNode(ctx, ctx.characterRange());
     } else if (ctx.LEXER_CHAR_SET() != null) {
-      var ident = ast.mkCharset("[" + ctx.LEXER_CHAR_SET().getText() + "]");
+      var ident = grammar.mkCharset("[" + ctx.LEXER_CHAR_SET().getText() + "]");
       properties.put(ctx, ident);
     } else if (ctx.terminalDef() != null) {
       copyNode(ctx, ctx.terminalDef());
     } else if (ctx.notSet() != null) {
       copyNode(ctx, ctx.notSet());
     } else if (ctx.wildcard() != null) {
-      var wildcard = ast.mkWildcard();
+      var wildcard = grammar.mkWildcard();
       properties.put(ctx, wildcard);
     }
   }
@@ -147,30 +150,30 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     } else {
       node = properties.get(ctx.blockSet());
     }
-    var notNote = ast.mkNot(node);
+    var notNote = grammar.mkNot(node);
     properties.put(ctx, notNote);
   }
 
   @Override
   public void exitBlockSet(ANTLRv4Parser.BlockSetContext ctx) {
     var nodes = mkNodeList(ctx.setElement());
-    var node = ast.mkSequence(nodes);
+    var node = grammar.mkSequence(nodes);
     properties.put(ctx, node);
   }
 
   @Override
   public void exitSetElement(ANTLRv4Parser.SetElementContext ctx) {
     if (ctx.TOKEN_REF() != null) {
-      var ident = ast.mkIdent(ctx.TOKEN_REF().getText());
+      var ident = grammar.mkIdent(ctx.TOKEN_REF().getText());
       properties.put(ctx, ident);
 
     } else if (ctx.STRING_LITERAL() != null) {
-      var ident = ast.mkLiteral(ctx.STRING_LITERAL().getText());
+      var ident = grammar.mkLiteral(ctx.STRING_LITERAL().getText());
       properties.put(ctx, ident);
     } else if (ctx.characterRange() != null) {
       copyNode(ctx, ctx.characterRange());
     } else if (ctx.LEXER_CHAR_SET() != null) {
-      var ident = ast.mkCharset("[" + ctx.LEXER_CHAR_SET().getText() + "]");
+      var ident = grammar.mkCharset("[" + ctx.LEXER_CHAR_SET().getText() + "]");
       properties.put(ctx, ident);
     }
   }
@@ -181,7 +184,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     buf.append(ctx.STRING_LITERAL(0).getText());
     buf.append(ctx.RANGE().getText());
     buf.append(ctx.STRING_LITERAL(1).getText());
-    var ident = ast.mkIdent(buf.toString());
+    var ident = grammar.mkIdent(buf.toString());
     properties.put(ctx, ident);
   }
 
@@ -189,7 +192,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   public void exitRuleAltList(ANTLRv4Parser.RuleAltListContext ctx) {
     List<ANTLRv4Parser.LabeledAltContext> alts = ctx.labeledAlt();
     List<Node> nodes = mkNodeList(alts);
-    var node = ast.mkOrderedChoice(nodes);
+    var node = grammar.mkOrderedChoice(nodes);
     properties.put(ctx, node);
   }
 
@@ -201,11 +204,11 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   @Override
   public void exitAlternative(ANTLRv4Parser.AlternativeContext ctx) {
     if (ctx.element().isEmpty()) {
-      properties.put(ctx, ast.mkEmpty());
+      properties.put(ctx, grammar.mkEmpty());
       return;
     }
     List<Node> nodes = mkNodeList(ctx.element());
-    var node = ast.mkSequence(nodes);
+    var node = grammar.mkSequence(nodes);
     properties.put(ctx, node);
   }
 
@@ -213,13 +216,13 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   public void exitElement(ANTLRv4Parser.ElementContext ctx) {
     Optional<Operator> suffix = Optional.empty();
     if (ctx.ebnfSuffix() != null) {
-      suffix = Optional.of(ast.operatorOfString(ctx.ebnfSuffix().getText()));
+      suffix = Optional.of(grammar.operatorOfString(ctx.ebnfSuffix().getText()));
     }
 
     if (ctx.labeledElement() != null) {
     } else if (ctx.atom() != null) {
       var node = properties.get(ctx.atom());
-      var term = ast.mkTerm(node, suffix);
+      var term = grammar.mkTerm(node, suffix);
       properties.put(ctx, term);
     } else if (ctx.ebnf() != null) {
       copyNode(ctx, ctx.ebnf());
@@ -232,13 +235,13 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     if (ctx.terminalDef() != null) {
       copyNode(ctx, ctx.terminalDef());
     } else if (ctx.ruleref() != null) {
-      var ruleRef = ast.mkIdent(ctx.getText());
+      var ruleRef = grammar.mkIdent(ctx.getText());
       properties.put(ctx, ruleRef);
     } else if (ctx.notSet() != null) {
       copyNode(ctx, ctx.notSet());
     } else if (ctx.wildcard() != null) {
       // FIXME
-      var ident = ast.mkIdent(ctx.wildcard().getText());
+      var ident = grammar.mkIdent(ctx.wildcard().getText());
       properties.put(ctx, ident);
     }
   }
@@ -246,10 +249,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   @Override
   public void exitTerminalDef(ANTLRv4Parser.TerminalDefContext ctx) {
     if (ctx.STRING_LITERAL() != null) {
-      var node = ast.mkLiteral(ctx.getText());
+      var node = grammar.mkLiteral(ctx.getText());
       properties.put(ctx, node);
     } else if (ctx.TOKEN_REF() != null) {
-      var node = ast.mkIdent(ctx.getText());
+      var node = grammar.mkIdent(ctx.getText());
       properties.put(ctx, node);
     }
   }
@@ -260,10 +263,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     var choices = properties.get(ctx.block());
 
     if (ctx.blockSuffix() != null) {
-      suffix = Optional.of(ast.operatorOfString(ctx.blockSuffix().getText()));
+      suffix = Optional.of(grammar.operatorOfString(ctx.blockSuffix().getText()));
     }
 
-    var node = ast.mkTerm(choices, suffix);
+    var node = grammar.mkTerm(choices, suffix);
     properties.put(ctx, node);
   }
 
@@ -275,7 +278,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   @Override
   public void exitAltList(ANTLRv4Parser.AltListContext ctx) {
     var nodes = mkNodeList(ctx.alternative());
-    var node = ast.mkOrderedChoice(nodes);
+    var node = grammar.mkOrderedChoice(nodes);
     properties.put(ctx, node);
   }
 }

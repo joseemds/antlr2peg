@@ -6,14 +6,14 @@ import java.util.stream.Collectors;
 import peg.node.*;
 
 public class MoveEmpty implements Transformation {
+
   @Override
-  public List<Node> apply(List<Node> nodes) {
-    return nodes.stream().map(this::transformNode).collect(Collectors.toList());
+  public Node apply(Node node) {
+    return this.transformNode(node);
   }
 
   private Node transformNode(Node n) {
     return switch (n) {
-      case Rule r -> new Rule(r.name(), transformNode(r.rhs()));
       case Term t -> new Term(transformNode(t.node()), t.op());
       case Sequence seq -> {
         List<Node> transformed =
@@ -48,7 +48,6 @@ public class MoveEmpty implements Transformation {
 
   private boolean isPossiblyEmpty(Node n) {
     return switch (n) {
-      case Rule r -> isPossiblyEmpty(r.rhs());
       case Term t -> {
         if (t.op().isPresent() && t.op().get() == Operator.OPTIONAL) {
           yield true;

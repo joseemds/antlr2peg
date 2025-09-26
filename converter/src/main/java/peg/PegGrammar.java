@@ -6,15 +6,15 @@ import java.util.Optional;
 import peg.node.*;
 import transformation.Transformation;
 
-public class PegAst {
-  private List<Node> ast = new ArrayList<>();
+public class PegGrammar {
+  private List<Rule> rules = new ArrayList<>();
 
   public Term mkTerm(Node node, Optional<Operator> op) {
     return new Term(node, op);
   }
 
-  public List<Node> getAst() {
-    return this.ast;
+  public List<Rule> getRules() {
+    return this.rules;
   }
 
   public Operator operatorOfString(String op) {
@@ -66,12 +66,13 @@ public class PegAst {
     return new Wildcard();
   }
 
-  public void addNode(Node node) {
-    this.ast.add(node);
+  public void addRule(Rule rule) {
+    this.rules.add(rule);
   }
 
-  public List<Node> transform(Transformation transformation) {
-    this.ast = transformation.apply(this.ast);
-    return this.ast;
+  public List<Rule> transform(Transformation transformation) {
+    return this.rules.stream()
+        .map(rule -> new Rule(rule.name(), transformation.apply(rule.rhs())))
+        .toList();
   }
 }

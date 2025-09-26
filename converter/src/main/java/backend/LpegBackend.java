@@ -7,7 +7,7 @@ import utils.Utils;
 
 public class LpegBackend {
 
-  public String convert(List<Node> rules) {
+  public String convert(List<Rule> rules) {
     return String.format(
         """
 		local lpeg = require "lpeg"
@@ -46,19 +46,15 @@ public class LpegBackend {
   }
   ;
 
-  public String getFirstRule(List<Node> nodes) {
-    Node node = nodes.getFirst();
-    if (node instanceof Rule rule) {
-      return rule.name();
-    }
-
-    throw new Error("Top-level nodes must be rules");
+  public String getFirstRule(List<Rule> rules) {
+    Rule startRule = rules.getFirst();
+    return startRule.name();
   }
 
-  public String printRules(List<Node> nodes) {
+  public String printRules(List<Rule> rules) {
     StringBuilder sb = new StringBuilder();
-    for (Node node : nodes) {
-      sb.append("  " + printNode(node));
+    for (Rule rule : rules) {
+      sb.append("  " + printRule(rule));
       sb.append(",\n");
     }
     return sb.toString().trim();
@@ -66,7 +62,6 @@ public class LpegBackend {
 
   public String printNode(Node node) {
     return switch (node) {
-      case Rule rule -> printRule(rule);
       case Term term -> printTerm(term);
       case Ident ident -> printIdent(ident);
       case Sequence seq -> printSequence(seq);

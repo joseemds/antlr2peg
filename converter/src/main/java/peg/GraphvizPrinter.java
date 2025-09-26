@@ -5,7 +5,7 @@ import peg.node.*;
 
 public class GraphvizPrinter {
 
-  public String print(List<Node> nodes) {
+  public String print(List<Rule> rules) {
     StringBuilder dotBuilder = new StringBuilder();
 
     dotBuilder.append("digraph peg_ast {\n");
@@ -15,12 +15,17 @@ public class GraphvizPrinter {
 
     int[] counter = {0};
 
-    for (Node node : nodes) {
-      printNode(node, dotBuilder, counter);
+    for (Rule rule : rules) {
+      printRule(rule, dotBuilder, counter);
     }
 
     dotBuilder.append("}\n");
     return dotBuilder.toString();
+  }
+
+  private void printRule(Rule rule, StringBuilder dotBuilder, int[] counter) {
+    String childId = printNode(rule.rhs(), dotBuilder, counter);
+    dotBuilder.append(String.format("  %s -> %s;\n", sanitize(rule.name()), childId));
   }
 
   private String printNode(Node node, StringBuilder dotBuilder, int[] counter) {
@@ -28,11 +33,6 @@ public class GraphvizPrinter {
 
     String label =
         switch (node) {
-          case Rule rule -> {
-            String childId = printNode(rule.rhs(), dotBuilder, counter);
-            dotBuilder.append(String.format("  %s -> %s;\n", nodeId, childId));
-            yield "Rule: " + sanitize(rule.name());
-          }
           case Sequence seq -> {
             for (int i = 0; i < seq.nodes().size(); i++) {
               String childId = printNode(seq.nodes().get(i), dotBuilder, counter);
