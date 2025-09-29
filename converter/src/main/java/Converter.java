@@ -2,12 +2,13 @@ import backend.LpegBackend;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import peg.GraphvizPrinter;
 import peg.node.*;
+import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
+import transformation.ReorderSamePrefix;
 
 public class Converter {
   private static void printHelp() {
@@ -32,13 +33,21 @@ public class Converter {
     ParseTree ast = parser.grammarSpec(); // grammarSpec = start rule
     AntlrToPegListener pegListener = new AntlrToPegListener();
     walker.walk(pegListener, ast);
-    List<Rule> rules = pegListener.getGrammar().transform(new MoveEmpty());
-    PegGrammar grammar = pegListener.getGrammar();
+    var grammar = pegListener.getGrammar();
     grammar.computeNonTerminals();
     grammar.computeFirst();
+    System.out.println(grammar.getRules());
+    grammar =
+        grammar
+            .transform(new FlattenGrammar())
+            .transform(new MoveEmpty())
+            .transform(new ReorderSamePrefix(grammar.getFirsts(), grammar.getNonTerminals()));
+    System.out.println("========");
+    System.out.println(grammar.getRules());
+
     GraphvizPrinter graphPrinter = new GraphvizPrinter();
     LpegBackend lpegBackend = new LpegBackend();
-    Files.writeString(outputFile, lpegBackend.convert(rules));
-    Files.writeString(Path.of("ast.dot"), graphPrinter.print(rules));
+    Files.writeString(outputFile, lpegBackend.convert(grammar.getRules()));
+    Files.writeString(Path.of("ast.dot"), graphPrinter.print(grammar.getRules()));
   }
 }

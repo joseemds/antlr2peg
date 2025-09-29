@@ -27,6 +27,10 @@ public class PegGrammar {
     return this.first;
   }
 
+  public Map<String, Node> getNonTerminals() {
+    return this.nonTerminals;
+  }
+
   public Operator operatorOfString(String op) {
     switch (op) {
       case "?":
@@ -80,10 +84,12 @@ public class PegGrammar {
     this.rules.add(rule);
   }
 
-  public List<Rule> transform(Transformation transformation) {
-    return this.rules.stream()
-        .map(rule -> new Rule(rule.name(), transformation.apply(rule.rhs())))
-        .toList();
+  public PegGrammar transform(Transformation transformation) {
+    this.rules =
+        this.rules.stream()
+            .map(rule -> new Rule(rule.name(), transformation.apply(rule.rhs())))
+            .toList();
+    return this;
   }
 
   public void computeFirst() {

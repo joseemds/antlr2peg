@@ -24,8 +24,17 @@ public class GraphvizPrinter {
   }
 
   private void printRule(Rule rule, StringBuilder dotBuilder, int[] counter) {
-    String childId = printNode(rule.rhs(), dotBuilder, counter);
-    dotBuilder.append(String.format("  %s -> %s;\n", sanitize(rule.name()), childId));
+    final String ruleNodeId = "rule_node" + (counter[0]++);
+    final String ruleLabel = "Rule: " + sanitize(rule.name());
+
+    dotBuilder.append(
+        String.format(
+            "  %s [label=\"%s\", style=\"filled\", fillcolor=\"lightblue\"];\n",
+            ruleNodeId, ruleLabel));
+
+    String rhsNodeId = printNode(rule.rhs(), dotBuilder, counter);
+
+    dotBuilder.append(String.format("  %s -> %s [label=\"rhs\"];\n", ruleNodeId, rhsNodeId));
   }
 
   private String printNode(Node node, StringBuilder dotBuilder, int[] counter) {
