@@ -24,6 +24,7 @@ public class PegPrinter {
       case Not term -> "~" + printNode(term);
       case Empty e -> "ε";
       case Wildcard w -> "*";
+      case EOF e -> "$";
     };
   }
 

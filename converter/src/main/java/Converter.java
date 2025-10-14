@@ -10,6 +10,7 @@ import peg.node.*;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
 import transformation.ReorderSamePrefix;
+import transformation.LeftRefactor;
 
 public class Converter {
   private static void printHelp() {
@@ -33,6 +34,7 @@ public class Converter {
         grammar
             .transform(new FlattenGrammar())
             .transform(new MoveEmpty())
+            // .transform(new LeftRefactor());
             .transform(new ReorderSamePrefix(grammar.getFirsts(), grammar.getNonTerminals()));
 
     return grammar;

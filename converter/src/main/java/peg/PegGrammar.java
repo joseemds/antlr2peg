@@ -195,7 +195,86 @@ public class PegGrammar {
     }
     return result;
   }
+  
+public void computeFollowSets() {
+  for (Rule rule : rules) {
+    followSets.putIfAbsent(rule.name(), new HashSet<>());
+  }
 
+  if (!rules.isEmpty()) {
+    followSets.get(rules.get(0).name()).add(new EOF());
+  }
+
+  boolean changed;
+  do {
+    changed = false;
+    for (Rule rule : rules) {
+      String A = rule.name();
+      Node rhs = rule.rhs();
+
+      List<Ident> idents = collectIdents(rhs);
+      for (Ident B : idents) {
+        Set<Node> followB = followSets.computeIfAbsent(B.name(), k -> new HashSet<>());
+        Set<Node> before = new HashSet<>(followB);
+
+        List<Node> tail = tailAfter(rhs, B);
+        if (!tail.isEmpty()) {
+          Set<Node> firstTail = new HashSet<>();
+          for (Node t : tail) {
+            firstTail.addAll(firstOf(t));
+            if (!isPossiblyEmpty(t)) break;
+          }
+          followB.addAll(firstTail.stream().filter(n -> !(n instanceof Empty)).toList());
+          if (tail.stream().allMatch(this::isPossiblyEmpty)) {
+            followB.addAll(followSets.getOrDefault(A, Set.of()));
+          }
+        } else {
+          followB.addAll(followSets.getOrDefault(A, Set.of()));
+        }
+
+        if (!followB.equals(before)) changed = true;
+      }
+    }
+  } while (changed);
+}
+
+private List<Ident> collectIdents(Node node) {
+  List<Ident> list = new ArrayList<>();
+  if (node instanceof Ident ident) {
+    list.add(ident);
+  } else if (node instanceof Sequence seq) {
+    for (Node n : seq.nodes()) list.addAll(collectIdents(n));
+  } else if (node instanceof OrderedChoice oc) {
+    for (Node n : oc.nodes()) list.addAll(collectIdents(n));
+  } else if (node instanceof Term t) {
+    list.addAll(collectIdents(t.node()));
+  } else if (node instanceof Not not) {
+    list.addAll(collectIdents(not.node()));
+  }
+  return list;
+}
+
+private List<Node> tailAfter(Node root, Ident target) {
+  if (root instanceof Sequence seq) {
+    List<Node> nodes = seq.nodes();
+    for (int i = 0; i < nodes.size(); i++) {
+      if (nodes.get(i) instanceof Ident ident && ident.name().equals(target.name())) {
+        return nodes.subList(i + 1, nodes.size());
+      }
+    }
+  } else if (root instanceof OrderedChoice oc) {
+    for (Node n : oc.nodes()) {
+      List<Node> t = tailAfter(n, target);
+      if (!t.isEmpty()) return t;
+    }
+  } else if (root instanceof Term t) {
+    return tailAfter(t.node(), target);
+  } else if (root instanceof Not not) {
+    return tailAfter(not.node(), target);
+  }
+  return List.of();
+}
+  
   private boolean isPossiblyEmpty(Node n) {
     return switch (n) {
       case Term t -> {
@@ -212,6 +291,7 @@ public class PegGrammar {
       case Not not -> true;
       case Empty e -> true;
       case Wildcard w -> false;
+      case EOF e -> false;
     };
   }
 

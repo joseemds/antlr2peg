@@ -5,7 +5,7 @@ program: expr EOF;
 
 if:
     'if' expr 'then' expr
-		| 'if' expr 'then' expr 'else' expr;
+    | 'if' expr 'then' expr 'else' expr;
 
 
 expr: 'true' | 'false';

@@ -43,6 +43,7 @@ public class MoveEmpty implements Transformation {
       case Not not -> new Not(transformNode(not.node()));
       case Empty e -> e;
       case Wildcard w -> w;
+      case EOF e -> e;
     };
   }
 
@@ -63,6 +64,7 @@ public class MoveEmpty implements Transformation {
       case Not not -> true;
       case Empty e -> true;
       case Wildcard w -> false;
+      case EOF e -> true;
     };
   }
 }

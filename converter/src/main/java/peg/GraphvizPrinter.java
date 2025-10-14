@@ -72,6 +72,7 @@ public class GraphvizPrinter {
           case Charset charset -> "Charset: " + sanitize(charset.content());
           case Empty e -> "ε";
           case Wildcard w -> "•";
+          case EOF e -> "$";
         };
 
     dotBuilder.append(String.format("  %s [label=\"%s\"];\n", nodeId, label));

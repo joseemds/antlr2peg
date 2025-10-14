@@ -76,6 +76,7 @@ public class LpegBackend {
       case Empty e -> "EMPTY";
       case Not term -> "neg(" + printNode(term.node()) + ")";
       case Wildcard w -> "P(1)";
+      case EOF e -> "EOF";
     };
   }
 
