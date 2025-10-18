@@ -20,16 +20,14 @@ public class LpegBackend {
 		local regex = function (s)
 			return re.compile(s)
 		end
-		local rule = function (s)
-			return V(s) * V"WS"^0
-		end
 		local tk = function (s)
 			return P(s) * V"WS"^0
 		end
 		local EOF = P(-1)
 
 		local grammar = {
-			\"%s\",
+			\"start_\",
+      start_ = V"WS"^0 * V\"%s\" * V"EOF",
 			%s
 			EOF = EOF,
       EMPTY = EMPTY,
@@ -82,7 +80,7 @@ public class LpegBackend {
   }
 
   private String printRule(Rule rule) {
-    String ws =  rule.kind() == RuleKind.LEXING ? " * V\"WS\"^0" : "";
+    String ws = rule.kind() == RuleKind.LEXING ? " * V\"WS\"^0" : "";
     return rule.name() + " = " + printNode(rule.rhs()) + ws;
   }
 
@@ -97,13 +95,6 @@ public class LpegBackend {
 
   private String printTerm(Term term) {
     String nodeStr = printNode(term.node());
-    // if (term.node() instanceof Term term2){
-    // 	System.out.println("here");
-    //     nodeStr = "(" + printNode(term2) + ")";
-    // } else {
-    //    nodeStr = printNode(term.node());
-    //   }
-
     if (term.op().isPresent()) {
       return "(" + nodeStr + ")" + printOperator(term.op().get());
     }
