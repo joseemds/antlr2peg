@@ -82,7 +82,8 @@ public class LpegBackend {
   }
 
   private String printRule(Rule rule) {
-    return rule.name() + " = " + printNode(rule.rhs());
+    String ws =  rule.kind() == RuleKind.LEXING ? " * V\"WS\"^0" : "";
+    return rule.name() + " = " + printNode(rule.rhs()) + ws;
   }
 
   private String printLiteral(Literal lit) {
