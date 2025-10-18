@@ -12,7 +12,8 @@ import transformation.Transformation;
 
 public class PegGrammar {
   private List<Rule> rules = new ArrayList<>();
-  private Map<String, Set<Node>> first = new HashMap<>();
+  private Map<String, Set<Node>> firstSets = new HashMap<>();
+  private Map<String, Set<Node>> followSets = new HashMap<>();
   public Map<String, Node> nonTerminals = new HashMap<>();
 
   public Term mkTerm(Node node, Optional<Operator> op) {
@@ -24,7 +25,7 @@ public class PegGrammar {
   }
 
   public Map<String, Set<Node>> getFirsts() {
-    return this.first;
+    return this.firstSets;
   }
 
   public Map<String, Node> getNonTerminals() {
@@ -109,13 +110,43 @@ public class PegGrammar {
     do {
       changed = false;
       for (Rule rule : rules) {
-        Set<Node> firstSet = first.computeIfAbsent(rule.name(), k -> new HashSet<>());
+        Set<Node> firstSet = firstSets.computeIfAbsent(rule.name(), k -> new HashSet<>());
         List<Node> rhsFirst = firstOf(rule.rhs());
         if (firstSet.addAll(rhsFirst)) {
           changed = true;
         }
       }
     } while (changed);
+  }
+  
+  public void computeFollow(){
+    boolean changed = false;
+    do {
+      for (Rule rule : rules) {
+        Set<Node> followsSet = followSets.computeIfAbsent(rule.name(), k -> new HashSet<>());
+        List<Node> rhsFollow = followsOf(rule.rhs());
+        changed = followsSet.addAll(rhsFollow);
+      }
+    } while (changed);
+
+  }
+
+  public List<Node> followsOf(Node node){
+    List<Node> result = new ArrayList<>();
+    switch (node) {
+  	case Literal l -> result.add(l);
+  	case Wildcard w -> result.add(w);
+  	case Charset cs -> result.add(cs);
+    case Empty e -> result.add(e);
+    case Ident ident -> {
+      result.addAll(firstSets.getOrDefault(ident, Set.of()));
+    }
+    case Sequence s -> {
+
+    }
+  		
+  }
+
   }
 
   private List<Node> firstOf(Node node) {
@@ -126,7 +157,7 @@ public class PegGrammar {
       result.add(node); // ?
     } else if (node instanceof Ident) {
       Ident ident = (Ident) node;
-      result.addAll(first.getOrDefault(ident.name(), Set.of()));
+      result.addAll(firstSets.getOrDefault(ident.name(), Set.of()));
     } else if (node instanceof Sequence) {
       Sequence seq = (Sequence) node;
       for (Node part : seq.nodes()) {
