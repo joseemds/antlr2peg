@@ -10,7 +10,6 @@ import peg.node.*;
 public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   private final PegGrammar grammar = new PegGrammar();
-  private boolean isFragment = false;
   private ParseTreeProperty<Node> properties = new ParseTreeProperty<>();
 
   private void copyNode(ParserRuleContext parent, ParserRuleContext child) {
@@ -37,13 +36,6 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   }
 
   @Override
-  public void exitRules(ANTLRv4Parser.RulesContext ctx) {
-    for (var rule : ctx.ruleSpec()) {
-      // grammar.addRule(properties.get(rule));
-    }
-  }
-
-  @Override
   public void exitRuleSpec(ANTLRv4Parser.RuleSpecContext ctx) {
     if (ctx.parserRuleSpec() != null) {
       var childNode = properties.get(ctx.parserRuleSpec());
@@ -58,7 +50,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
     var ident = ctx.RULE_REF().getText();
     var rhs = properties.get(ctx.ruleBlock());
-    var rule = grammar.mkRule(ident, rhs);
+    var rule = grammar.mkParsingRule(ident, rhs);
     grammar.addRule(rule);
   }
 
@@ -71,13 +63,12 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
     var ident = ctx.TOKEN_REF().getText();
     var rhs = properties.get(ctx.lexerRuleBlock());
+    RuleKind ruleKind = RuleKind.LEXING;
     if (ctx.FRAGMENT() != null) {
-      this.isFragment = true;
+      ruleKind = RuleKind.FRAGMENT;
     }
-    var rule = grammar.mkRule(ident, rhs);
+    var rule = grammar.mkRule(ident, rhs, ruleKind);
     grammar.addRule(rule);
-
-    this.isFragment = false;
   }
 
   @Override

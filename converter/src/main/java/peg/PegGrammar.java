@@ -56,8 +56,20 @@ public class PegGrammar {
     return new Charset(content);
   }
 
-  public Rule mkRule(String lhs, Node rhs) {
-    return new Rule(lhs, rhs);
+  public Rule mkRule(String lhs, Node rhs, RuleKind kind) {
+    return new Rule(lhs, rhs, kind);
+  }
+
+  public Rule mkLexicalRule(String lhs, Node rhs) {
+    return new Rule(lhs, rhs, RuleKind.LEXING);
+  }
+
+  public Rule mkParsingRule(String lhs, Node rhs) {
+    return new Rule(lhs, rhs, RuleKind.PARSING);
+  }
+
+  public Rule mkFragmentRule(String lhs, Node rhs) {
+    return new Rule(lhs, rhs, RuleKind.FRAGMENT);
   }
 
   public OrderedChoice mkOrderedChoice(List<Node> nodes) {
@@ -87,7 +99,7 @@ public class PegGrammar {
   public PegGrammar transform(Transformation transformation) {
     this.rules =
         this.rules.stream()
-            .map(rule -> new Rule(rule.name(), transformation.apply(rule.rhs())))
+            .map(rule -> new Rule(rule.name(), transformation.apply(rule.rhs()), rule.kind()))
             .toList();
     return this;
   }

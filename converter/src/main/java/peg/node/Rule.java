@@ -1,3 +1,3 @@
 package peg.node;
 
-public record Rule(String name, Node rhs) {}
+public record Rule(String name, Node rhs, RuleKind kind) {}
