@@ -1,0 +1,12 @@
+graph {
+	node []
+	edge [
+		from = "here",
+		to = "there"
+	]
+	graph [	fontname = "Helvetica-Oblique",
+		fontsize = 36,
+		label = "\n\n\n\nObject Oriented Graphs\nStephen North, 3/19/93",
+		size = "6,6" ];
+
+}

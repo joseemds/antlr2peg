@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import peg.GraphvizPrinter;
+import peg.PegGrammar;
 import peg.node.*;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
@@ -17,16 +18,8 @@ public class Converter {
    """);
   }
 
-  public static void main(String[] args) throws IOException {
-    if (args.length == 1) {
-      printHelp();
-    }
-
-    Path inputFile = Path.of(args[1]);
-    Path outputFile = Path.of(args[3]);
-    String input = Files.readString(inputFile);
-    CharStream inputStream = CharStreams.fromString(input);
-    ANTLRv4Lexer lexer = new ANTLRv4Lexer(inputStream);
+  public static PegGrammar convertToPegGrammar(CharStream input) {
+    ANTLRv4Lexer lexer = new ANTLRv4Lexer(input);
     CommonTokenStream tokenStream = new CommonTokenStream(lexer);
     ANTLRv4Parser parser = new ANTLRv4Parser(tokenStream);
     ParseTreeWalker walker = new ParseTreeWalker();
@@ -36,15 +29,30 @@ public class Converter {
     var grammar = pegListener.getGrammar();
     grammar.computeNonTerminals();
     grammar.computeFirst();
-    System.out.println(grammar.getRules());
     grammar =
         grammar
             .transform(new FlattenGrammar())
             .transform(new MoveEmpty())
             .transform(new ReorderSamePrefix(grammar.getFirsts(), grammar.getNonTerminals()));
-    System.out.println("========");
-    System.out.println(grammar.getRules());
 
+    return grammar;
+  }
+
+  public static String convertToLpeg(PegGrammar pegGrammar) {
+    LpegBackend lpegBackend = new LpegBackend();
+    return lpegBackend.convert(pegGrammar.getRules());
+  }
+
+  public static void main(String[] args) throws IOException {
+    if (args.length == 1) {
+      printHelp();
+    }
+
+    Path inputFile = Path.of(args[1]);
+    Path outputFile = Path.of(args[3]);
+    String input = Files.readString(inputFile);
+    CharStream inputStream = CharStreams.fromString(input);
+    PegGrammar grammar = convertToPegGrammar(inputStream);
     GraphvizPrinter graphPrinter = new GraphvizPrinter();
     LpegBackend lpegBackend = new LpegBackend();
     Files.writeString(outputFile, lpegBackend.convert(grammar.getRules()));
