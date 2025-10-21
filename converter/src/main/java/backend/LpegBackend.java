@@ -36,6 +36,13 @@ public class LpegBackend {
 		}
 
 		local parse = function (input)
+			local result = lpeg.match(grammar, input)
+			if result then
+			  print("Parsed: ", result)
+			else
+			  print("LPEG Parsing failed")
+			  os.exit(1)
+			end
 			return lpeg.match(grammar, input)
 		end
 
