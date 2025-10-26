@@ -118,8 +118,8 @@ public class PegGrammar {
       }
     } while (changed);
   }
-  
-  public void computeFollow(){
+
+  public void computeFollow() {
     boolean changed = false;
     do {
       for (Rule rule : rules) {
@@ -128,25 +128,42 @@ public class PegGrammar {
         changed = followsSet.addAll(rhsFollow);
       }
     } while (changed);
-
   }
 
-  public List<Node> followsOf(Node node){
+  // TODO: possibly empty nodes
+  public List<Node> followsOf(Node node) {
     List<Node> result = new ArrayList<>();
     switch (node) {
-  	case Literal l -> result.add(l);
-  	case Wildcard w -> result.add(w);
-  	case Charset cs -> result.add(cs);
-    case Empty e -> result.add(e);
-    case Ident ident -> {
-      result.addAll(firstSets.getOrDefault(ident, Set.of()));
-    }
-    case Sequence s -> {
+      case Literal l -> result.add(l);
+      case Wildcard w -> result.add(w);
+      case Charset cs -> result.add(cs);
+      case Empty e -> result.add(e);
+      case Term t -> result.addAll(followsOf(t.node()));
+      case Not t -> result.addAll(followsOf(t.node())); // FIXME
+      case Ident ident -> {
+        result.addAll(firstSets.getOrDefault(ident, Set.of()));
+      }
+      case Sequence s -> {
+        for (Node n : s.nodes()) {
+          result.addAll(followsOf(n));
+        }
+      }
+      case OrderedChoice c -> {
+        List<Node> elements = c.nodes();
+        if (elements.size() == 1) throw new Error("Single element sequence should not exists");
 
+        for (int i = 0; i < elements.size(); i++) {
+          Node current = elements.get(i);
+          for (int j = i + 1; j < elements.size(); j++) {
+            Node next = elements.get(j);
+            result.addAll(firstSets.getOrDefault(next, Set.of()));
+          }
+        }
+      }
+      case EOF eof -> result.add(eof);
     }
-  		
-  }
 
+    return result;
   }
 
   private List<Node> firstOf(Node node) {
@@ -195,86 +212,86 @@ public class PegGrammar {
     }
     return result;
   }
-  
-public void computeFollowSets() {
-  for (Rule rule : rules) {
-    followSets.putIfAbsent(rule.name(), new HashSet<>());
-  }
 
-  if (!rules.isEmpty()) {
-    followSets.get(rules.get(0).name()).add(new EOF());
-  }
-
-  boolean changed;
-  do {
-    changed = false;
+  public void computeFollowSets() {
     for (Rule rule : rules) {
-      String A = rule.name();
-      Node rhs = rule.rhs();
+      followSets.putIfAbsent(rule.name(), new HashSet<>());
+    }
 
-      List<Ident> idents = collectIdents(rhs);
-      for (Ident B : idents) {
-        Set<Node> followB = followSets.computeIfAbsent(B.name(), k -> new HashSet<>());
-        Set<Node> before = new HashSet<>(followB);
+    if (!rules.isEmpty()) {
+      followSets.get(rules.get(0).name()).add(new EOF());
+    }
 
-        List<Node> tail = tailAfter(rhs, B);
-        if (!tail.isEmpty()) {
-          Set<Node> firstTail = new HashSet<>();
-          for (Node t : tail) {
-            firstTail.addAll(firstOf(t));
-            if (!isPossiblyEmpty(t)) break;
-          }
-          followB.addAll(firstTail.stream().filter(n -> !(n instanceof Empty)).toList());
-          if (tail.stream().allMatch(this::isPossiblyEmpty)) {
+    boolean changed;
+    do {
+      changed = false;
+      for (Rule rule : rules) {
+        String A = rule.name();
+        Node rhs = rule.rhs();
+
+        List<Ident> idents = collectIdents(rhs);
+        for (Ident B : idents) {
+          Set<Node> followB = followSets.computeIfAbsent(B.name(), k -> new HashSet<>());
+          Set<Node> before = new HashSet<>(followB);
+
+          List<Node> tail = tailAfter(rhs, B);
+          if (!tail.isEmpty()) {
+            Set<Node> firstTail = new HashSet<>();
+            for (Node t : tail) {
+              firstTail.addAll(firstOf(t));
+              if (!isPossiblyEmpty(t)) break;
+            }
+            followB.addAll(firstTail.stream().filter(n -> !(n instanceof Empty)).toList());
+            if (tail.stream().allMatch(this::isPossiblyEmpty)) {
+              followB.addAll(followSets.getOrDefault(A, Set.of()));
+            }
+          } else {
             followB.addAll(followSets.getOrDefault(A, Set.of()));
           }
-        } else {
-          followB.addAll(followSets.getOrDefault(A, Set.of()));
+
+          if (!followB.equals(before)) changed = true;
         }
-
-        if (!followB.equals(before)) changed = true;
       }
-    }
-  } while (changed);
-}
-
-private List<Ident> collectIdents(Node node) {
-  List<Ident> list = new ArrayList<>();
-  if (node instanceof Ident ident) {
-    list.add(ident);
-  } else if (node instanceof Sequence seq) {
-    for (Node n : seq.nodes()) list.addAll(collectIdents(n));
-  } else if (node instanceof OrderedChoice oc) {
-    for (Node n : oc.nodes()) list.addAll(collectIdents(n));
-  } else if (node instanceof Term t) {
-    list.addAll(collectIdents(t.node()));
-  } else if (node instanceof Not not) {
-    list.addAll(collectIdents(not.node()));
+    } while (changed);
   }
-  return list;
-}
 
-private List<Node> tailAfter(Node root, Ident target) {
-  if (root instanceof Sequence seq) {
-    List<Node> nodes = seq.nodes();
-    for (int i = 0; i < nodes.size(); i++) {
-      if (nodes.get(i) instanceof Ident ident && ident.name().equals(target.name())) {
-        return nodes.subList(i + 1, nodes.size());
+  private List<Ident> collectIdents(Node node) {
+    List<Ident> list = new ArrayList<>();
+    if (node instanceof Ident ident) {
+      list.add(ident);
+    } else if (node instanceof Sequence seq) {
+      for (Node n : seq.nodes()) list.addAll(collectIdents(n));
+    } else if (node instanceof OrderedChoice oc) {
+      for (Node n : oc.nodes()) list.addAll(collectIdents(n));
+    } else if (node instanceof Term t) {
+      list.addAll(collectIdents(t.node()));
+    } else if (node instanceof Not not) {
+      list.addAll(collectIdents(not.node()));
+    }
+    return list;
+  }
+
+  private List<Node> tailAfter(Node root, Ident target) {
+    if (root instanceof Sequence seq) {
+      List<Node> nodes = seq.nodes();
+      for (int i = 0; i < nodes.size(); i++) {
+        if (nodes.get(i) instanceof Ident ident && ident.name().equals(target.name())) {
+          return nodes.subList(i + 1, nodes.size());
+        }
       }
+    } else if (root instanceof OrderedChoice oc) {
+      for (Node n : oc.nodes()) {
+        List<Node> t = tailAfter(n, target);
+        if (!t.isEmpty()) return t;
+      }
+    } else if (root instanceof Term t) {
+      return tailAfter(t.node(), target);
+    } else if (root instanceof Not not) {
+      return tailAfter(not.node(), target);
     }
-  } else if (root instanceof OrderedChoice oc) {
-    for (Node n : oc.nodes()) {
-      List<Node> t = tailAfter(n, target);
-      if (!t.isEmpty()) return t;
-    }
-  } else if (root instanceof Term t) {
-    return tailAfter(t.node(), target);
-  } else if (root instanceof Not not) {
-    return tailAfter(not.node(), target);
+    return List.of();
   }
-  return List.of();
-}
-  
+
   private boolean isPossiblyEmpty(Node n) {
     return switch (n) {
       case Term t -> {

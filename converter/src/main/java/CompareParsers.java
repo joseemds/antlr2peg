@@ -68,7 +68,7 @@ public class CompareParsers {
             }
           });
 
-			// TODO: make it generic for the grammars being tested
+      // TODO: make it generic for the grammars being tested
       var method = parserClass.getMethod("graph");
       method.invoke(parser);
       return parser.getNumberOfSyntaxErrors() == 0;

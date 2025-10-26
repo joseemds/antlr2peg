@@ -34,7 +34,8 @@ public class LeftRefactor implements Transformation {
     List<Node> newAlts = new ArrayList<>();
     for (Node alt : alts) {
       List<Node> flattened = flattenSeq(alt);
-      List<Node> suffix = flattened.subList(Math.min(prefix.size(), flattened.size()), flattened.size());
+      List<Node> suffix =
+          flattened.subList(Math.min(prefix.size(), flattened.size()), flattened.size());
 
       if (suffix.isEmpty()) {
         newAlts.add(new Empty());
@@ -63,9 +64,7 @@ public class LeftRefactor implements Transformation {
   private List<Node> longestCommonPrefix(List<Node> alternatives) {
     if (alternatives.isEmpty()) return List.of();
 
-    List<List<Node>> flatAlts = alternatives.stream()
-        .map(this::flattenSeq)
-        .toList();
+    List<List<Node>> flatAlts = alternatives.stream().map(this::flattenSeq).toList();
 
     List<Node> prefix = new ArrayList<>();
     int minLen = flatAlts.stream().mapToInt(List::size).min().orElse(0);

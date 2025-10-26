@@ -10,7 +10,6 @@ import peg.node.*;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
 import transformation.ReorderSamePrefix;
-import transformation.LeftRefactor;
 
 public class Converter {
   private static void printHelp() {
