@@ -131,6 +131,7 @@ public class PegGrammar {
   }
 
   // TODO: possibly empty nodes
+
   public List<Node> followsOf(Node node) {
     List<Node> result = new ArrayList<>();
     switch (node) {
@@ -316,5 +317,28 @@ public class PegGrammar {
     for (Rule r : rules) {
       nonTerminals.put(r.name(), r.rhs());
     }
+  }
+
+  public Rule findRuleByName(String name) {
+    for (Rule r : rules) {
+      if (r.name() == name) return r;
+    }
+    throw new Error("Rule with name " + name + "not found");
+  }
+
+  public boolean isSyntacticRule(Rule r) {
+    return r.kind() == RuleKind.PARSING;
+  }
+
+  public boolean isLexicalRule(Rule r) {
+    return r.kind() == RuleKind.LEXING;
+  }
+
+  public boolean isTerminal(Node n) {
+    return switch (n) {
+      case Literal lit -> true;
+      case Charset charset -> true;
+      default -> false;
+    };
   }
 }
