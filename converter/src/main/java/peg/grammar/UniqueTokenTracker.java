@@ -20,7 +20,7 @@ public class UniqueTokenTracker {
   public void analyzeGrammar() {
     for (Rule rule : grammar.getRules()) {
       if (grammar.isSyntacticRule(rule)) {
-        List<Node> tokens = extractLexicalTokens(rule.rhs());
+        List<Node> tokens = extractDirectLexicalTokens(rule.rhs());
         for (Node token : tokens) {
           tokenOccurrences.computeIfAbsent(token, k -> new TokenInfo()).addOccurrence(rule.name());
         }
@@ -28,35 +28,86 @@ public class UniqueTokenTracker {
     }
   }
 
-  public boolean isUnique(Node n) {
-    return tokenOccurrences.get(n).isUnique();
+  public void printUniqueTokens() {
+    System.out.println("=== Unique Tokens ===");
+    for (Map.Entry<Node, TokenInfo> entry : tokenOccurrences.entrySet()) {
+      Node token = entry.getKey();
+      TokenInfo info = entry.getValue();
+
+      if (info.isUnique()) {
+        System.out.printf("Token: %s %s \n", token, info);
+      }
+    }
   }
 
-  private List<Node> extractLexicalTokens(Node n) {
+  public boolean isUnique(Node n) {
+    TokenInfo tokenInfo = tokenOccurrences.get(n);
+    if (tokenInfo == null) return false;
+    return tokenInfo.isUnique();
+  }
+
+  public boolean containsUniqueToken(Node n) {
+    List<Node> tokens = extractAllLexicalTokens(n, new HashSet<>());
+    for (Node token : tokens) {
+      if (isUnique(token)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private List<Node> extractDirectLexicalTokens(Node n) {
     List<Node> tokens = new ArrayList<>();
     switch (n) {
       case Ident i -> {
         Rule r = grammar.findRuleByName(i.name());
-        if (grammar.isLexicalRule(r)) {
-          tokens.addAll(extractLexicalTokens(r.rhs()));
+        if (r != null && grammar.isLexicalRule(r)) {
+          tokens.addAll(extractAllLexicalTokens(r.rhs(), new HashSet<>()));
         }
       }
       case Literal lit -> tokens.add(n);
-      case Charset cs -> tokens.add(n);
       case Sequence s -> {
         for (Node children : s.nodes()) {
-          tokens.addAll(extractLexicalTokens(children));
+          tokens.addAll(extractDirectLexicalTokens(children));
         }
       }
       case OrderedChoice oc -> {
         for (Node children : oc.nodes()) {
-          tokens.addAll(extractLexicalTokens(children));
+          tokens.addAll(extractDirectLexicalTokens(children));
         }
       }
-      case Term t -> tokens.addAll(extractLexicalTokens(t.node()));
+      case Term t -> tokens.addAll(extractDirectLexicalTokens(t.node()));
+      default -> {}
+    }
+    return tokens;
+  }
+
+  private List<Node> extractAllLexicalTokens(Node n, Set<String> visited) {
+    List<Node> tokens = new ArrayList<>();
+    switch (n) {
+      case Ident i -> {
+        if (visited.contains(i.name())) break;
+        visited.add(i.name());
+
+        Rule r = grammar.findRuleByName(i.name());
+        if (r == null) break;
+
+        tokens.addAll(extractAllLexicalTokens(r.rhs(), new HashSet<>(visited)));
+      }
+      case Literal lit -> tokens.add(n);
+      case Sequence s -> {
+        for (Node children : s.nodes()) {
+          tokens.addAll(extractAllLexicalTokens(children, new HashSet<>(visited)));
+        }
+      }
+      case OrderedChoice oc -> {
+        for (Node children : oc.nodes()) {
+          tokens.addAll(extractAllLexicalTokens(children, new HashSet<>(visited)));
+        }
+      }
+      case Term t -> tokens.addAll(extractAllLexicalTokens(t.node(), new HashSet<>(visited)));
       default -> {} // noop
     }
-
     return tokens;
   }
 

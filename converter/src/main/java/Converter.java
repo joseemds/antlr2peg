@@ -31,11 +31,16 @@ public class Converter {
     var grammar = pegListener.getGrammar();
     grammar.computeNonTerminals();
     grammar.computeFirst();
-    grammar =
-        grammar
-            .transform(new FlattenGrammar())
-            .transform(new MoveEmpty())
-            .transform(new ReorderSamePrefix(grammar.getFirsts(), grammar.getNonTerminals()));
+
+    grammar = grammar.transform(new FlattenGrammar());
+    grammar = grammar.transform(new MoveEmpty());
+    UniqueTokenTracker uniqueTokenTracker = new UniqueTokenTracker(grammar);
+    uniqueTokenTracker.analyzeGrammar();
+
+    Node id_ = grammar.findRuleByName("id_").rhs();
+    Node edgeop = grammar.findRuleByName("edgeop").rhs();
+    uniqueTokenTracker.printUniqueTokens();
+    grammar = grammar.transform(new ReorderSamePrefix(grammar));
 
     return grammar;
   }
@@ -60,8 +65,6 @@ public class Converter {
 
     AmbiguousChoiceDetector ambiguityDetector = new AmbiguousChoiceDetector(grammar);
     ambiguityDetector.checkAmbiguity();
-    UniqueTokenTracker uniqueTokenTracker = new UniqueTokenTracker(grammar);
-    uniqueTokenTracker.analyzeGrammar();
     GraphvizPrinter graphPrinter = new GraphvizPrinter();
     LpegBackend lpegBackend = new LpegBackend();
     Files.writeString(outputFile, lpegBackend.convert(grammar.getRules()));

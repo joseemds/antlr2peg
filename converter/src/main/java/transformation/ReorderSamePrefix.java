@@ -1,16 +1,23 @@
 package transformation;
 
 import java.util.*;
+import peg.PegGrammar;
+import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
 
 public class ReorderSamePrefix implements Transformation {
 
+  private final PegGrammar grammar;
   private final Map<String, Set<Node>> firstSet;
   private final Map<String, Node> nonTerminals;
+  private final UniqueTokenTracker uniqueTokenTracker;
 
-  public ReorderSamePrefix(Map<String, Set<Node>> firstSet, Map<String, Node> nonTerminals) {
-    this.firstSet = firstSet;
-    this.nonTerminals = nonTerminals;
+  public ReorderSamePrefix(PegGrammar grammar) {
+    this.grammar = grammar;
+    this.firstSet = grammar.getFirsts();
+    this.nonTerminals = grammar.getNonTerminals();
+    this.uniqueTokenTracker = new UniqueTokenTracker(grammar);
+    this.uniqueTokenTracker.analyzeGrammar();
   }
 
   @Override
@@ -54,6 +61,9 @@ public class ReorderSamePrefix implements Transformation {
           int prefixComparison = compareByPrefix(a, b);
           if (prefixComparison != 0) return prefixComparison;
 
+          int uniqueTokenComparison = compareByUniqueToken(a, b);
+          if (uniqueTokenComparison != 0) return uniqueTokenComparison;
+
           int specificityComparison = compareBySpecificity(a, b);
           if (specificityComparison != 0) return specificityComparison;
 
@@ -66,6 +76,16 @@ public class ReorderSamePrefix implements Transformation {
     }
   }
 
+  private int compareByUniqueToken(AlternativeInfo a, AlternativeInfo b) {
+    if (a.hasUniqueToken && !b.hasUniqueToken) {
+      return -1;
+    }
+    if (!a.hasUniqueToken && b.hasUniqueToken) {
+      return 1;
+    }
+    return 0;
+  }
+
   private int compareByPrefix(AlternativeInfo a, AlternativeInfo b) {
     List<Node> flatA = a.flattened;
     List<Node> flatB = b.flattened;
@@ -76,8 +96,8 @@ public class ReorderSamePrefix implements Transformation {
       boolean aIsPrefixOfB = sharedLen == flatA.size() && flatB.size() > flatA.size();
       boolean bIsPrefixOfA = sharedLen == flatB.size() && flatA.size() > flatB.size();
 
-      if (aIsPrefixOfB) return 1; // b before a
-      if (bIsPrefixOfA) return -1; // a before b
+      if (aIsPrefixOfB) return 1; // b (mais longo) antes de a
+      if (bIsPrefixOfA) return -1; // a (mais longo) antes de b
 
       return compareSpecificityAfterPrefix(flatA, flatB, sharedLen);
     }
@@ -160,7 +180,7 @@ public class ReorderSamePrefix implements Transformation {
       }
       case Charset csA -> {
         Charset csB = (Charset) b;
-        yield csA.equals(csB); // TODO: Implement proper Charset equality
+        yield csA.equals(csB); // Implement proper Charset equality
       }
       case Ident idA -> {
         Ident idB = (Ident) b;
@@ -175,12 +195,14 @@ public class ReorderSamePrefix implements Transformation {
     final List<Node> flattened;
     final Set<Node> firstSet;
     final int terminalCount;
+    final boolean hasUniqueToken;
 
     AlternativeInfo(Node node) {
       this.node = node;
       this.flattened = flattenSeqOrIdent(node);
       this.firstSet = getFirstSetForNode(node);
       this.terminalCount = countTerminals(flattened);
+      this.hasUniqueToken = uniqueTokenTracker.containsUniqueToken(node);
     }
   }
 
