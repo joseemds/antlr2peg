@@ -30,14 +30,15 @@ public class UniqueTokenTracker {
 
   public void printUniqueTokens() {
     System.out.println("=== Unique Tokens ===");
+    List<Node>  uniqueTokens = new ArrayList<>();
     for (Map.Entry<Node, TokenInfo> entry : tokenOccurrences.entrySet()) {
       Node token = entry.getKey();
       TokenInfo info = entry.getValue();
-
       if (info.isUnique()) {
-        System.out.printf("Token: %s %s \n", token, info);
+        uniqueTokens.add(token);
       }
     }
+    System.out.println("Unique tokens are: " + uniqueTokens);
   }
 
   public boolean isUnique(Node n) {
