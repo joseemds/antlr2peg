@@ -9,13 +9,34 @@ public class CompareParsers {
   public static void main(String[] args) throws Exception {
     List<String> failedFiles = new ArrayList<>();
     List<String> succeedFiles = new ArrayList<>();
-    if (args.length != 1) {
-      System.err.println("Usage: compareParser <GrammarName>");
+
+    if (args.length < 1) {
+      System.err.println("Usage: compareParser <GrammarName> [--rule <entryRule>] [--use-gen]");
       System.exit(1);
     }
 
     String grammar = args[0];
-    Path inputDir = Paths.get("inputs", grammar.toLowerCase());
+    String entryRule = "graph";
+    boolean useGenerated = false;
+
+    for (int i = 1; i < args.length; i++) {
+      switch (args[i]) {
+        case "--rule" -> {
+          if (i + 1 >= args.length) {
+            System.err.println("Missing value after --rule");
+            System.exit(1);
+          }
+          entryRule = args[++i];
+        }
+        case "--use-gen" -> useGenerated = true;
+        default -> {
+          System.err.println("Unknown option: " + args[i]);
+          System.exit(1);
+        }
+      }
+    }
+
+    Path inputDir = Paths.get("inputs", grammar.toLowerCase(), useGenerated ? "gen" : "");
     if (!Files.isDirectory(inputDir)) {
       System.err.println("No input directory for " + grammar);
       System.exit(1);
@@ -38,7 +59,7 @@ public class CompareParsers {
         System.out.println("\n-> Testing " + file.getFileName());
         String text = Files.readString(file);
 
-        boolean antlrOK = parseWithAntlr(lexerClass, parserClass, grammar, text);
+        boolean antlrOK = parseWithAntlr(lexerClass, parserClass, grammar, text, entryRule);
         boolean generatedOK = parseWithGenerated(luaParserPath, grammar, file);
 
         if (antlrOK == generatedOK) {
@@ -66,7 +87,11 @@ public class CompareParsers {
   }
 
   static boolean parseWithAntlr(
-      Class<?> lexerClass, Class<?> parserClass, String grammar, String text) {
+      Class<?> lexerClass,
+      Class<?> parserClass,
+      String grammar,
+      String text,
+      String antlrEntryRule) {
     try {
       CharStream input = CharStreams.fromString(text);
       Lexer lexer = (Lexer) lexerClass.getConstructor(CharStream.class).newInstance(input);
@@ -88,8 +113,7 @@ public class CompareParsers {
             }
           });
 
-      // TODO: make it grammar generic
-      var method = parserClass.getMethod("graph");
+      var method = parserClass.getMethod(antlrEntryRule);
       method.invoke(parser);
 
       return parser.getNumberOfSyntaxErrors() == 0;
