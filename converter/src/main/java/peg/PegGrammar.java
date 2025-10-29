@@ -167,7 +167,7 @@ public class PegGrammar {
     return result;
   }
 
-  private List<Node> firstOf(Node node) {
+  public List<Node> firstOf(Node node) {
     List<Node> result = new ArrayList<>();
     if (node instanceof Literal || node instanceof Charset || node instanceof Wildcard) {
       result.add(node);

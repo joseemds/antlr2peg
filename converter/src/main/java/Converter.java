@@ -6,10 +6,10 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import peg.GraphvizPrinter;
 import peg.PegGrammar;
+import peg.grammar.AmbiguousChoiceDetector;
 import peg.node.*;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
-import transformation.ReorderSamePrefix;
 
 public class Converter {
   private static void printHelp() {
@@ -29,12 +29,8 @@ public class Converter {
     var grammar = pegListener.getGrammar();
     grammar.computeNonTerminals();
     grammar.computeFirst();
-    grammar =
-        grammar
-            .transform(new FlattenGrammar())
-            .transform(new MoveEmpty())
-            // .transform(new LeftRefactor());
-            .transform(new ReorderSamePrefix(grammar.getFirsts(), grammar.getNonTerminals()));
+    grammar = grammar.transform(new FlattenGrammar()).transform(new MoveEmpty());
+    // .transform(new ReorderSamePrefix(grammar.getFirsts(), grammar.getNonTerminals()));
 
     return grammar;
   }
@@ -54,6 +50,8 @@ public class Converter {
     String input = Files.readString(inputFile);
     CharStream inputStream = CharStreams.fromString(input);
     PegGrammar grammar = convertToPegGrammar(inputStream);
+    AmbiguousChoiceDetector ambiguityDetector = new AmbiguousChoiceDetector(grammar);
+    ambiguityDetector.checkAmbiguity();
     GraphvizPrinter graphPrinter = new GraphvizPrinter();
     LpegBackend lpegBackend = new LpegBackend();
     Files.writeString(outputFile, lpegBackend.convert(grammar.getRules()));
