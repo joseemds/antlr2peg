@@ -1,3 +1,8 @@
 package peg.node;
 
-public record Wildcard() implements Node {}
+public record Wildcard() implements Node {
+  @Override
+  public final String toString() {
+    return "*";
+  }
+}
