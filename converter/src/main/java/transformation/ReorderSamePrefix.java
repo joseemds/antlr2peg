@@ -58,11 +58,11 @@ public class ReorderSamePrefix implements Transformation {
 
     altInfos.sort(
         (a, b) -> {
-          int prefixComparison = compareByPrefix(a, b);
-          if (prefixComparison != 0) return prefixComparison;
-
           int uniqueTokenComparison = compareByUniqueToken(a, b);
           if (uniqueTokenComparison != 0) return uniqueTokenComparison;
+
+          int prefixComparison = compareByPrefix(a, b);
+          if (prefixComparison != 0) return prefixComparison;
 
           int specificityComparison = compareBySpecificity(a, b);
           if (specificityComparison != 0) return specificityComparison;
