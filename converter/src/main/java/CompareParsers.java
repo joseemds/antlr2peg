@@ -23,15 +23,23 @@ public class CompareParsers {
 
     System.out.println("=== Comparing parsers for " + grammar + " ===");
 
-    try (var files = Files.list(inputDir)) {
-      List<Path> matched = files.filter(p -> Files.isRegularFile(p)).toList();
-      for (Path file : (Iterable<Path>) matched::iterator) {
-        System.out.println("\n→ Testing " + file.getFileName());
+    Class<?> lexerClass = Class.forName(grammar + "Lexer");
+    Class<?> parserClass = Class.forName(grammar + "Parser");
 
+    Path luaParserPath = compileToLua(grammar);
+    if (luaParserPath == null) {
+      System.err.println("Failed to generate Lua parser");
+      System.exit(1);
+    }
+
+    try (var files = Files.list(inputDir)) {
+      List<Path> matched = files.filter(Files::isRegularFile).toList();
+      for (Path file : matched) {
+        System.out.println("\n-> Testing " + file.getFileName());
         String text = Files.readString(file);
 
-        boolean antlrOK = parseWithAntlr(grammar, text);
-        boolean generatedOK = parseWithGenerated(grammar, file);
+        boolean antlrOK = parseWithAntlr(lexerClass, parserClass, grammar, text);
+        boolean generatedOK = parseWithGenerated(luaParserPath, grammar, file);
 
         if (antlrOK == generatedOK) {
           System.out.println("Match: both " + (antlrOK ? "accepted" : "rejected"));
@@ -44,26 +52,22 @@ public class CompareParsers {
 
       int totalTested = matched.size();
       System.out.println("\n\n===== Summary =====");
-      System.out.println("Number of files tested " + totalTested);
+      System.out.println("Number of files tested: " + totalTested);
       System.out.printf(
-          "Succeed %d (%%%.2f)\n",
+          "Succeed %d (%.2f%%)\n",
           succeedFiles.size(), (float) succeedFiles.size() / totalTested * 100);
       System.out.printf(
-          "Failed %d (%%%.2f)\n",
+          "Failed %d (%.2f%%)\n",
           failedFiles.size(), (float) failedFiles.size() / totalTested * 100);
-
-      System.out.println("Failed files: " + failedFiles);
+      if (!failedFiles.isEmpty()) {
+        System.out.println("Failed files: " + failedFiles);
+      }
     }
   }
 
-  static boolean parseWithAntlr(String grammar, String text) {
+  static boolean parseWithAntlr(
+      Class<?> lexerClass, Class<?> parserClass, String grammar, String text) {
     try {
-      String lexerName = grammar + "Lexer";
-      String parserName = grammar + "Parser";
-
-      Class<?> lexerClass = Class.forName(lexerName);
-      Class<?> parserClass = Class.forName(parserName);
-
       CharStream input = CharStreams.fromString(text);
       Lexer lexer = (Lexer) lexerClass.getConstructor(CharStream.class).newInstance(input);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -84,9 +88,10 @@ public class CompareParsers {
             }
           });
 
-      // TODO: make it generic for the grammars being tested
+      // TODO: make it grammar generic
       var method = parserClass.getMethod("graph");
       method.invoke(parser);
+
       return parser.getNumberOfSyntaxErrors() == 0;
     } catch (Exception e) {
       System.out.println("ANTLR parse failed: " + e.getMessage());
@@ -94,10 +99,12 @@ public class CompareParsers {
     }
   }
 
-  static boolean parseWithGenerated(String grammarName, Path inputFile) {
+  static boolean parseWithGenerated(Path luaParser, String grammarName, Path inputFile) {
     try {
-      Path luaParser = compileToLua(grammarName);
-      Process p = new ProcessBuilder("lua", luaParser.toFile().getAbsolutePath()).start();
+      Process p =
+          new ProcessBuilder("lua", luaParser.toFile().getAbsolutePath())
+              .redirectErrorStream(true)
+              .start();
       try (OutputStream os = p.getOutputStream()) {
         Files.copy(inputFile, os);
       }

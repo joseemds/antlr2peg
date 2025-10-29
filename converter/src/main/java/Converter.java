@@ -10,6 +10,7 @@ import peg.grammar.AmbiguousChoiceDetector;
 import peg.node.*;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
+import transformation.ReorderSamePrefix;
 
 public class Converter {
   private static void printHelp() {
@@ -29,8 +30,11 @@ public class Converter {
     var grammar = pegListener.getGrammar();
     grammar.computeNonTerminals();
     grammar.computeFirst();
-    grammar = grammar.transform(new FlattenGrammar()).transform(new MoveEmpty());
-    // .transform(new ReorderSamePrefix(grammar.getFirsts(), grammar.getNonTerminals()));
+    grammar =
+        grammar
+            .transform(new FlattenGrammar())
+            .transform(new MoveEmpty())
+            .transform(new ReorderSamePrefix(grammar.getFirsts(), grammar.getNonTerminals()));
 
     return grammar;
   }

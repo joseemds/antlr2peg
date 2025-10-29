@@ -10,8 +10,8 @@ public class LpegBackend {
   public String convert(List<Rule> rules) {
     return String.format(
         """
-		local lpeg = require "lpeg"
-		local re = require "re"
+		local lpeg = require "lpeglabel"
+		local re = require "relabel"
 		local P, S, V = lpeg.P, lpeg.S, lpeg.V
     local EMPTY = P''
     local neg = function (pat)
@@ -34,11 +34,12 @@ public class LpegBackend {
 		}
 
 		local parse = function (input)
-			local result = lpeg.match(grammar, input)
+			local result, label, errpos = lpeg.match(grammar, input)
 			if result then
 			  print("Parsed: ", result)
 			else
-			  print("LPEG Parsing failed")
+        local line, col = re.calcline(input, errpos)
+			  print("LPEG Parsing failed at " .. line .. ":" .. col)
 			  os.exit(1)
 			end
 			return lpeg.match(grammar, input)
