@@ -7,6 +7,8 @@ import org.antlr.v4.runtime.tree.*;
 public class CompareParsers {
 
   public static void main(String[] args) throws Exception {
+    List<String> failedFiles = new ArrayList<>();
+    List<String> succeedFiles = new ArrayList<>();
     if (args.length != 1) {
       System.err.println("Usage: compareParser <GrammarName>");
       System.exit(1);
@@ -33,10 +35,24 @@ public class CompareParsers {
 
         if (antlrOK == generatedOK) {
           System.out.println("Match: both " + (antlrOK ? "accepted" : "rejected"));
+          succeedFiles.add(file.getFileName().toString());
         } else {
           System.out.println("Mismatch: ANTLR=" + antlrOK + ", peg=" + generatedOK);
+          failedFiles.add(file.getFileName().toString());
         }
       }
+
+      int totalTested = matched.size();
+      System.out.println("\n\n===== Summary =====");
+      System.out.println("Number of files tested " + totalTested);
+      System.out.printf(
+          "Succeed %d (%%%.2f)\n",
+          succeedFiles.size(), (float) succeedFiles.size() / totalTested * 100);
+      System.out.printf(
+          "Failed %d (%%%.2f)\n",
+          failedFiles.size(), (float) failedFiles.size() / totalTested * 100);
+
+      System.out.println("Failed files: " + failedFiles);
     }
   }
 
