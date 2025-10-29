@@ -1,5 +1,6 @@
 package peg.grammar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +33,7 @@ public class UniqueTokenTracker {
   }
 
   private List<Node> extractLexicalTokens(Node n) {
-    List<Node> tokens = List.of();
+    List<Node> tokens = new ArrayList<>();
     switch (n) {
       case Ident i -> {
         Rule r = grammar.findRuleByName(i.name());

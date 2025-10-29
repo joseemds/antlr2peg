@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.tree.*;
 import peg.GraphvizPrinter;
 import peg.PegGrammar;
 import peg.grammar.AmbiguousChoiceDetector;
+import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
@@ -54,8 +55,13 @@ public class Converter {
     String input = Files.readString(inputFile);
     CharStream inputStream = CharStreams.fromString(input);
     PegGrammar grammar = convertToPegGrammar(inputStream);
+    //
+    // System.out.println(grammar.getRules());
+
     AmbiguousChoiceDetector ambiguityDetector = new AmbiguousChoiceDetector(grammar);
     ambiguityDetector.checkAmbiguity();
+    UniqueTokenTracker uniqueTokenTracker = new UniqueTokenTracker(grammar);
+    uniqueTokenTracker.analyzeGrammar();
     GraphvizPrinter graphPrinter = new GraphvizPrinter();
     LpegBackend lpegBackend = new LpegBackend();
     Files.writeString(outputFile, lpegBackend.convert(grammar.getRules()));

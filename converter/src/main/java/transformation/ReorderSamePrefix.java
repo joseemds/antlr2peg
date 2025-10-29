@@ -160,7 +160,7 @@ public class ReorderSamePrefix implements Transformation {
       }
       case Charset csA -> {
         Charset csB = (Charset) b;
-        yield csA.equals(csB); // Implement proper Charset equality
+        yield csA.equals(csB); // TODO: Implement proper Charset equality
       }
       case Ident idA -> {
         Ident idB = (Ident) b;

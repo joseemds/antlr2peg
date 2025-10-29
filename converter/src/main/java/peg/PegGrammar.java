@@ -320,8 +320,10 @@ public class PegGrammar {
   }
 
   public Rule findRuleByName(String name) {
+    if (name.equals("EOF"))
+      return new Rule("EOF", new EOF(), RuleKind.LEXING); // TODO: is this correct?
     for (Rule r : rules) {
-      if (r.name() == name) return r;
+      if (r.name().equals(name)) return r;
     }
     throw new Error("Rule with name " + name + "not found");
   }
