@@ -173,7 +173,6 @@ public class UniqueTokenTracker {
   }
 
   public void printUniquePaths() {
-    System.out.println("Unique Paths");
     List<String> uniques = new ArrayList<>();
     for (Map.Entry<String, Boolean> entry : uniquePaths.entrySet()) {
       String rule = entry.getKey();

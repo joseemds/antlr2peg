@@ -59,8 +59,6 @@ public class ReorderSamePrefix implements Transformation {
     altInfos.sort(
         (a, b) -> {
           int uniqueTokenComparison = compareByUniquePath(a, b);
-          System.out.printf(
-              "Comparing %s and %s, result %d\n", a.node, b.node, uniqueTokenComparison);
           return uniqueTokenComparison;
 
           // int prefixComparison = compareByPrefix(a, b);
