@@ -37,9 +37,16 @@ public class Converter {
     UniqueTokenTracker uniqueTokenTracker = new UniqueTokenTracker(grammar);
     uniqueTokenTracker.analyzeGrammar();
 
-    Node id_ = grammar.findRuleByName("id_").rhs();
-    Node edgeop = grammar.findRuleByName("edgeop").rhs();
     uniqueTokenTracker.printUniqueTokens();
+    uniqueTokenTracker.printUniquePaths();
+    System.out.println("node_stmt: " + uniqueTokenTracker.hasUniqueToken("node_stmt"));
+    System.out.println("node_stmt: " + uniqueTokenTracker.hasUniquePath("node_stmt"));
+
+    System.out.println("id_ " + uniqueTokenTracker.hasUniqueToken("id_"));
+    System.out.println("id_: " + uniqueTokenTracker.hasUniquePath("id_"));
+
+    System.out.println("port: " + uniqueTokenTracker.hasUniqueToken("port"));
+    System.out.println("port: " + uniqueTokenTracker.hasUniquePath("port"));
     grammar = grammar.transform(new ReorderSamePrefix(grammar));
 
     return grammar;

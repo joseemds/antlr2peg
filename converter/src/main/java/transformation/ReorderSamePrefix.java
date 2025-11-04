@@ -58,16 +58,18 @@ public class ReorderSamePrefix implements Transformation {
 
     altInfos.sort(
         (a, b) -> {
-          int uniqueTokenComparison = compareByUniqueToken(a, b);
-          if (uniqueTokenComparison != 0) return uniqueTokenComparison;
+          int uniqueTokenComparison = compareByUniquePath(a, b);
+          System.out.printf(
+              "Comparing %s and %s, result %d\n", a.node, b.node, uniqueTokenComparison);
+          return uniqueTokenComparison;
 
-          int prefixComparison = compareByPrefix(a, b);
-          if (prefixComparison != 0) return prefixComparison;
-
-          int specificityComparison = compareBySpecificity(a, b);
-          if (specificityComparison != 0) return specificityComparison;
-
-          return compareByFirstSetConflict(a, b);
+          // int prefixComparison = compareByPrefix(a, b);
+          // if (prefixComparison != 0) return prefixComparison;
+          //
+          // int specificityComparison = compareBySpecificity(a, b);
+          // if (specificityComparison != 0) return specificityComparison;
+          //
+          // return compareByFirstSetConflict(a, b);
         });
 
     alternatives.clear();
@@ -76,13 +78,21 @@ public class ReorderSamePrefix implements Transformation {
     }
   }
 
-  private int compareByUniqueToken(AlternativeInfo a, AlternativeInfo b) {
-    if (a.hasUniqueToken && !b.hasUniqueToken) {
-      return -1;
+  private int compareByUniquePath(AlternativeInfo a, AlternativeInfo b) {
+    if (a.node instanceof Ident aIdent && b.node instanceof Ident bIdent) {
+      boolean aUniquePath = uniqueTokenTracker.hasUniquePath(aIdent.name());
+      boolean bUniquePath = uniqueTokenTracker.hasUniquePath(bIdent.name());
+      if (aUniquePath && !bUniquePath) {
+        System.out.printf("Swaping %s and %s, %s is uniquePath\n", aIdent, bIdent, aIdent);
+        return -1;
+      }
+      if (!aUniquePath && bUniquePath) {
+
+        System.out.printf("Swaping %s and %s, %s is uniquePath\n", aIdent, bIdent, bIdent);
+        return 1;
+      }
     }
-    if (!a.hasUniqueToken && b.hasUniqueToken) {
-      return 1;
-    }
+
     return 0;
   }
 
@@ -195,14 +205,15 @@ public class ReorderSamePrefix implements Transformation {
     final List<Node> flattened;
     final Set<Node> firstSet;
     final int terminalCount;
-    final boolean hasUniqueToken;
+
+    // final boolean hasUniqueToken;
 
     AlternativeInfo(Node node) {
       this.node = node;
       this.flattened = flattenSeqOrIdent(node);
       this.firstSet = getFirstSetForNode(node);
       this.terminalCount = countTerminals(flattened);
-      this.hasUniqueToken = uniqueTokenTracker.containsUniqueToken(node);
+      // this.hasUniqueToken = uniqueTokenTracker.containsUniqueToken(node);
     }
   }
 
