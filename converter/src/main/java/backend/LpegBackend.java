@@ -76,7 +76,7 @@ public class LpegBackend {
       case Literal lit -> printLiteral(lit);
       case Empty e -> "EMPTY";
       case Not term -> "neg(" + printNode(term.node()) + ")";
-      case Wildcard w -> "P(1)";
+      case Wildcard w -> "P(1)"; // Fetch next token && make wildcard = !nextToken;
       case EOF e -> "EOF";
     };
   }
@@ -130,6 +130,17 @@ public class LpegBackend {
       }
       Node node = seq.nodes().get(i);
       String nodeStr = printNode(node);
+
+      if(node instanceof Wildcard && i+1 < seq.nodes().size()){
+        Node nextNode = seq.nodes().get(i+1);
+        nodeStr = "neg(" + printNode(nextNode) + ")";
+      }
+
+      if(node instanceof Term t && t.node() instanceof Wildcard && i+1 < seq.nodes().size()){
+        Node nextNode = seq.nodes().get(i+1);
+        String op = t.op().isPresent() ? printOperator(t.op().get()) : "";
+        nodeStr = "neg(" + printNode(nextNode) + ")" + op;
+      }
 
       if (node instanceof OrderedChoice && seq.nodes().size() > 1) {
         nodeStr = "(" + nodeStr + ")";
