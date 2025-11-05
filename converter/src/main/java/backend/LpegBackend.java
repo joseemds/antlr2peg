@@ -131,13 +131,13 @@ public class LpegBackend {
       Node node = seq.nodes().get(i);
       String nodeStr = printNode(node);
 
-      if(node instanceof Wildcard && i+1 < seq.nodes().size()){
-        Node nextNode = seq.nodes().get(i+1);
+      if (node instanceof Wildcard && i + 1 < seq.nodes().size()) {
+        Node nextNode = seq.nodes().get(i + 1);
         nodeStr = "neg(" + printNode(nextNode) + ")";
       }
 
-      if(node instanceof Term t && t.node() instanceof Wildcard && i+1 < seq.nodes().size()){
-        Node nextNode = seq.nodes().get(i+1);
+      if (node instanceof Term t && t.node() instanceof Wildcard && i + 1 < seq.nodes().size()) {
+        Node nextNode = seq.nodes().get(i + 1);
         String op = t.op().isPresent() ? printOperator(t.op().get()) : "";
         nodeStr = "neg(" + printNode(nextNode) + ")" + op;
       }

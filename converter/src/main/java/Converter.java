@@ -11,7 +11,7 @@ import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
-import transformation.ReorderSamePrefix;
+import transformation.ReorderByUniquePath;
 
 public class Converter {
   private static void printHelp() {
@@ -39,7 +39,7 @@ public class Converter {
 
     uniqueTokenTracker.printUniqueTokens();
     uniqueTokenTracker.printUniquePaths();
-    grammar = grammar.transform(new ReorderSamePrefix(grammar));
+    grammar = grammar.transform(new ReorderByUniquePath(grammar));
 
     return grammar;
   }
