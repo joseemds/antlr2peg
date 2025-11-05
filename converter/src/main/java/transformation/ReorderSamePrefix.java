@@ -1,5 +1,4 @@
 package transformation;
-
 import java.util.*;
 import peg.PegGrammar;
 import peg.grammar.UniqueTokenTracker;
@@ -58,16 +57,14 @@ public class ReorderSamePrefix implements Transformation {
 
     altInfos.sort(
         (a, b) -> {
-          int uniqueTokenComparison = compareByUniquePath(a, b);
-          return uniqueTokenComparison;
 
-          // int prefixComparison = compareByPrefix(a, b);
-          // if (prefixComparison != 0) return prefixComparison;
-          //
-          // int specificityComparison = compareBySpecificity(a, b);
-          // if (specificityComparison != 0) return specificityComparison;
-          //
-          // return compareByFirstSetConflict(a, b);
+          int prefixComparison = compareByPrefix(a, b);
+          if (prefixComparison != 0) return prefixComparison;
+
+          int specificityComparison = compareBySpecificity(a, b);
+          if (specificityComparison != 0) return specificityComparison;
+
+          return compareByFirstSetConflict(a, b);
         });
 
     alternatives.clear();

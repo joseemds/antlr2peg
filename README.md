@@ -24,3 +24,15 @@ luarocks install lpeglabel
 
 To see a list of useful commands, run `make help`
 
+
+To run a parser benchmark run (inside ./converter/):
+
+```bash
+./gradlew compareParser --args="Dot --use-gen"
+```
+
+To generate a parser run (inside ./converter/):
+
+```bash
+ ./gradlew run --args="-i src/main/antlr/Dot.g4 -o dot.lua"
+```

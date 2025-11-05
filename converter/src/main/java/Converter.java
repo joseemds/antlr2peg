@@ -12,6 +12,7 @@ import peg.node.*;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
 import transformation.ReorderByUniquePath;
+import transformation.ReorderSamePrefix;
 
 public class Converter {
   private static void printHelp() {
@@ -40,6 +41,7 @@ public class Converter {
     uniqueTokenTracker.printUniqueTokens();
     uniqueTokenTracker.printUniquePaths();
     grammar = grammar.transform(new ReorderByUniquePath(grammar));
+    // grammar = grammar.transform(new ReorderSamePrefix(grammar));
 
     return grammar;
   }
