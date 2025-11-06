@@ -226,7 +226,6 @@ public class UniqueTokenTracker {
       case Ident i -> {
         if (visited.contains(i.name())) break;
         visited.add(i.name());
-
         Rule r = grammar.findRuleByName(i.name());
         if (r == null) break;
 

@@ -172,10 +172,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   @Override
   public void exitCharacterRange(ANTLRv4Parser.CharacterRangeContext ctx) {
     StringBuilder buf = new StringBuilder();
-    buf.append(ctx.STRING_LITERAL(0).getText());
-    buf.append(ctx.RANGE().getText());
-    buf.append(ctx.STRING_LITERAL(1).getText());
-    var ident = grammar.mkIdent(buf.toString());
+    buf.append(ctx.STRING_LITERAL(0).getText().charAt(1));
+    buf.append("-");
+    buf.append(ctx.STRING_LITERAL(1).getText().charAt(1));
+    var ident = grammar.mkCharset(" [" + buf.toString() + "] ");
     properties.put(ctx, ident);
   }
 

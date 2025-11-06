@@ -6,6 +6,7 @@ import peg.node.Node;
 import utils.Utils;
 
 public class LpegBackend {
+  private RuleKind currentRuleKind;
 
   public String convert(List<Rule> rules) {
     return String.format(
@@ -83,11 +84,13 @@ public class LpegBackend {
 
   private String printRule(Rule rule) {
     String ws = rule.kind() == RuleKind.LEXING ? " * V\"WS\"^0" : "";
+    this.currentRuleKind = rule.kind();
     return rule.name() + " = " + printNode(rule.rhs()) + ws;
   }
 
   private String printLiteral(Literal lit) {
-    return "tk(" + lit.content() + ")";
+    String fn = this.currentRuleKind == RuleKind.PARSING ? "tk" : "P";
+    return fn + "(" + lit.content() + ")";
   }
 
   private String printCharset(Charset c) {
