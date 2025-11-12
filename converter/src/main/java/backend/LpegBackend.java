@@ -1,6 +1,7 @@
 package backend;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import peg.node.*;
 import peg.node.Node;
 import utils.Utils;
@@ -32,6 +33,7 @@ public class LpegBackend {
 			%s
 			EOF = EOF,
       EMPTY = EMPTY,
+      %s
 		}
 
 		local parse = function (input)
@@ -49,7 +51,7 @@ public class LpegBackend {
 	 local input = io.read("*a")
 	 print(parse(input))
 		""",
-        getFirstRule(rules), printRules(rules));
+        getFirstRule(rules), printRules(rules), getKeywords(rules));
   }
   ;
 
@@ -176,5 +178,17 @@ public class LpegBackend {
       sb.append(nodeStr);
     }
     return sb.toString();
+  }
+
+  public String getKeywords(List<Rule> rules) {
+    String keywords = rules.stream()
+        .filter(r -> r.kind() == RuleKind.LEXING)
+        .filter(r -> r.rhs() instanceof Literal)
+        .map(r -> "P" + ((Literal) r.rhs()).toString())
+        .collect(Collectors.joining(" + "));
+      
+
+      return keywords.isBlank() ? "" : "KEYWORDS = " + keywords + ",";
+
   }
 }
