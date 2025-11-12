@@ -2,6 +2,7 @@ package backend;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import peg.node.*;
 import peg.node.Node;
 import utils.Utils;
@@ -39,11 +40,11 @@ public class LpegBackend {
 		local parse = function (input)
 			local result, label, errpos = lpeg.match(grammar, input)
 			if result then
-			  print("Parsed: ", result)
+				print("Parsed: ", result)
 			else
         local line, col = re.calcline(input, errpos)
-			  print("LPEG Parsing failed at " .. line .. ":" .. col)
-			  os.exit(1)
+				print("LPEG Parsing failed at " .. line .. ":" .. col)
+				os.exit(1)
 			end
 			return lpeg.match(grammar, input)
 		end
@@ -183,8 +184,16 @@ public class LpegBackend {
   public String getKeywords(List<Rule> rules) {
     String keywords = rules.stream()
         .filter(r -> r.kind() == RuleKind.LEXING)
-        .filter(r -> r.rhs() instanceof Literal)
-        .map(r -> "P" + ((Literal) r.rhs()).toString())
+        .filter(r -> r.rhs() instanceof Literal || r.rhs() instanceof Sequence)
+        .flatMap(
+            r ->
+                switch (r.rhs()) {
+                  case OrderedChoice oc -> oc.nodes().stream()
+                      .filter(n -> n instanceof Literal)
+                      .map(n -> "P" + ((Literal) n).toString());
+                  case Literal l -> Stream.of("P" + l.toString());
+                  default -> Stream.empty();
+                })
         .collect(Collectors.joining(" + "));
       
 
