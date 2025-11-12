@@ -5,10 +5,12 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import peg.PegGrammar;
 import peg.PegPrinter;
+import peg.grammar.GrammarOptions;
 import peg.node.*;
 
 public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
+  private final GrammarOptions grammarOptions = new GrammarOptions();
   private final PegGrammar grammar = new PegGrammar();
   private ParseTreeProperty<Node> properties = new ParseTreeProperty<>();
 
@@ -33,6 +35,17 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   public PegGrammar getGrammar() {
     return this.grammar;
+  }
+
+  public GrammarOptions getGrammarOptions() {
+    return this.grammarOptions;
+  }
+
+  @Override
+  public void exitOption(ANTLRv4Parser.OptionContext ctx) {
+    String optionIdentifier = ctx.identifier().getText();
+    String optionValue = ctx.optionValue().getText();
+    grammarOptions.setOption(optionIdentifier, optionValue);
   }
 
   @Override

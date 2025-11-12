@@ -3,11 +3,18 @@ package backend;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import peg.PegGrammar;
 import peg.node.*;
 import peg.node.Node;
 import utils.Utils;
 
 public class LpegBackend {
+  private PegGrammar grammar;
+
+  public LpegBackend(PegGrammar grammar) {
+    this.grammar = grammar;
+  }
+
   private RuleKind currentRuleKind;
 
   public String convert(List<Rule> rules) {
@@ -27,6 +34,21 @@ public class LpegBackend {
 			return P(s) * V"WS"^0
 		end
 		local EOF = P(-1)
+
+    local ci =  function (s)
+      local pat = P""
+      for i = 1, #s do
+        local ch = s:sub(i, i)
+        local lower = ch:lower()
+        local upper = ch:upper()
+        if lower == upper then
+         pat = pat * P(ch)
+        else
+         pat = pat * S(lower .. upper)
+        end
+      end
+      return pat
+    end
 
 		local grammar = {
 			\"start_\",
@@ -92,8 +114,13 @@ public class LpegBackend {
   }
 
   private String printLiteral(Literal lit) {
+    String content = lit.content();
+    if (grammar.getOptions().caseInsensitive) {
+      content = "ci(" + lit.content() + ")";
+    }
+    ;
     String fn = this.currentRuleKind == RuleKind.PARSING ? "tk" : "P";
-    return fn + "(" + lit.content() + ")";
+    return fn + "(" + content + ")";
   }
 
   private String printCharset(Charset c) {
@@ -182,22 +209,21 @@ public class LpegBackend {
   }
 
   public String getKeywords(List<Rule> rules) {
-    String keywords = rules.stream()
-        .filter(r -> r.kind() == RuleKind.LEXING)
-        .filter(r -> r.rhs() instanceof Literal || r.rhs() instanceof Sequence)
-        .flatMap(
-            r ->
-                switch (r.rhs()) {
-                  case OrderedChoice oc -> oc.nodes().stream()
-                      .filter(n -> n instanceof Literal)
-                      .map(n -> "P" + ((Literal) n).toString());
-                  case Literal l -> Stream.of("P" + l.toString());
-                  default -> Stream.empty();
-                })
-        .collect(Collectors.joining(" + "));
-      
+    String keywords =
+        rules.stream()
+            .filter(r -> r.kind() == RuleKind.LEXING)
+            .filter(r -> r.rhs() instanceof Literal || r.rhs() instanceof Sequence)
+            .flatMap(
+                r ->
+                    switch (r.rhs()) {
+                      case OrderedChoice oc -> oc.nodes().stream()
+                          .filter(n -> n instanceof Literal)
+                          .map(n -> "P" + ((Literal) n).toString());
+                      case Literal l -> Stream.of("P" + l.toString());
+                      default -> Stream.empty();
+                    })
+            .collect(Collectors.joining(" + "));
 
-      return keywords.isBlank() ? "" : "KEYWORDS = " + keywords + ",";
-
+    return keywords.isBlank() ? "" : "KEYWORDS = " + keywords + ",";
   }
 }

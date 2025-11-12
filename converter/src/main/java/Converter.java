@@ -28,7 +28,9 @@ public class Converter {
     ParseTree ast = parser.grammarSpec(); // grammarSpec = start rule
     AntlrToPegListener pegListener = new AntlrToPegListener();
     walker.walk(pegListener, ast);
+    var grammarOptions = pegListener.getGrammarOptions();
     var grammar = pegListener.getGrammar();
+    grammar.setGrammarOptions(grammarOptions);
     grammar.computeNonTerminals();
     grammar.computeFirst();
 
@@ -46,7 +48,7 @@ public class Converter {
   }
 
   public static String convertToLpeg(PegGrammar pegGrammar) {
-    LpegBackend lpegBackend = new LpegBackend();
+    LpegBackend lpegBackend = new LpegBackend(pegGrammar);
     return lpegBackend.convert(pegGrammar.getRules());
   }
 
@@ -66,7 +68,7 @@ public class Converter {
     AmbiguousChoiceDetector ambiguityDetector = new AmbiguousChoiceDetector(grammar);
     ambiguityDetector.checkAmbiguity();
     GraphvizPrinter graphPrinter = new GraphvizPrinter();
-    LpegBackend lpegBackend = new LpegBackend();
+    LpegBackend lpegBackend = new LpegBackend(grammar);
     Files.writeString(outputFile, lpegBackend.convert(grammar.getRules()));
     Files.writeString(Path.of("ast.dot"), graphPrinter.print(grammar.getRules()));
   }

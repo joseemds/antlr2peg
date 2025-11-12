@@ -7,14 +7,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import peg.grammar.GrammarOptions;
 import peg.node.*;
 import transformation.Transformation;
 
 public class PegGrammar {
+  private GrammarOptions grammarOptions;
   private List<Rule> rules = new ArrayList<>();
   private Map<String, Set<Node>> firstSets = new HashMap<>();
   private Map<String, Set<Node>> followSets = new HashMap<>();
   public Map<String, Node> nonTerminals = new HashMap<>();
+
+  public PegGrammar() {
+    this.grammarOptions = new GrammarOptions();
+  }
+
+  public PegGrammar(GrammarOptions grammarOptions) {
+    this.grammarOptions = grammarOptions;
+  }
+
+  public void setGrammarOptions(GrammarOptions grammarOptions) {
+    this.grammarOptions = grammarOptions;
+  }
+
+  public GrammarOptions getOptions() {
+    return this.grammarOptions;
+  }
 
   public Term mkTerm(Node node, Optional<Operator> op) {
     return new Term(node, op);
