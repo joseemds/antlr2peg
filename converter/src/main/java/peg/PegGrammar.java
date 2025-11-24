@@ -148,8 +148,6 @@ public class PegGrammar {
     } while (changed);
   }
 
-  // TODO: possibly empty nodes
-
   public List<Node> followsOf(Node node) {
     List<Node> result = new ArrayList<>();
     switch (node) {
@@ -187,48 +185,52 @@ public class PegGrammar {
 
   public List<Node> firstOf(Node node) {
     List<Node> result = new ArrayList<>();
-    if (node instanceof Literal || node instanceof Charset || node instanceof Wildcard) {
-      result.add(node);
-    } else if (node instanceof Empty) {
-      result.add(node); // ?
-    } else if (node instanceof Ident) {
-      Ident ident = (Ident) node;
-      result.addAll(firstSets.getOrDefault(ident.name(), Set.of()));
-    } else if (node instanceof Sequence) {
-      Sequence seq = (Sequence) node;
-      for (Node part : seq.nodes()) {
-        List<Node> partFirst = firstOf(part);
-        result.addAll(partFirst.stream().filter(x -> !(x instanceof Empty)).toList());
-        if (!isPossiblyEmpty(part)) break;
-      }
-      if (seq.nodes().stream().allMatch(this::isPossiblyEmpty)) {
-        result.add(new Empty());
-      }
-    } else if (node instanceof OrderedChoice) {
-      OrderedChoice oc = (OrderedChoice) node;
-      for (Node option : oc.nodes()) {
-        result.addAll(firstOf(option));
-      }
-    } else if (node instanceof Term) {
 
-      Term t = (Term) node;
-      if (t.op().isPresent()) {
-        switch (t.op().get()) {
-          case Operator.OPTIONAL:
-          case Operator.STAR:
-            result.addAll(firstOf(t.node()));
-            result.add(new Empty());
-            break;
-          case Operator.PLUS:
-            result.addAll(firstOf(t.node()));
-            break;
-          default:
-            result.addAll(firstOf(t.node()));
+    switch (node) {
+      case Literal lit -> result.add(lit);
+      case Charset cs -> result.add(cs);
+      case Wildcard w -> result.add(w);
+      case Empty e -> result.add(e);
+      case EOF eof -> result.add(eof);
+      case Not n -> result.add(new Empty());
+      case Ident ident -> {
+        result.addAll(firstSets.getOrDefault(ident.name(), Set.of()));
+      }
+
+      case Sequence seq -> {
+        for (Node part : seq.nodes()) {
+          List<Node> partFirst = firstOf(part);
+          result.addAll(partFirst.stream().filter(x -> !(x instanceof Empty)).toList());
+          if (!isPossiblyEmpty(part)) break;
         }
-      } else {
-        result.addAll(firstOf(t.node()));
+        if (seq.nodes().stream().allMatch(this::isPossiblyEmpty)) {
+          result.add(new Empty());
+        }
+      }
+
+      case OrderedChoice oc -> {
+        for (Node option : oc.nodes()) {
+          result.addAll(firstOf(option));
+        }
+      }
+
+      case Term t -> {
+        if (t.op().isPresent()) {
+          switch (t.op().get()) {
+            case OPTIONAL, STAR -> {
+              result.addAll(firstOf(t.node()));
+              result.add(new Empty());
+            }
+            case PLUS -> {
+              result.addAll(firstOf(t.node()));
+            }
+          }
+        } else {
+          result.addAll(firstOf(t.node()));
+        }
       }
     }
+
     return result;
   }
 
@@ -314,7 +316,8 @@ public class PegGrammar {
   private boolean isPossiblyEmpty(Node n) {
     return switch (n) {
       case Term t -> {
-        if (t.op().isPresent() && t.op().get() == Operator.OPTIONAL) {
+        if (t.op().isPresent()
+            && (t.op().get() == Operator.OPTIONAL || t.op().get() == Operator.STAR)) {
           yield true;
         }
         yield isPossiblyEmpty(t.node());
