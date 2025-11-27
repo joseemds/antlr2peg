@@ -2,6 +2,8 @@ import backend.LpegBackend;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map.Entry;
+import java.util.Set;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import peg.GraphvizPrinter;
@@ -33,6 +35,14 @@ public class Converter {
     grammar.setGrammarOptions(grammarOptions);
     grammar.computeNonTerminals();
     grammar.computeFirst();
+    grammar.computeFollowSets();
+
+    // for(var entry : grammar.getFirsts().entrySet()){
+    //     Ident nonterm = new Ident(entry.getKey());
+    //     if(entry.getValue().contains(nonterm)) {
+    //      throw new Error("Grammar is left recursive and is not supported");
+    //     }
+    //  }
 
     grammar = grammar.transform(new FlattenGrammar());
     grammar = grammar.transform(new MoveEmpty());
@@ -42,7 +52,22 @@ public class Converter {
     uniqueTokenTracker.printUniqueTokens();
     uniqueTokenTracker.printUniquePaths();
     grammar = grammar.transform(new ReorderByUniquePath(grammar));
-    // grammar = grammar.transform(new ReorderSamePrefix(grammar));
+
+    for (Entry<String, Set<Node>> e : grammar.getFollows().entrySet()) {
+      System.out.printf("FOLLOWS(%s) = %s\n", e.getKey(), e.getValue().toString());
+    }
+
+    for (Entry<String, Set<Node>> e : grammar.getFirsts().entrySet()) {
+      System.out.printf("FIRST(%s) = %s\n", e.getKey(), e.getValue().toString());
+    }
+
+    System.out.println("===========");
+    for (Entry<String, Set<Node>> e : grammar.getFirsts().entrySet()) {
+      var follow = grammar.getFollows().get(e.getKey());
+      follow.retainAll(e.getValue());
+      System.out.printf(
+          "FIRST(%s) ^ FOLLOWS(%s) = %s\n", e.getKey(), e.getKey(), e.getValue(), follow);
+    }
 
     return grammar;
   }

@@ -46,6 +46,10 @@ public class PegGrammar {
     return this.firstSets;
   }
 
+  public Map<String, Set<Node>> getFollows() {
+    return this.followSets;
+  }
+
   public Map<String, Node> getNonTerminals() {
     return this.nonTerminals;
   }
@@ -128,6 +132,7 @@ public class PegGrammar {
     do {
       changed = false;
       for (Rule rule : rules) {
+        if (!isSyntacticRule(rule)) continue;
         Set<Node> firstSet = firstSets.computeIfAbsent(rule.name(), k -> new HashSet<>());
         List<Node> rhsFirst = firstOf(rule.rhs());
         if (firstSet.addAll(rhsFirst)) {
@@ -148,7 +153,12 @@ public class PegGrammar {
       case EOF eof -> result.add(eof);
       case Not n -> result.add(new Empty());
       case Ident ident -> {
-        result.addAll(firstSets.getOrDefault(ident.name(), Set.of()));
+        Rule r = findRuleByName(ident.name());
+        if (!isSyntacticRule(r)) {
+          result.add(ident);
+        } else {
+          result.addAll(firstSets.getOrDefault(ident.name(), Set.of()));
+        }
       }
 
       case Sequence seq -> {
@@ -190,6 +200,7 @@ public class PegGrammar {
 
   public void computeFollowSets() {
     for (Rule r : rules) {
+      if (!isSyntacticRule(r)) continue;
       followSets.putIfAbsent(r.name(), new HashSet<>());
     }
 
@@ -203,6 +214,7 @@ public class PegGrammar {
       changed = false;
 
       for (Rule rule : rules) {
+        if (!isSyntacticRule(rule)) continue;
         String ruleName = rule.name();
         Node rhs = rule.rhs();
 
@@ -217,8 +229,12 @@ public class PegGrammar {
 
     switch (node) {
       case Ident id -> {
+        Rule r = findRuleByName(id.name());
+        if (!isSyntacticRule(r)) {
+          break;
+        }
         Set<Node> idFollows = followSets.computeIfAbsent(id.name(), k -> new HashSet<>());
-        changed = idFollows.addAll(followOfParent);
+        changed |= idFollows.addAll(followOfParent);
       }
       case Sequence seq -> {
         List<Node> nodes = seq.nodes();
