@@ -266,9 +266,6 @@ public class PegGrammar {
           changed |= propagateFollow(alternative, followOfParent);
         }
       }
-      case Not not -> {
-        // changed |= propagateFollow(not.node(), new HashSet<>()); TODO : Ignore or propagate?
-      }
       case Term t -> {
         Set<Node> innerFollow = new HashSet<>(followOfParent);
         if (t.op().isPresent()) {
@@ -283,6 +280,7 @@ public class PegGrammar {
         changed |= propagateFollow(t.node(), innerFollow);
       }
         // NO-OPs
+      case Not not -> {}
       case Literal lit -> {}
       case Charset cs -> {}
       case Empty e -> {}

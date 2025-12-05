@@ -1,6 +1,11 @@
 package backend;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import peg.PegGrammar;
@@ -10,9 +15,13 @@ import utils.Utils;
 
 public class LpegBackend {
   private PegGrammar grammar;
+  private final Map<String, Set<Node>> firstSets;
+  private final Map<String, Set<Node>> followSets;
 
   public LpegBackend(PegGrammar grammar) {
     this.grammar = grammar;
+    this.firstSets = grammar.getFirsts();
+    this.followSets = grammar.getFirsts();
   }
 
   private RuleKind currentRuleKind;
@@ -52,7 +61,7 @@ public class LpegBackend {
 
 		local grammar = {
 			\"start_\",
-      start_ = V"WS"^0 * V\"%s\" * V"EOF",
+      start_ = V"WS"^0 * V\"%s\",
 			%s
 			EOF = EOF,
       EMPTY = EMPTY,
@@ -110,7 +119,23 @@ public class LpegBackend {
   private String printRule(Rule rule) {
     String ws = rule.kind() == RuleKind.LEXING ? " * V\"WS\"^0" : "";
     this.currentRuleKind = rule.kind();
-    return rule.name() + " = " + printNode(rule.rhs()) + ws;
+    return rule.name() + " = " + printNode(rule.rhs()) + fixAmbiguity(rule) + ws;
+  }
+
+  private String fixAmbiguity(Rule r) {
+    if (!grammar.isSyntacticRule(r)) return "";
+    var ruleFirst = firstSets.get(r.name());
+    var ruleFollows = followSets.get(r.name());
+    boolean intersect = !Collections.disjoint(ruleFirst, ruleFollows);
+    if (intersect) {
+      Set<Node> intersection = new HashSet<>(ruleFirst);
+      intersection.retainAll(ruleFollows);
+      List<Node> intersectionTokens = new ArrayList<>(intersection);
+      var oc = grammar.mkOrderedChoice(intersectionTokens);
+      var result = printNode(oc);
+      return " + #(" + result + ")";
+    }
+    return "";
   }
 
   private String printLiteral(Literal lit) {

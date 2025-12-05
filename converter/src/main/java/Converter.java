@@ -2,8 +2,6 @@ import backend.LpegBackend;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map.Entry;
-import java.util.Set;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import peg.GraphvizPrinter;
@@ -53,21 +51,21 @@ public class Converter {
     uniqueTokenTracker.printUniquePaths();
     grammar = grammar.transform(new ReorderByUniquePath(grammar));
 
-    for (Entry<String, Set<Node>> e : grammar.getFollows().entrySet()) {
-      System.out.printf("FOLLOWS(%s) = %s\n", e.getKey(), e.getValue().toString());
-    }
-
-    for (Entry<String, Set<Node>> e : grammar.getFirsts().entrySet()) {
-      System.out.printf("FIRST(%s) = %s\n", e.getKey(), e.getValue().toString());
-    }
-
-    System.out.println("===========");
-    for (Entry<String, Set<Node>> e : grammar.getFirsts().entrySet()) {
-      var follow = grammar.getFollows().get(e.getKey());
-      follow.retainAll(e.getValue());
-      System.out.printf(
-          "FIRST(%s) ^ FOLLOWS(%s) = %s\n", e.getKey(), e.getKey(), e.getValue(), follow);
-    }
+    // for (Entry<String, Set<Node>> e : grammar.getFollows().entrySet()) {
+    //   System.out.printf("FOLLOWS(%s) = %s\n", e.getKey(), e.getValue().toString());
+    // }
+    //
+    // for (Entry<String, Set<Node>> e : grammar.getFirsts().entrySet()) {
+    //   System.out.printf("FIRST(%s) = %s\n", e.getKey(), e.getValue().toString());
+    // }
+    //
+    // System.out.println("===========");
+    // for (Entry<String, Set<Node>> e : grammar.getFirsts().entrySet()) {
+    //   var follow = grammar.getFollows().get(e.getKey());
+    //   follow.retainAll(e.getValue());
+    //   System.out.printf(
+    //       "FIRST(%s) ^ FOLLOWS(%s) = %s\n", e.getKey(), e.getKey(), e.getValue(), follow);
+    // }
 
     return grammar;
   }
