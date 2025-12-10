@@ -44,6 +44,7 @@ public class MoveEmpty implements Transformation {
       case Empty e -> e;
       case Wildcard w -> w;
       case EOF e -> e;
+      case And and -> and;
     };
   }
 
@@ -64,6 +65,7 @@ public class MoveEmpty implements Transformation {
       case Not not -> true;
       case Empty e -> true;
       case Wildcard w -> false;
+      case And and -> true;
       case EOF e -> true;
     };
   }

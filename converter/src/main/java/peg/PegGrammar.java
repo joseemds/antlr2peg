@@ -152,6 +152,7 @@ public class PegGrammar {
       case Empty e -> result.add(e);
       case EOF eof -> result.add(eof);
       case Not n -> result.add(new Empty());
+      case And and -> {}
       case Ident ident -> {
         Rule r = findRuleByName(ident.name());
         if (!isSyntacticRule(r)) {
@@ -281,6 +282,7 @@ public class PegGrammar {
       }
         // NO-OPs
       case Not not -> {}
+      case And and -> {}
       case Literal lit -> {}
       case Charset cs -> {}
       case Empty e -> {}
@@ -306,6 +308,7 @@ public class PegGrammar {
       case Literal lit -> lit.content().isEmpty();
       case Charset charset -> false;
       case Not not -> true;
+      case And and -> true;
       case Empty e -> true;
       case Wildcard w -> false;
       case EOF e -> false;

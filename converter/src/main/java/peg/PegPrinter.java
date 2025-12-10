@@ -22,6 +22,7 @@ public class PegPrinter {
       case OrderedChoice choice -> printOrderedChoice(choice);
       case Charset charset -> charset.content();
       case Not term -> "~" + printNode(term);
+      case And and -> "&" + printNode(and);
       case Empty e -> "ε";
       case Wildcard w -> "*";
       case EOF e -> "$";

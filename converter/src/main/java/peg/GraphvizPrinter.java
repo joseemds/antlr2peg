@@ -67,6 +67,11 @@ public class GraphvizPrinter {
             dotBuilder.append(String.format("  %s -> %s;\n", nodeId, childId));
             yield "Not ~";
           }
+          case And and -> {
+            String childId = printNode(and.node(), dotBuilder, counter);
+            dotBuilder.append(String.format("  %s -> %s;\n", nodeId, childId));
+            yield "And &";
+          }
           case Literal lit -> "Literal: " + sanitize(lit.content());
           case Ident ident -> "Ident: " + sanitize(ident.name());
           case Charset charset -> "Charset: " + sanitize(charset.content());

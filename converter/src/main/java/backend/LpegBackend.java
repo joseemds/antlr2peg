@@ -111,6 +111,7 @@ public class LpegBackend {
       case Literal lit -> printLiteral(lit);
       case Empty e -> "EMPTY";
       case Not term -> "neg(" + printNode(term.node()) + ")";
+      case And term -> "#(" + printNode(term.node()) + ")";
       case Wildcard w -> "P(1)"; // Fetch next token && make wildcard = !nextToken;
       case EOF e -> "EOF";
     };
