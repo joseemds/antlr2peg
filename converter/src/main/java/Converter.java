@@ -9,6 +9,7 @@ import peg.PegGrammar;
 import peg.grammar.AmbiguousChoiceDetector;
 import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
+import transformation.FixRepetitions;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
 import transformation.ReorderByUniquePath;
@@ -50,6 +51,7 @@ public class Converter {
     uniqueTokenTracker.printUniqueTokens();
     uniqueTokenTracker.printUniquePaths();
     grammar = grammar.transform(new ReorderByUniquePath(grammar));
+    grammar = grammar.transform(new FixRepetitions(grammar));
 
     // for (Entry<String, Set<Node>> e : grammar.getFollows().entrySet()) {
     //   System.out.printf("FOLLOWS(%s) = %s\n", e.getKey(), e.getValue().toString());

@@ -7,7 +7,7 @@ public record OrderedChoice(List<Node> nodes) implements Node {
   public final java.lang.String toString() {
     String out = nodes.get(0).toString();
     for (int i = 1; i < nodes.size(); i++) {
-      out += "/ " + nodes.get(i).toString();
+      out += " / " + nodes.get(i).toString();
     }
 
     return out;

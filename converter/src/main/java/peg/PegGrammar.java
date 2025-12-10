@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import peg.grammar.GrammarOptions;
 import peg.node.*;
 import transformation.Transformation;
@@ -123,7 +125,7 @@ public class PegGrammar {
     this.rules =
         this.rules.stream()
             .map(rule -> new Rule(rule.name(), transformation.apply(rule.rhs()), rule.kind()))
-            .toList();
+            .collect(Collectors.toCollection(ArrayList::new));
     return this;
   }
 
@@ -198,6 +200,74 @@ public class PegGrammar {
 
     return result;
   }
+ 
+
+public Set<Node> localFollowOf(Node target, Node parent) {
+    Set<Node> result = new HashSet<>();
+
+    switch (parent) {
+        case Sequence seq -> {
+            List<Node> nodes = seq.nodes();
+            int i = nodes.indexOf(target);
+
+            if (i >= 0) {
+                for (int j = i + 1; j < nodes.size(); j++) {
+                    Node next = nodes.get(j);
+                    List<Node> nextFirst = firstOf(next);
+
+                    nextFirst.stream()
+                             .filter(n -> !(n instanceof Empty))
+                             .forEach(result::add);
+
+                    if (!isPossiblyEmpty(next)) {
+                        return result; 
+                    }
+                }
+
+                result.add(new Empty());
+                return result;
+            }
+
+            for (Node child : nodes) {
+                result.addAll(localFollowOf(target, child));
+            }
+        }
+
+        case OrderedChoice oc -> {
+            for (Node alt : oc.nodes()) {
+                result.addAll(localFollowOf(target, alt));
+            }
+        }
+
+        case Term t -> {
+            if (t.node() == target) {
+                if (t.op().isPresent()) {
+                    switch (t.op().get()) {
+                        case STAR, PLUS -> {
+                            var first = firstOf(target);
+                            first.stream()
+                                 .filter(n -> !(n instanceof Empty))
+                                 .forEach(result::add);
+                            
+                            result.add(new Empty()); 
+                        }
+                        case OPTIONAL -> {
+                            result.add(new Empty());
+                        }
+                    }
+                } else {
+                     result.add(new Empty());
+                }
+                return result;
+            }
+
+            result.addAll(localFollowOf(target, t.node()));
+        }
+
+        default -> {}
+    }
+    return result;
+}
 
   public void computeFollowSets() {
     for (Rule r : rules) {
