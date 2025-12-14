@@ -220,9 +220,8 @@ public class ReorderSamePrefix implements Transformation {
     return switch (node) {
       case Literal lit -> Set.of(lit);
       case Ident id -> firstSet.getOrDefault(id.name(), Set.of());
-      case Sequence seq -> seq.nodes().isEmpty()
-          ? Set.of()
-          : getFirstSetForNode(seq.nodes().get(0));
+      case Sequence seq ->
+          seq.nodes().isEmpty() ? Set.of() : getFirstSetForNode(seq.nodes().get(0));
       case Term t -> getFirstSetForNode(t.node());
       default -> Set.of();
     };

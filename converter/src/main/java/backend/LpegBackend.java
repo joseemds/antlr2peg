@@ -242,9 +242,10 @@ public class LpegBackend {
             .flatMap(
                 r ->
                     switch (r.rhs()) {
-                      case OrderedChoice oc -> oc.nodes().stream()
-                          .filter(n -> n instanceof Literal)
-                          .map(n -> "P" + ((Literal) n).toString());
+                      case OrderedChoice oc ->
+                          oc.nodes().stream()
+                              .filter(n -> n instanceof Literal)
+                              .map(n -> "P" + ((Literal) n).toString());
                       case Literal l -> Stream.of("P" + l.toString());
                       default -> Stream.empty();
                     })
