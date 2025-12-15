@@ -1,8 +1,5 @@
 package backend;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -120,23 +117,7 @@ public class LpegBackend {
   private String printRule(Rule rule) {
     String ws = rule.kind() == RuleKind.LEXING ? " * V\"WS\"^0" : "";
     this.currentRuleKind = rule.kind();
-    return rule.name() + " = " + printNode(rule.rhs()) + fixAmbiguity(rule) + ws;
-  }
-
-  private String fixAmbiguity(Rule r) {
-    if (!grammar.isSyntacticRule(r)) return "";
-    var ruleFirst = firstSets.get(r.name());
-    var ruleFollows = followSets.get(r.name());
-    boolean intersect = !Collections.disjoint(ruleFirst, ruleFollows);
-    if (intersect) {
-      Set<Node> intersection = new HashSet<>(ruleFirst);
-      intersection.retainAll(ruleFollows);
-      List<Node> intersectionTokens = new ArrayList<>(intersection);
-      var oc = grammar.mkOrderedChoice(intersectionTokens);
-      var result = printNode(oc);
-      return " + #(" + result + ")";
-    }
-    return "";
+    return rule.name() + " = " + printNode(rule.rhs()) + ws;
   }
 
   private String printLiteral(Literal lit) {

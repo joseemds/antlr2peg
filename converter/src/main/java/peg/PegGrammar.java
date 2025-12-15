@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import peg.grammar.GrammarOptions;
 import peg.node.*;
+import transformation.RuleTransformation;
 import transformation.Transformation;
 
 public class PegGrammar {
@@ -100,6 +101,14 @@ public class PegGrammar {
     return new OrderedChoice(nodes);
   }
 
+  public OrderedChoice mkOrderedChoice(Node... nodes) {
+    return new OrderedChoice(List.of(nodes));
+  }
+
+  public Sequence mkSequence(Node... nodes) {
+    return new Sequence(List.of(nodes));
+  }
+
   public Sequence mkSequence(List<Node> nodes) {
     return new Sequence(nodes);
   }
@@ -116,13 +125,23 @@ public class PegGrammar {
     return new Wildcard();
   }
 
+  public And mkAnd(Node node) {
+    return new And(node);
+  }
+
   public void addRule(Rule rule) {
     this.rules.add(rule);
+  }
+
+  public PegGrammar transform(RuleTransformation transformation) {
+    this.rules.stream().map(transformation::apply).collect(Collectors.toCollection(ArrayList::new));
+    return this;
   }
 
   public PegGrammar transform(Transformation transformation) {
     this.rules =
         this.rules.stream()
+            // .map(rule -> new Rule(rule.name(), transformation.apply(rule.rhs()), rule.kind()))
             .map(
                 rule ->
                     isSyntacticRule(rule)
@@ -245,10 +264,8 @@ public class PegGrammar {
               case STAR, PLUS -> {
                 var first = firstOf(target);
                 first.stream().filter(n -> !(n instanceof Empty)).forEach(result::add);
-
               }
-              case OPTIONAL -> {
-              }
+              case OPTIONAL -> {}
             }
           } else {
           }
