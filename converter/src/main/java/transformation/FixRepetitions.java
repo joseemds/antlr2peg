@@ -123,7 +123,9 @@ public class FixRepetitions implements RuleTransformation {
         yield resultNode;
       }
       case PLUS -> {
-        Node termFollowSeq = grammar.mkSequence(t.node(), grammar.mkOrderedChoice(termFollow));
+        termFollow.add(t.node());
+        // Node termFollowSeq = grammar.mkSequence(t.node(), grammar.mkOrderedChoice(termFollow));
+        Node termFollowSeq = grammar.mkOrderedChoice(termFollow);
         Node lhs = grammar.mkSequence(t.node(), id);
         Node fixedNode = new And(termFollowSeq);
         Node resultNode = grammar.mkOrderedChoice(lhs, fixedNode);

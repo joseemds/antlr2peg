@@ -2,6 +2,7 @@ import backend.LpegBackend;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -64,11 +65,12 @@ public class Converter {
     System.out.println("===========");
     for (Entry<String, Set<Node>> e : grammar.getFirsts().entrySet()) {
       var follow = grammar.getFollows().get(e.getKey());
-      // follow.retainAll(e.getValue());
+      var intersection = new HashSet<>(follow);
+      intersection.retainAll(e.getValue());
       // System.out.printf(
-      //     "FIRST(%s) ^ FOLLOWS(%s) = %s\n", e.getKey(), e.getKey(), e.getValue(), follow);
-      // System.out.printf("FIRST(%s) = %s\n", e.getKey(), e.getValue());
-      // System.out.printf("FOLLOW(%s) = %s\n", e.getKey(), follow);
+      //     "FIRST(%s) ^ FOLLOWS(%s) = %s\n", e.getKey(), e.getKey(), e.getValue(), intersection);
+      System.out.printf("FIRST(%s) = %s\n", e.getKey(), e.getValue());
+      System.out.printf("FOLLOW(%s) = %s\n", e.getKey(), follow);
     }
 
     return grammar;
