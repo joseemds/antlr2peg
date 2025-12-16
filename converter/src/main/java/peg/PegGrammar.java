@@ -134,7 +134,10 @@ public class PegGrammar {
   }
 
   public PegGrammar transform(RuleTransformation transformation) {
-    this.rules.stream().map(transformation::apply).collect(Collectors.toCollection(ArrayList::new));
+    List<Rule> newRules = this.rules.stream().map(transformation::apply).toList();
+
+    this.rules.clear();
+    this.rules.addAll(newRules);
     return this;
   }
 

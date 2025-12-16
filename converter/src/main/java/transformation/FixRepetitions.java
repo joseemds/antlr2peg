@@ -99,6 +99,7 @@ public class FixRepetitions implements RuleTransformation {
               fixRepetition(term, firstOfBody, new ArrayList<Node>(followOfTerm), ruleName);
           Rule r = grammar.mkParsingRule(ruleName, newNode);
           addRule(r, seq);
+          newChildren.add(grammar.mkIdent(ruleName));
 
         } else {
           newChildren.add(term);
@@ -144,10 +145,10 @@ public class FixRepetitions implements RuleTransformation {
   private Set<Node> calculateFollow(Term term, String parentRule) {
     if (term.node() instanceof Ident ident) {
       Rule r = grammar.findRuleByName(ident.name());
-      if(!grammar.isSyntacticRule(r)) return followsSets.get(parentRule);
+      if (!grammar.isSyntacticRule(r)) return followsSets.get(parentRule);
       return followsSets.get(ident.name());
     }
-    
+
     var result = followsSets.get(parentRule);
     return result;
   }
