@@ -119,13 +119,12 @@ public class FixRepetitions implements RuleTransformation {
     return switch (t.op().get()) {
       case OPTIONAL -> {
         Node termFollowSeq = grammar.mkOrderedChoice(termFollow);
-        Node lhs = grammar.mkSequence(t.node(), id);
-        Node resultNode = grammar.mkOrderedChoice(List.of(lhs, termFollowSeq));
+        Node lhs = grammar.mkSequence(t.node(), grammar.mkAnd(termFollowSeq));
+        Node resultNode = grammar.mkOrderedChoice(lhs, grammar.mkEmpty());
         yield resultNode;
       }
       case PLUS -> {
         termFollow.add(t.node());
-        // Node termFollowSeq = grammar.mkSequence(t.node(), grammar.mkOrderedChoice(termFollow));
         Node termFollowSeq = grammar.mkOrderedChoice(termFollow);
         Node lhs = grammar.mkSequence(t.node(), id);
         Node fixedNode = new And(termFollowSeq);
@@ -134,9 +133,8 @@ public class FixRepetitions implements RuleTransformation {
       }
       case STAR -> {
         Node termFollowSeq = grammar.mkOrderedChoice(termFollow);
-        Node lhs = grammar.mkSequence(List.of(t.node(), id));
-        Node fixedNode = grammar.mkSequence(List.of(lhs, new And(termFollowSeq)));
-        Node resultNode = grammar.mkOrderedChoice(List.of(fixedNode, grammar.mkEmpty()));
+        Node lhs = grammar.mkSequence(t.node(), id);
+        Node resultNode = grammar.mkOrderedChoice(lhs, grammar.mkAnd(termFollowSeq));
         yield resultNode;
       }
     };
