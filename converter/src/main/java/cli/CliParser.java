@@ -15,18 +15,18 @@ class CliParser {
       return options;
     }
 
-    for (int i = 1; i < argv.length; i++) {
+    for (int i = 0; i < argv.length; i++) {
       String arg = argv[i];
 
       switch (arg) {
         case "-i":
         case "--input":
-          options.setInputFile(argv[++i]);
+          options.setInputFile(argv[i + 1]);
           break;
 
         case "-o":
         case "--output":
-          options.setOutputFile(argv[++i]);
+          options.setOutputFile(argv[i + 1]);
           break;
 
         case "--dump-tree":
@@ -39,6 +39,8 @@ class CliParser {
           break;
       }
     }
+
+    validate(options);
 
     return options;
   }

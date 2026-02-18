@@ -56,6 +56,8 @@ options {
 
 // Insert here @header for lexer.
 
+@header {package converter;}
+
 // Standard set of fragments
 tokens {
     TOKEN_REF,

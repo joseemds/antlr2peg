@@ -44,6 +44,8 @@
 
 parser grammar ANTLRv4Parser;
 
+@header {package converter;}
+
 options {
     tokenVocab = ANTLRv4Lexer;
 }

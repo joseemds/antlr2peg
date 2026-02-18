@@ -31,12 +31,35 @@ repositories {
 }
 
 application {
-	mainClass = 'Converter'
+	mainClass = 'Main'
+}
+
+sourceSets {
+    benchmark {
+        java {
+            srcDirs = ['src/benchmark/java']
+        }
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    benchmarkImplementation.extendsFrom implementation
+    benchmarkRuntimeOnly.extendsFrom runtimeOnly
+}
+
+
+tasks.register("benchmark", JavaExec) {
+    group = "benchmark"
+    description = "Run benchmarks"
+    classpath = sourceSets.benchmark.runtimeClasspath
+    mainClass = "benchmark.Main"
 }
 
 def copyAntlrGrammarDeps = tasks.register("copyAntlrGrammarDeps", Copy) {
     from("src/main/antlr/predefined.tokens", "src/main/antlr/LexerAdaptor.java")
-    into(layout.buildDirectory.dir("generated-src/antlr/main"))
+    into(layout.buildDirectory.dir("generated-src/antlr/main/converter"))
 }
 
 generateGrammarSource {
@@ -44,9 +67,8 @@ generateGrammarSource {
 
     arguments += ['-visitor']
 
-    outputDirectory = file("build/generated-src/antlr/main")
+    outputDirectory = file("build/generated-src/antlr/main/converter")
 }
-
 
 test {
   useJUnitPlatform()

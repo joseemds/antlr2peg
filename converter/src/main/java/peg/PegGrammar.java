@@ -144,7 +144,6 @@ public class PegGrammar {
   public PegGrammar transform(Transformation transformation) {
     this.rules =
         this.rules.stream()
-            // .map(rule -> new Rule(rule.name(), transformation.apply(rule.rhs()), rule.kind()))
             .map(
                 rule ->
                     isSyntacticRule(rule)
