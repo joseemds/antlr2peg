@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import peg.GraphvizPrinter;
+import peg.LeftRecursionChecker;
 import peg.PegGrammar;
 
 public class CliRunner {
@@ -38,6 +39,10 @@ public class CliRunner {
     }
 
     PegGrammar pegGrammar = Converter.convertToPegGrammar(options.input);
+    LeftRecursionChecker isLeftRecursive = new LeftRecursionChecker(pegGrammar);
+    if (isLeftRecursive.check()) {
+      throw new IllegalStateException("Left Recursive grammars are not supported");
+    }
     Path outputFile = Path.of(options.output);
     try {
       Files.writeString(outputFile, Converter.convertToLpeg(pegGrammar));

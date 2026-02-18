@@ -35,16 +35,18 @@ public class Converter {
       var grammarOptions = pegListener.getGrammarOptions();
       var grammar = pegListener.getGrammar();
       grammar.setGrammarOptions(grammarOptions);
-      // for(var entry : grammar.getFirsts().entrySet()){
-      //     Ident nonterm = new Ident(entry.getKey());
-      //     if(entry.getValue().contains(nonterm)) {
-      //      throw new Error("Grammar is left recursive and is not supported");
-      //     }
-      //  }
 
       grammar.computeNonTerminals();
       grammar.computeFirst();
       grammar.computeFollowSets();
+
+      for (var entry : grammar.getFirsts().entrySet()) {
+        Ident nonterm = new Ident(entry.getKey());
+        System.out.println("here " + nonterm);
+        if (entry.getValue().contains(nonterm)) {
+          throw new Error("Grammar is left recursive and is not supported");
+        }
+      }
 
       grammar = grammar.transform(new FlattenGrammar());
       grammar = grammar.transform(new MoveEmpty());
@@ -81,10 +83,6 @@ public class Converter {
   }
 
   public static String convertToLpeg(PegGrammar pegGrammar) {
-    System.out.println("Here");
-    for (var rule : pegGrammar.getRules()) {
-      System.out.println(rule);
-    }
     LpegBackend lpegBackend = new LpegBackend(pegGrammar);
     return lpegBackend.convert(pegGrammar.getRules());
   }

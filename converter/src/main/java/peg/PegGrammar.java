@@ -376,18 +376,26 @@ public class PegGrammar {
     return changed;
   }
 
-  private boolean isPossiblyEmpty(Node n) {
+  public boolean isPossiblyEmpty(Node n) {
+    return isPossiblyEmpty(n, new HashSet<>());
+  }
+
+  public boolean isPossiblyEmpty(Node n, Set<String> visited) {
     return switch (n) {
       case Term t -> {
         if (t.op().isPresent()
-            && (t.op().get() == Operator.OPTIONAL || t.op().get() == Operator.STAR)) {
-          yield true;
-        }
-        yield isPossiblyEmpty(t.node());
+            && (t.op().get() == Operator.OPTIONAL || t.op().get() == Operator.STAR)) yield true;
+        yield isPossiblyEmpty(t.node(), visited);
       }
-      case Ident ident -> false;
-      case Sequence seq -> seq.nodes().stream().allMatch(this::isPossiblyEmpty);
-      case OrderedChoice choice -> choice.nodes().stream().anyMatch(this::isPossiblyEmpty);
+      case Ident ident -> {
+        if (visited.contains(ident.name())) yield false;
+        visited.add(ident.name());
+        Node body = findRuleByName(ident.name()).rhs();
+        yield body != null && isPossiblyEmpty(body, visited);
+      }
+      case Sequence seq -> seq.nodes().stream().allMatch(node -> isPossiblyEmpty(node, visited));
+      case OrderedChoice choice ->
+          choice.nodes().stream().anyMatch(node -> isPossiblyEmpty(node, visited));
       case Literal lit -> lit.content().isEmpty();
       case Charset charset -> false;
       case Not not -> true;
