@@ -13,16 +13,19 @@ import peg.node.OrderedChoice;
 import peg.node.Rule;
 import peg.node.Sequence;
 import peg.node.Term;
+import utils.StatsTracker;
 
 public class FixRepetitions implements RuleTransformation {
   private final PegGrammar grammar;
   private static volatile int counter = 0;
   private final ArrayList<Rule> newRules = new ArrayList<>();
   private final Map<String, Set<Node>> followsSets;
+  private StatsTracker statsTracker;
 
-  public FixRepetitions(PegGrammar grammar) {
+  public FixRepetitions(PegGrammar grammar, StatsTracker tracker) {
     this.grammar = grammar;
     this.followsSets = grammar.getFollows();
+    this.statsTracker = tracker;
   }
 
   private String genName() {
@@ -71,6 +74,7 @@ public class FixRepetitions implements RuleTransformation {
     if (hasIntersection) {
       String newRuleName = genName();
       Node newNode = fixRepetition(term, pFirst, new ArrayList<>(repFollow), newRuleName);
+      statsTracker.bumpRepetitionsTransformed();
       Rule r = new Rule(newRuleName, newNode);
       addRule(r, term);
       return new Ident(newRuleName);

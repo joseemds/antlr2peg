@@ -3,12 +3,15 @@ package peg.grammar;
 import java.util.List;
 import peg.PegGrammar;
 import peg.node.*;
+import utils.StatsTracker;
 
 public class AmbiguousChoiceDetector {
   private PegGrammar grammar;
+  private StatsTracker statsTracker;
 
-  public AmbiguousChoiceDetector(PegGrammar grammar) {
+  public AmbiguousChoiceDetector(PegGrammar grammar, StatsTracker tracker) {
     this.grammar = grammar;
+    this.statsTracker = tracker;
   }
 
   public void checkAmbiguity() {
@@ -31,8 +34,9 @@ public class AmbiguousChoiceDetector {
             intersection.retainAll(firstJ);
             if (!intersection.isEmpty()) {
               System.err.printf(
-                  "Warn: At Rule %s, choice %d (%s) and %d (%s) may match the same input\n",
+                  "Warning: At Rule %s, choice %d (%s) and %d (%s) may match the same input\n",
                   ruleName, i + 1, nodeI, j + 1, nodeJ);
+              statsTracker.bumpChoiceAmbiguites();
             }
           }
         }

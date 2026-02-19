@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import peg.GraphvizPrinter;
 import peg.LeftRecursionChecker;
 import peg.PegGrammar;
+import peg.grammar.AmbiguousChoiceDetector;
+import utils.StatsTracker;
 
 public class CliRunner {
   private String[] argv;
@@ -32,17 +34,30 @@ public class CliRunner {
   }
   ;
 
+  public StatsTracker runWithStats(CliOptions options) {
+    StatsTracker statsTracker = new StatsTracker();
+    run(options, statsTracker);
+    return statsTracker;
+  }
+
   public void run(CliOptions options) {
+    run(options, new StatsTracker());
+  }
+
+  public void run(CliOptions options, StatsTracker statsTracker) {
     if (options.printHelp) {
       this.printHelp();
-      return;
     }
 
-    PegGrammar pegGrammar = Converter.convertToPegGrammar(options.input);
+    PegGrammar pegGrammar = Converter.convertToPegGrammar(options.input, statsTracker);
+    AmbiguousChoiceDetector hasAmbiguousChoice =
+        new AmbiguousChoiceDetector(pegGrammar, statsTracker);
     LeftRecursionChecker isLeftRecursive = new LeftRecursionChecker(pegGrammar);
+    hasAmbiguousChoice.checkAmbiguity();
     if (isLeftRecursive.check()) {
       throw new IllegalStateException("Left Recursive grammars are not supported");
     }
+
     Path outputFile = Path.of(options.output);
     try {
       Files.writeString(outputFile, Converter.convertToLpeg(pegGrammar));

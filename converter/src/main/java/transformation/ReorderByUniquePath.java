@@ -4,14 +4,17 @@ import java.util.*;
 import peg.PegGrammar;
 import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
+import utils.StatsTracker;
 
 public class ReorderByUniquePath implements Transformation {
 
   private final UniqueTokenTracker uniqueTokenTracker;
+  private final StatsTracker statsTracker;
 
-  public ReorderByUniquePath(PegGrammar grammar) {
+  public ReorderByUniquePath(PegGrammar grammar, StatsTracker statsTracker) {
     this.uniqueTokenTracker = new UniqueTokenTracker(grammar);
     this.uniqueTokenTracker.analyzeGrammar();
+    this.statsTracker = statsTracker;
   }
 
   @Override
@@ -53,11 +56,13 @@ public class ReorderByUniquePath implements Transformation {
       boolean bUniquePath = uniqueTokenTracker.hasUniquePath(bIdent.name());
       if (aUniquePath && !bUniquePath) {
         System.out.printf("Swaping %s and %s, %s is uniquePath\n", aIdent, bIdent, aIdent);
+        statsTracker.bumpUniquePathSwaps();
         return -1;
       }
       if (!aUniquePath && bUniquePath) {
 
         System.out.printf("Swaping %s and %s, %s is uniquePath\n", aIdent, bIdent, bIdent);
+        statsTracker.bumpUniquePathSwaps();
         return 1;
       }
     }

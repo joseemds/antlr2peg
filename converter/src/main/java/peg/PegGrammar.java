@@ -63,6 +63,7 @@ public class PegGrammar {
       case "+":
         return Operator.PLUS;
       case "*":
+      case "*?":
         return Operator.STAR;
       default:
         throw new Error("Unexpected operator " + op);

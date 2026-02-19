@@ -4,14 +4,12 @@
  * This is a general purpose Gradle build.
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.14.3/samples
  */
-
 plugins {
-	id "application"
-	id "java"
-	id "antlr"
-	id 'com.diffplug.spotless' version '6.25.0'
+    id "application"
+    id "java"
+    id "antlr"
+    id 'com.diffplug.spotless' version '6.25.0'
 }
-
 
 spotless {
     java {
@@ -20,18 +18,8 @@ spotless {
     }
 }
 
-dependencies {
-  antlr "org.antlr:antlr4:4.13.2"
-  testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
 repositories {
-	mavenCentral()
-}
-
-application {
-	mainClass = 'Main'
+    mavenCentral()
 }
 
 sourceSets {
@@ -49,12 +37,15 @@ configurations {
     benchmarkRuntimeOnly.extendsFrom runtimeOnly
 }
 
+dependencies {
+    antlr "org.antlr:antlr4:4.13.2"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    benchmarkImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
+}
 
-tasks.register("benchmark", JavaExec) {
-    group = "benchmark"
-    description = "Run benchmarks"
-    classpath = sourceSets.benchmark.runtimeClasspath
-    mainClass = "benchmark.Main"
+application {
+    mainClass = 'Main'
 }
 
 def copyAntlrGrammarDeps = tasks.register("copyAntlrGrammarDeps", Copy) {
@@ -64,27 +55,19 @@ def copyAntlrGrammarDeps = tasks.register("copyAntlrGrammarDeps", Copy) {
 
 generateGrammarSource {
     dependsOn copyAntlrGrammarDeps
-
     arguments += ['-visitor']
-
     outputDirectory = file("build/generated-src/antlr/main/converter")
 }
 
-test {
-  useJUnitPlatform()
+tasks.register("benchmark", JavaExec) {
+    group = "benchmark"
+    description = "Run benchmarks"
+    classpath = sourceSets.benchmark.runtimeClasspath
+    mainClass = "benchmark.Main"
 }
 
-tasks.register("compareParser", JavaExec) {
-    group = "verification"
-    description = "Test generated parser vs ANTLR parser"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = "CompareParsers"
-
-    if (project.hasProperty('grammar')) {
-        args project.property('grammar')
-    } else {
-        args 'Dot'
-    }
+test {
+    useJUnitPlatform()
 }
 
 run {

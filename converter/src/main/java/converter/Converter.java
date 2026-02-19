@@ -11,16 +11,18 @@ import java.util.Set;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import peg.PegGrammar;
+import peg.grammar.AmbiguousChoiceDetector;
 import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
 import transformation.FixRepetitions;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
 import transformation.ReorderByUniquePath;
+import utils.StatsTracker;
 
 public class Converter {
 
-  public static PegGrammar convertToPegGrammar(String inputFile) {
+  public static PegGrammar convertToPegGrammar(String inputFile, StatsTracker statsTracker) {
     Path inputPath = Path.of(inputFile);
     try {
       String input = Files.readString(inputPath);
@@ -42,7 +44,6 @@ public class Converter {
 
       for (var entry : grammar.getFirsts().entrySet()) {
         Ident nonterm = new Ident(entry.getKey());
-        System.out.println("here " + nonterm);
         if (entry.getValue().contains(nonterm)) {
           throw new Error("Grammar is left recursive and is not supported");
         }
@@ -55,8 +56,8 @@ public class Converter {
 
       uniqueTokenTracker.printUniqueTokens();
       uniqueTokenTracker.printUniquePaths();
-      grammar = grammar.transform(new ReorderByUniquePath(grammar));
-      FixRepetitions fixRepetitions = new FixRepetitions(grammar);
+      grammar = grammar.transform(new ReorderByUniquePath(grammar, statsTracker));
+      FixRepetitions fixRepetitions = new FixRepetitions(grammar, statsTracker);
       grammar = grammar.transform(fixRepetitions);
       List<Rule> newRules = fixRepetitions.getNewRules();
       for (Rule rule : newRules) {
@@ -74,6 +75,10 @@ public class Converter {
         System.out.printf("FIRST(%s) = %s\n", e.getKey(), e.getValue());
         System.out.printf("FOLLOW(%s) = %s\n", e.getKey(), follow);
       }
+
+      AmbiguousChoiceDetector hasAmbiguousChoice =
+          new AmbiguousChoiceDetector(grammar, statsTracker);
+      hasAmbiguousChoice.checkAmbiguity();
 
       return grammar;
 

@@ -3,6 +3,7 @@ package cli;
 public class CliOptions {
   public boolean printHelp = false;
   public boolean dumpTree = false;
+  public boolean stats = true;
   public String input;
   public String output;
 
