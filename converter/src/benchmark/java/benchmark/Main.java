@@ -6,13 +6,14 @@ import java.util.*;
 import java.util.stream.Stream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import utils.StatsTracker;
+import exception.LeftRecursionException;
 
 public class Main {
     private static final Tasks tasks = new Tasks();
 
     public static void main(String[] args) throws Exception {
         Path repoPath = cloneRepo();
-        Map<String, StatsTracker> results = new LinkedHashMap<>();
+        Map<String, TaskResult> results = new LinkedHashMap<>();
 
         try (Stream<Path> paths = Files.walk(repoPath, 1)) {
             paths.filter(Files::isDirectory).forEach(dir -> {
@@ -23,19 +24,24 @@ public class Main {
                             .toList();
 
                     if (gs.size() == 0) {
-                        System.out.println("Grammar file missing at " + dir);
+                        results.put(dir.toString(), new TaskResult.Failure(ErrorKind.MISSING_FILE, "No .g4 file found"));
                         return;
                     }
                     if (gs.size() > 1) {
-                        System.out.println("Only one grammar is allowed at " + dir);
-                        return;
+                        results.put(dir.toString(), new TaskResult.Failure(ErrorKind.MULTIPLE_FILES, "Found " + gs.size() + " grammar files")); return;
                     }
 
                     Path grammarPath = gs.get(0);
                     System.out.println("Processing grammar: " + grammarPath);
 
-                    StatsTracker tracker = tasks.compilePeg(grammarPath);
-                    results.put(grammarPath.toString(), tracker);
+                    try {
+                        StatsTracker tracker = tasks.compilePeg(grammarPath);
+                        results.put(grammarPath.toString(), new TaskResult.Success(tracker));
+                    } catch (LeftRecursionException e) {
+                        results.put(grammarPath.toString(), new TaskResult.Failure(ErrorKind.LEFT_RECURSION, e.getMessage()));
+                    } catch (Throwable e) {
+                        results.put(grammarPath.toString(), new TaskResult.Failure(ErrorKind.UNKNOWN, e.getMessage()));
+                    }
 
                 } catch (Exception e) {
                     System.err.println("Error processing " + dir + ": " + e.getMessage());
@@ -44,6 +50,13 @@ public class Main {
         }
 
         System.out.println("Completed " + results.size() + " grammars");
+
+        results.forEach((path, result) -> {
+            switch (result) {
+                case TaskResult.Success s -> System.out.println("OK: " + path);
+                case TaskResult.Failure f -> System.err.println("FAIL [" + f.kind() + "]: " + path + " -> " + f.message());
+            }
+        });
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(results);

@@ -1,6 +1,7 @@
 package cli;
 
 import converter.Converter;
+import exception.LeftRecursionException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,7 +56,7 @@ public class CliRunner {
     LeftRecursionChecker isLeftRecursive = new LeftRecursionChecker(pegGrammar);
     hasAmbiguousChoice.checkAmbiguity();
     if (isLeftRecursive.check()) {
-      throw new IllegalStateException("Left Recursive grammars are not supported");
+      throw new LeftRecursionException("Left recursion is not supported");
     }
 
     Path outputFile = Path.of(options.output);
