@@ -11,6 +11,7 @@ import java.util.Set;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import peg.PegGrammar;
+import peg.PegPrinter;
 import peg.grammar.AmbiguousChoiceDetector;
 import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
@@ -52,6 +53,8 @@ public class Converter {
       grammar = grammar.transform(new FlattenGrammar());
       grammar = grammar.transform(new MoveEmpty());
       UniqueTokenTracker uniqueTokenTracker = new UniqueTokenTracker(grammar);
+      PegPrinter pegPrinter = new PegPrinter();
+      // System.out.println(pegPrinter.print(grammar));
       uniqueTokenTracker.analyzeGrammar();
 
       uniqueTokenTracker.printUniqueTokens();

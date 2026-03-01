@@ -22,6 +22,7 @@ public class UniqueTokenTracker {
   public void analyzeGrammar() {
     for (Rule rule : grammar.getRules()) {
       if (grammar.isSyntacticRule(rule)) {
+        System.out.println("Analyzing rule " + rule);
         Set<String> tokens = extractDirectLexicalTokens(rule.rhs());
         for (String token : tokens) {
           tokenOccurrences.computeIfAbsent(token, k -> new TokenInfo()).addOccurrence(rule.name());
@@ -129,7 +130,7 @@ public class UniqueTokenTracker {
     switch (n) {
       case Ident i -> {
         Rule r = grammar.findRuleByName(i.name());
-        if (r != null && grammar.isLexicalRule(r)) {
+        if (r != null && r.rhs() != null && grammar.isLexicalRule(r)) {
           tokens.addAll(extractAllLexicalTokens(r.rhs(), new HashSet<>()));
         }
       }
@@ -157,8 +158,7 @@ public class UniqueTokenTracker {
         if (visited.contains(i.name())) break;
         visited.add(i.name());
         Rule r = grammar.findRuleByName(i.name());
-        if (r == null) break;
-
+        if (r == null || r.rhs() == null) break; 
         tokens.addAll(extractAllLexicalTokens(r.rhs(), new HashSet<>(visited)));
       }
       case Literal lit -> tokens.add(lit.content());

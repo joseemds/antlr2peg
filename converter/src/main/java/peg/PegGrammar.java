@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import peg.grammar.GrammarOptions;
 import peg.node.*;
+import exception.RuleNotFoundException;
 import transformation.RuleTransformation;
 import transformation.Transformation;
 
@@ -59,8 +60,10 @@ public class PegGrammar {
   public Operator operatorOfString(String op) {
     switch (op) {
       case "?":
+      case "??":
         return Operator.OPTIONAL;
       case "+":
+      case "+?":
         return Operator.PLUS;
       case "*":
       case "*?":
@@ -391,8 +394,10 @@ public class PegGrammar {
       case Ident ident -> {
         if (visited.contains(ident.name())) yield false;
         visited.add(ident.name());
-        Node body = findRuleByName(ident.name()).rhs();
-        yield body != null && isPossiblyEmpty(body, visited);
+        Rule r = findRuleByName(ident.name());
+        if (r.rhs() == null || !isSyntacticRule(r)) yield false;
+
+        yield  isPossiblyEmpty(r.rhs(), visited);
       }
       case Sequence seq -> seq.nodes().stream().allMatch(node -> isPossiblyEmpty(node, visited));
       case OrderedChoice choice ->
@@ -419,7 +424,7 @@ public class PegGrammar {
     for (Rule r : rules) {
       if (r.name().equals(name)) return r;
     }
-    throw new Error("Rule with name " + name + "not found");
+    throw new RuleNotFoundException("Rule with name " + name + " not found");
   }
 
   public boolean isSyntacticRule(Rule r) {

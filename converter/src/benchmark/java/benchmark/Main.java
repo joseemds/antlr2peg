@@ -15,7 +15,7 @@ public class Main {
         Path repoPath = cloneRepo();
         Map<String, TaskResult> results = new LinkedHashMap<>();
 
-        try (Stream<Path> paths = Files.walk(repoPath, 1)) {
+        try (Stream<Path> paths = Files.walk(repoPath)) {
             paths.filter(Files::isDirectory).forEach(dir -> {
                 try (Stream<Path> files = Files.list(dir)) {
                     List<Path> gs = files
@@ -24,7 +24,7 @@ public class Main {
                             .toList();
 
                     if (gs.size() == 0) {
-                        results.put(dir.toString(), new TaskResult.Failure(ErrorKind.MISSING_FILE, "No .g4 file found"));
+                        // results.put(dir.toString(), new TaskResult.Failure(ErrorKind.MISSING_FILE, "No .g4 file found"));
                         return;
                     }
                     if (gs.size() > 1) {

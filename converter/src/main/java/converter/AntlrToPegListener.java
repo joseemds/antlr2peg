@@ -226,6 +226,9 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     }
 
     if (ctx.labeledElement() != null) {
+      var node = properties.get(ctx.labeledElement());
+      var term = grammar.mkTerm(node, suffix);
+      properties.put(ctx, term);
     } else if (ctx.atom() != null) {
       var node = properties.get(ctx.atom());
       var term = grammar.mkTerm(node, suffix);
@@ -233,6 +236,16 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     } else if (ctx.ebnf() != null) {
       copyNode(ctx, ctx.ebnf());
     } else if (ctx.actionBlock() != null) {
+    }
+  }
+
+
+  @Override
+  public void exitLabeledElement(ANTLRv4Parser.LabeledElementContext ctx){
+    if(ctx.atom() != null){
+      copyNode(ctx, ctx.atom());
+    } else if(ctx.block() != null){
+      copyNode(ctx, ctx.block());
     }
   }
 
@@ -246,9 +259,8 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     } else if (ctx.notSet() != null) {
       copyNode(ctx, ctx.notSet());
     } else if (ctx.wildcard() != null) {
-      // FIXME
-      var ident = grammar.mkIdent(ctx.wildcard().getText());
-      properties.put(ctx, ident);
+      var wildcard = grammar.mkWildcard();
+      properties.put(ctx, wildcard);
     }
   }
 
