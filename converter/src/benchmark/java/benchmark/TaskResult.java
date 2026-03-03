@@ -4,6 +4,7 @@ import utils.StatsTracker;
 
 enum ErrorKind {
     LEFT_RECURSION,
+    MISSING_RULE,
     MULTIPLE_FILES,
     MISSING_FILE,
     COMPILE_ERROR,

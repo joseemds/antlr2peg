@@ -1,5 +1,6 @@
 package peg;
 
+import exception.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +11,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import peg.grammar.GrammarOptions;
 import peg.node.*;
-import exception.RuleNotFoundException;
 import transformation.RuleTransformation;
 import transformation.Transformation;
 
@@ -397,7 +397,7 @@ public class PegGrammar {
         Rule r = findRuleByName(ident.name());
         if (r.rhs() == null || !isSyntacticRule(r)) yield false;
 
-        yield  isPossiblyEmpty(r.rhs(), visited);
+        yield isPossiblyEmpty(r.rhs(), visited);
       }
       case Sequence seq -> seq.nodes().stream().allMatch(node -> isPossiblyEmpty(node, visited));
       case OrderedChoice choice ->

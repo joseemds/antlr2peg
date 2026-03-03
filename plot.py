@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 PALETTE = {
     "SUCCESS":         "#4caf78",
     "MISSING_FILE":    "#e07b54",
+    "MISSING_RULE":    "#402CCD",
     "MULTIPLE_FILES":  "#5b8dd9",
     "LEFT_RECURSION":  "#c9547c",
     "UNKNOWN":         "#9e9e9e",
@@ -22,7 +23,7 @@ def classify(entry):
     if "tracker" in entry:
         return "SUCCESS"
     kind = entry.get("kind", "")
-    if kind in ("MISSING_FILE", "MULTIPLE_FILES", "LEFT_RECURSION"):
+    if kind in ("MISSING_FILE", "MULTIPLE_FILES", "LEFT_RECURSION", "MISSING_RULE"):
         return kind
     return "UNKNOWN"
 
@@ -34,7 +35,7 @@ with open(json_file) as f:
 
 counts = Counter(classify(e) for e in data.values())
 
-order  = ["SUCCESS", "MISSING_FILE", "MULTIPLE_FILES", "LEFT_RECURSION", "UNKNOWN"]
+order  = ["SUCCESS", "MISSING_FILE", "MULTIPLE_FILES", "LEFT_RECURSION", "MISSING_RULE", "UNKNOWN"]
 labels = [k for k in order if k in counts]
 values = [counts[k] for k in labels]
 colors = [PALETTE[k] for k in labels]

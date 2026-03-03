@@ -158,7 +158,7 @@ public class UniqueTokenTracker {
         if (visited.contains(i.name())) break;
         visited.add(i.name());
         Rule r = grammar.findRuleByName(i.name());
-        if (r == null || r.rhs() == null) break; 
+        if (r == null || r.rhs() == null) break;
         tokens.addAll(extractAllLexicalTokens(r.rhs(), new HashSet<>(visited)));
       }
       case Literal lit -> tokens.add(lit.content());

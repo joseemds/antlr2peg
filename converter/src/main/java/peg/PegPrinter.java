@@ -16,7 +16,8 @@ public class PegPrinter {
   public String printNode(Node node) {
     return switch (node) {
       case Literal lit -> lit.content();
-      case Term term -> printTerm(term); case Ident ident -> printIdent(ident);
+      case Term term -> printTerm(term);
+      case Ident ident -> printIdent(ident);
       case Sequence seq -> printSequence(seq);
       case OrderedChoice choice -> printOrderedChoice(choice);
       case Charset charset -> charset.content();

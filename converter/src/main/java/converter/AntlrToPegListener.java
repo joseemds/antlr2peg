@@ -239,12 +239,11 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     }
   }
 
-
   @Override
-  public void exitLabeledElement(ANTLRv4Parser.LabeledElementContext ctx){
-    if(ctx.atom() != null){
+  public void exitLabeledElement(ANTLRv4Parser.LabeledElementContext ctx) {
+    if (ctx.atom() != null) {
       copyNode(ctx, ctx.atom());
-    } else if(ctx.block() != null){
+    } else if (ctx.block() != null) {
       copyNode(ctx, ctx.block());
     }
   }

@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import utils.StatsTracker;
 import exception.LeftRecursionException;
+import exception.RuleNotFoundException;
 
 public class Main {
     private static final Tasks tasks = new Tasks();
@@ -39,6 +40,8 @@ public class Main {
                         results.put(grammarPath.toString(), new TaskResult.Success(tracker));
                     } catch (LeftRecursionException e) {
                         results.put(grammarPath.toString(), new TaskResult.Failure(ErrorKind.LEFT_RECURSION, e.getMessage()));
+                    } catch(RuleNotFoundException e){
+                        results.put(grammarPath.toString(), new TaskResult.Failure(ErrorKind.MISSING_RULE, e.getMessage()));
                     } catch (Throwable e) {
                         results.put(grammarPath.toString(), new TaskResult.Failure(ErrorKind.UNKNOWN, e.getMessage()));
                     }
