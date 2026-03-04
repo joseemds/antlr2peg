@@ -1,5 +1,6 @@
 package converter;
 
+import exception.SemanticActionNotAllowedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -297,5 +298,21 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     var nodes = mkNodeList(ctx.alternative());
     var node = grammar.mkOrderedChoice(nodes);
     properties.put(ctx, node);
+  }
+
+  @Override
+  public void exitOptionsSpec(ANTLRv4Parser.OptionsSpecContext ctx) {
+    if (ctx != null) {
+      throw new SemanticActionNotAllowedException(
+          "Grammar contains semantic actions, which are not supported");
+    }
+  }
+
+  @Override
+  public void exitActionBlock(ANTLRv4Parser.ActionBlockContext ctx) {
+    if (ctx != null) {
+      throw new SemanticActionNotAllowedException(
+          "Grammar contains semantic actions, which are not supported");
+    }
   }
 }

@@ -6,9 +6,7 @@ import java.util.*;
 import java.util.stream.Stream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import utils.StatsTracker;
-import exception.LeftRecursionException;
-import exception.RuleNotFoundException;
-import exception.WrongStartRuleException;
+import exception.*;
 
 public class Main {
     private static final Tasks tasks = new Tasks();
@@ -46,7 +44,10 @@ public class Main {
 
                     } catch(WrongStartRuleException e){
                         results.put(grammarPath.toString(), new TaskResult.Failure(ErrorKind.WRONG_START_RULE, e.getMessage()));
-                    } catch (Throwable e) {
+
+                    } catch(SemanticActionNotAllowedException e){
+                        results.put(grammarPath.toString(), new TaskResult.Failure(ErrorKind.HAS_SEMANTIC_ACTION, e.getMessage()));
+          } catch (Throwable e) {
                         results.put(grammarPath.toString(), new TaskResult.Failure(ErrorKind.UNKNOWN, e.getMessage()));
                     }
 

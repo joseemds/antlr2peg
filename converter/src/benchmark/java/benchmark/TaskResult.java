@@ -9,6 +9,7 @@ enum ErrorKind {
     MISSING_FILE,
     WRONG_START_RULE,
     COMPILE_ERROR,
+    HAS_SEMANTIC_ACTION,
     UNKNOWN
 }
 
