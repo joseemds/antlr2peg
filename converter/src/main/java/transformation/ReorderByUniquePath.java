@@ -13,7 +13,6 @@ public class ReorderByUniquePath implements Transformation {
 
   public ReorderByUniquePath(PegGrammar grammar, StatsTracker statsTracker) {
     this.uniqueTokenTracker = new UniqueTokenTracker(grammar);
-    this.uniqueTokenTracker.analyzeGrammar();
     this.statsTracker = statsTracker;
   }
 
@@ -51,22 +50,26 @@ public class ReorderByUniquePath implements Transformation {
   }
 
   private int compareByUniquePath(Node a, Node b) {
-    if (a instanceof Ident aIdent && b instanceof Ident bIdent) {
-      boolean aUniquePath = uniqueTokenTracker.hasUniquePath(aIdent.name());
-      boolean bUniquePath = uniqueTokenTracker.hasUniquePath(bIdent.name());
-      if (aUniquePath && !bUniquePath) {
-        System.out.printf("Swaping %s and %s, %s is uniquePath\n", aIdent, bIdent, aIdent);
-        statsTracker.bumpUniquePathSwaps();
-        return -1;
-      }
-      if (!aUniquePath && bUniquePath) {
+    boolean aUniquePath = getUniquePath(a);
+    boolean bUniquePath = getUniquePath(b);
 
-        System.out.printf("Swaping %s and %s, %s is uniquePath\n", aIdent, bIdent, bIdent);
-        statsTracker.bumpUniquePathSwaps();
-        return 1;
-      }
+    if (aUniquePath && !bUniquePath) {
+      System.out.printf("Swapping %s and %s, %s has unique path\n", a, b, a);
+      statsTracker.bumpUniquePathSwaps();
+      return -1;
     }
-
+    if (!aUniquePath && bUniquePath) {
+      System.out.printf("Swapping %s and %s, %s has unique path\n", a, b, b);
+      statsTracker.bumpUniquePathSwaps();
+      return 1;
+    }
     return 0;
+  }
+
+  private boolean getUniquePath(Node n) {
+    return switch (n) {
+      case Ident i -> uniqueTokenTracker.hasUniquePath(i.name());
+      default -> uniqueTokenTracker.hasUniquePathForNode(n, new HashSet<>());
+    };
   }
 }

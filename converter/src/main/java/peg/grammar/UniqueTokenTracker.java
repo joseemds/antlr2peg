@@ -1,6 +1,7 @@
 package peg.grammar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,16 +14,17 @@ public class UniqueTokenTracker {
   private final Map<String, TokenInfo> tokenOccurrences = new HashMap<>();
   private final Map<String, Boolean> uniquePaths = new HashMap<>();
   private final Map<String, Set<String>> ruleUniqueTokens = new HashMap<>();
-  private PegGrammar grammar;
+  private final Set<String> uniqueTokens = new HashSet<>();
+  private final PegGrammar grammar;
 
   public UniqueTokenTracker(PegGrammar grammar) {
     this.grammar = grammar;
+    analyzeGrammar();
   }
 
-  public void analyzeGrammar() {
+  private void analyzeGrammar() {
     for (Rule rule : grammar.getRules()) {
       if (grammar.isSyntacticRule(rule)) {
-        System.out.println("Analyzing rule " + rule);
         Set<String> tokens = extractDirectLexicalTokens(rule.rhs());
         for (String token : tokens) {
           tokenOccurrences.computeIfAbsent(token, k -> new TokenInfo()).addOccurrence(rule.name());
@@ -31,8 +33,21 @@ public class UniqueTokenTracker {
     }
 
     for (Rule rule : grammar.getRules()) {
-      if (grammar.isSyntacticRule(rule)) {
-        uniquePaths.put(rule.name(), hasUniquePath(rule, new HashSet<>()));
+      if (!grammar.isSyntacticRule(rule)) continue;
+
+      String ruleName = rule.name();
+      uniquePaths.put(ruleName, hasUniquePathInternal(rule, new HashSet<>()));
+
+      Set<String> tokens = extractDirectLexicalTokens(rule.rhs());
+      Set<String> ruleSpecificUniqueTokens = new HashSet<>();
+      for (String token : tokens) {
+        if (isUnique(token)) {
+          ruleSpecificUniqueTokens.add(token);
+          uniqueTokens.add(token);
+        }
+      }
+      if (!ruleSpecificUniqueTokens.isEmpty()) {
+        ruleUniqueTokens.put(ruleName, ruleSpecificUniqueTokens);
       }
     }
   }
@@ -41,78 +56,36 @@ public class UniqueTokenTracker {
     return uniquePaths.getOrDefault(ruleName, false);
   }
 
-  private boolean hasUniquePath(Rule rule, Set<String> visited) {
+  private boolean hasUniquePathInternal(Rule rule, Set<String> visited) {
     if (visited.contains(rule.name())) return false;
     visited.add(rule.name());
-
-    return hasUniquePath(rule.rhs(), new HashSet<>(visited));
+    return hasUniquePathForNode(rule.rhs(), new HashSet<>(visited));
   }
 
-  private boolean hasUniquePath(Node node, Set<String> visited) {
-    switch (node) {
+  public boolean hasUniquePathForNode(Node node, Set<String> visited) {
+    return switch (node) {
       case Ident i -> {
         Rule refRule = grammar.findRuleByName(i.name());
-        if (refRule != null && grammar.isSyntacticRule(refRule)) {
-          return hasUniquePath(refRule, visited);
-        }
-        return false;
+        yield refRule != null
+            && grammar.isSyntacticRule(refRule)
+            && hasUniquePathInternal(refRule, visited);
       }
-      case Literal lit -> {
-        return isUnique(lit.content());
-      }
-      case Sequence s -> {
-        for (Node child : s.nodes()) {
-          if (hasUniquePath(child, new HashSet<>(visited))) {
-            return true;
-          }
-        }
-        return false;
-      }
-      case OrderedChoice oc -> {
-        if (oc.nodes().isEmpty()) return false;
-        for (Node alternative : oc.nodes()) {
-          if (!hasUniquePath(alternative, new HashSet<>(visited))) {
-            return false;
-          }
-        }
-        return true;
-      }
+      case Literal lit -> isUnique(lit.content());
+      case Sequence s ->
+          s.nodes().stream().anyMatch(child -> hasUniquePathForNode(child, new HashSet<>(visited)));
+      case OrderedChoice oc ->
+          !oc.nodes().isEmpty()
+              && oc.nodes().stream()
+                  .allMatch(alt -> hasUniquePathForNode(alt, new HashSet<>(visited)));
       case Term t -> {
         if (t.op().isPresent()) {
           Operator op = t.op().get();
-          if (op == Operator.OPTIONAL || op == Operator.STAR) return false;
+          if (op == Operator.OPTIONAL || op == Operator.STAR) yield false;
         }
-        return hasUniquePath(t.node(), visited);
+        yield hasUniquePathForNode(t.node(), visited);
       }
-      default -> {
-        return false;
-      }
-    }
-  }
-
-  public void printUniqueTokens() {
-    System.out.println("=== Unique Tokens ===");
-    List<String> uniqueTokens = new ArrayList<>();
-    for (Map.Entry<String, TokenInfo> entry : tokenOccurrences.entrySet()) {
-      String token = entry.getKey();
-      TokenInfo info = entry.getValue();
-      if (info.isUnique()) {
-        uniqueTokens.add(token);
-      }
-    }
-    System.out.println("Unique tokens are: " + uniqueTokens);
-  }
-
-  public void printUniquePaths() {
-    List<String> uniques = new ArrayList<>();
-    for (Map.Entry<String, Boolean> entry : uniquePaths.entrySet()) {
-      String rule = entry.getKey();
-      Boolean isUnique = entry.getValue();
-      if (isUnique) {
-        uniques.add(rule);
-      }
-    }
-    System.out.println("Unique paths are: " + uniques);
+      default -> false;
+    };
   }
 
   public boolean isUnique(String tokenContent) {
@@ -121,8 +94,27 @@ public class UniqueTokenTracker {
   }
 
   public boolean hasUniqueToken(String ruleName) {
-    Set<String> uniqueTokens = ruleUniqueTokens.get(ruleName);
-    return uniqueTokens != null && !uniqueTokens.isEmpty();
+    Set<String> tokens = ruleUniqueTokens.get(ruleName);
+    return tokens != null && !tokens.isEmpty();
+  }
+
+  public Set<String> getUniqueTokens() {
+    return Collections.unmodifiableSet(uniqueTokens);
+  }
+
+  public Set<String> getUniqueTokensForRule(String ruleName) {
+    return ruleUniqueTokens.getOrDefault(ruleName, Set.of());
+  }
+
+  public void printUniqueTokens() {
+    System.out.println("=== Unique Tokens ===");
+    System.out.println("Unique tokens are: " + new ArrayList<>(uniqueTokens));
+  }
+
+  public void printUniquePaths() {
+    List<String> rulesWithUniquePaths =
+        uniquePaths.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).toList();
+    System.out.println("Unique paths are: " + rulesWithUniquePaths);
   }
 
   private Set<String> extractDirectLexicalTokens(Node n) {
@@ -135,16 +127,10 @@ public class UniqueTokenTracker {
         }
       }
       case Literal lit -> tokens.add(lit.content());
-      case Sequence s -> {
-        for (Node children : s.nodes()) {
-          tokens.addAll(extractDirectLexicalTokens(children));
-        }
-      }
-      case OrderedChoice oc -> {
-        for (Node children : oc.nodes()) {
-          tokens.addAll(extractDirectLexicalTokens(children));
-        }
-      }
+      case Sequence s ->
+          s.nodes().forEach(child -> tokens.addAll(extractDirectLexicalTokens(child)));
+      case OrderedChoice oc ->
+          oc.nodes().forEach(child -> tokens.addAll(extractDirectLexicalTokens(child)));
       case Term t -> tokens.addAll(extractDirectLexicalTokens(t.node()));
       default -> {}
     }
@@ -162,18 +148,16 @@ public class UniqueTokenTracker {
         tokens.addAll(extractAllLexicalTokens(r.rhs(), new HashSet<>(visited)));
       }
       case Literal lit -> tokens.add(lit.content());
-      case Sequence s -> {
-        for (Node children : s.nodes()) {
-          tokens.addAll(extractAllLexicalTokens(children, new HashSet<>(visited)));
-        }
-      }
-      case OrderedChoice oc -> {
-        for (Node children : oc.nodes()) {
-          tokens.addAll(extractAllLexicalTokens(children, new HashSet<>(visited)));
-        }
-      }
+      case Sequence s ->
+          s.nodes()
+              .forEach(
+                  child -> tokens.addAll(extractAllLexicalTokens(child, new HashSet<>(visited))));
+      case OrderedChoice oc ->
+          oc.nodes()
+              .forEach(
+                  child -> tokens.addAll(extractAllLexicalTokens(child, new HashSet<>(visited))));
       case Term t -> tokens.addAll(extractAllLexicalTokens(t.node(), new HashSet<>(visited)));
-      default -> {} // noop
+      default -> {}
     }
     return tokens;
   }

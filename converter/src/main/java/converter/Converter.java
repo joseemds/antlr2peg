@@ -55,7 +55,6 @@ public class Converter {
       UniqueTokenTracker uniqueTokenTracker = new UniqueTokenTracker(grammar);
       PegPrinter pegPrinter = new PegPrinter();
       // System.out.println(pegPrinter.print(grammar));
-      uniqueTokenTracker.analyzeGrammar();
 
       uniqueTokenTracker.printUniqueTokens();
       uniqueTokenTracker.printUniquePaths();

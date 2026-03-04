@@ -1,4 +1,5 @@
 package peg.grammar;
+
 import exception.SemanticActionNotAllowedException;
 
 public class GrammarOptions {
