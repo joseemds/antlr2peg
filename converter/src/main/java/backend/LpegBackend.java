@@ -1,5 +1,8 @@
 package backend;
 
+import charset.CharacterSet;
+import charset.LiteralNode;
+import charset.RangeNode;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -8,7 +11,6 @@ import java.util.stream.Stream;
 import peg.PegGrammar;
 import peg.node.*;
 import peg.node.Node;
-import utils.Utils;
 
 public class LpegBackend {
   private PegGrammar grammar;
@@ -28,7 +30,7 @@ public class LpegBackend {
         """
 		local lpeg = require "lpeglabel"
 		local re = require "relabel"
-		local P, S, V = lpeg.P, lpeg.S, lpeg.V
+		local P, S, V, R = lpeg.P, lpeg.S, lpeg.V, lpeg.R
     local EMPTY = P''
     local neg = function (pat)
      return P(1) - pat
@@ -131,8 +133,22 @@ public class LpegBackend {
   }
 
   private String printCharset(Charset c) {
-    String out = c.content().substring(1, c.content().length() - 1);
-    return "regex\"" + Utils.sanitizeString(out) + "\"";
+    return c.content().stream().map(this::printCharset).collect(Collectors.joining(" + "));
+  }
+
+  private String printCharset(CharacterSet cs) {
+    return switch (cs) {
+      case RangeNode range -> printCharset(range);
+      case LiteralNode literal -> printCharset(literal);
+    };
+  }
+
+  private String printCharset(RangeNode range) {
+    return "R('%s', '%s')".formatted(range.from(), range.to());
+  }
+
+  private String printCharset(LiteralNode literal) {
+    return "P('%s')".formatted(literal.ch());
   }
 
   private String printTerm(Term term) {

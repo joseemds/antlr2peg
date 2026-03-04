@@ -20,7 +20,7 @@ public class PegPrinter {
       case Ident ident -> printIdent(ident);
       case Sequence seq -> printSequence(seq);
       case OrderedChoice choice -> printOrderedChoice(choice);
-      case Charset charset -> charset.content();
+      case Charset charset -> charset.toString();
       case Not not -> not.toString();
       case And and -> and.toString();
       case Empty e -> "ε";

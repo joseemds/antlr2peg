@@ -1,5 +1,6 @@
 package peg;
 
+import charset.CharacterSet;
 import exception.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,8 +82,12 @@ public class PegGrammar {
     return new Literal(content);
   }
 
-  public Charset mkCharset(String content) {
-    return new Charset(content);
+  // public Charset mkCharset(String content) {
+  //   return new Charset(content);
+  // }
+
+  public Charset mkCharset(List<CharacterSet> cs) {
+    return new Charset(cs);
   }
 
   public Rule mkRule(String lhs, Node rhs, RuleKind kind) {

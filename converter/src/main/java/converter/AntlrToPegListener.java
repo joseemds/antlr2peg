@@ -1,5 +1,7 @@
 package converter;
 
+import charset.CharSetParser;
+import charset.CharacterSet;
 import exception.SemanticActionNotAllowedException;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +139,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     if (ctx.characterRange() != null) {
       copyNode(ctx, ctx.characterRange());
     } else if (ctx.LEXER_CHAR_SET() != null) {
-      var ident = grammar.mkCharset("[" + ctx.LEXER_CHAR_SET().getText() + "]");
+      String text = ctx.LEXER_CHAR_SET().getText();
+      List<CharacterSet> cs = CharSetParser.parseCharSet(text);
+      // var ident = grammar.mkCharset("[" + ctx.LEXER_CHAR_SET().getText() + "]");
+      var ident = grammar.mkCharset(cs);
       properties.put(ctx, ident);
     } else if (ctx.terminalDef() != null) {
       copyNode(ctx, ctx.terminalDef());
@@ -180,7 +185,8 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     } else if (ctx.characterRange() != null) {
       copyNode(ctx, ctx.characterRange());
     } else if (ctx.LEXER_CHAR_SET() != null) {
-      var ident = grammar.mkCharset("[" + ctx.LEXER_CHAR_SET().getText() + "]");
+      var cs = CharSetParser.parseCharSet(ctx.LEXER_CHAR_SET().getText());
+      var ident = grammar.mkCharset(cs);
       properties.put(ctx, ident);
     }
   }
@@ -191,7 +197,8 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     buf.append(ctx.STRING_LITERAL(0).getText().charAt(1));
     buf.append("-");
     buf.append(ctx.STRING_LITERAL(1).getText().charAt(1));
-    var ident = grammar.mkCharset(" [" + buf.toString() + "] ");
+    CharacterSet cs = CharSetParser.parseCharacterRange(ctx.getText());
+    var ident = grammar.mkCharset(List.of(cs));
     properties.put(ctx, ident);
   }
 

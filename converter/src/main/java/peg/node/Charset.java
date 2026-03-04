@@ -1,9 +1,12 @@
 package peg.node;
 
-public record Charset(String content) implements Node {
+import charset.CharacterSet;
+import java.util.List;
+
+public record Charset(List<CharacterSet> content) implements Node {
 
   @Override
   public final String toString() {
-    return "[" + this.content + "]";
+    return content.toString();
   }
 }

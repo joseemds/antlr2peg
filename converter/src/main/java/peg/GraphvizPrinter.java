@@ -74,7 +74,7 @@ public class GraphvizPrinter {
           }
           case Literal lit -> "Literal: " + sanitize(lit.content());
           case Ident ident -> "Ident: " + sanitize(ident.name());
-          case Charset charset -> "Charset: " + sanitize(charset.content());
+          case Charset charset -> "Charset: " + sanitize(charset.content().toString());
           case Empty e -> "ε";
           case Wildcard w -> "•";
           case EOF e -> "$";
