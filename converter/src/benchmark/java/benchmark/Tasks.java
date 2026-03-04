@@ -22,7 +22,6 @@ public class Tasks {
   public StatsTracker compilePeg(Path antlrGrammar) {
     CliOptions options = new CliOptions();
     try {
-			System.out.println("AntlrGrammar: " + antlrGrammar);
       Path outputFile = Files.createTempFile(antlrGrammar.getFileName().toString(), ".gen.lua");
       options.setInputFile(antlrGrammar.toString());
       options.setOutputFile(outputFile.toString());

@@ -293,7 +293,12 @@ public class PegGrammar {
     }
 
     if (!rules.isEmpty()) {
-      followSets.get(rules.get(0).name()).add(new EOF());
+      var firstRule = rules.getFirst();
+      var firstRuleFollows = followSets.get(firstRule.name());
+      if(!isSyntacticRule(firstRule) || firstRuleFollows == null){
+        throw new WrongStartRuleException("%s may not be the starting rule".formatted(firstRule.name()));
+      }
+      firstRuleFollows.add(new EOF());
     }
 
     boolean changed;

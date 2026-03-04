@@ -7,6 +7,7 @@ enum ErrorKind {
     MISSING_RULE,
     MULTIPLE_FILES,
     MISSING_FILE,
+    WRONG_START_RULE,
     COMPILE_ERROR,
     UNKNOWN
 }
