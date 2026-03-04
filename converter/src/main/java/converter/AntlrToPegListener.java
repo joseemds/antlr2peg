@@ -302,10 +302,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   @Override
   public void exitOptionsSpec(ANTLRv4Parser.OptionsSpecContext ctx) {
-    if (ctx != null) {
-      throw new SemanticActionNotAllowedException(
-          "Grammar contains semantic actions, which are not supported");
-    }
+    // if (ctx != null) {
+    //   throw new SemanticActionNotAllowedException(
+    //       "Grammar contains semantic actions, which are not supported");
+    // }
   }
 
   @Override
