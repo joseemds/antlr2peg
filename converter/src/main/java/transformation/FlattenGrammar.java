@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import peg.node.*;
 
-public class FlattenGrammar implements Transformation {
+public class FlattenGrammar implements RuleTransformation {
 
   public FlattenGrammar() {}
 
-  @Override
-  public Node apply(Node n) {
-    return flattenNode(n);
+  public Rule apply(Rule r) {
+    return new Rule(r.name(), flattenNode(r.rhs()), r.kind());
   }
 
   private Node flattenNode(Node node) {

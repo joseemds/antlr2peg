@@ -144,14 +144,14 @@ public class LpegBackend {
   }
 
   private String printCharset(RangeNode range) {
-    String base = "R('%s', '%s')".formatted(range.from(), range.to());
+    String base = "R('%s%s')".formatted(range.from(), range.to());
     if (grammar.getOptions().caseInsensitive) {
       if (isLowerRange(range))
         return base
-            + " + R('%s', '%s')".formatted(range.from().toUpperCase(), range.to().toUpperCase());
+            + " + R('%s%s')".formatted(range.from().toUpperCase(), range.to().toUpperCase());
       if (isUpperRange(range))
         return base
-            + " + R('%s', '%s')".formatted(range.from().toLowerCase(), range.to().toLowerCase());
+            + " + R('%s%s')".formatted(range.from().toLowerCase(), range.to().toLowerCase());
     }
     return base;
   }
