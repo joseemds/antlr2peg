@@ -144,11 +144,41 @@ public class LpegBackend {
   }
 
   private String printCharset(RangeNode range) {
-    return "R('%s', '%s')".formatted(range.from(), range.to());
+    String base = "R('%s', '%s')".formatted(range.from(), range.to());
+    if (grammar.getOptions().caseInsensitive) {
+      if (isLowerRange(range))
+        return base
+            + " + R('%s', '%s')".formatted(range.from().toUpperCase(), range.to().toUpperCase());
+      if (isUpperRange(range))
+        return base
+            + " + R('%s', '%s')".formatted(range.from().toLowerCase(), range.to().toLowerCase());
+    }
+    return base;
   }
 
   private String printCharset(LiteralNode literal) {
-    return "P('%s')".formatted(literal.ch());
+    String base = "P('%s')".formatted(literal.ch());
+    if (grammar.getOptions().caseInsensitive) {
+      if (isLower(literal.ch())) return base + " + P('%s')".formatted(literal.ch().toUpperCase());
+      if (isUpper(literal.ch())) return base + " + P('%s')".formatted(literal.ch().toLowerCase());
+    }
+    return base;
+  }
+
+  private boolean isLowerRange(RangeNode range) {
+    return isLower(range.from()) && isLower(range.to());
+  }
+
+  private boolean isUpperRange(RangeNode range) {
+    return isUpper(range.from()) && isUpper(range.to());
+  }
+
+  private boolean isLower(String token) {
+    return token.length() == 1 && Character.isLowerCase(token.charAt(0));
+  }
+
+  private boolean isUpper(String token) {
+    return token.length() == 1 && Character.isUpperCase(token.charAt(0));
   }
 
   private String printTerm(Term term) {
