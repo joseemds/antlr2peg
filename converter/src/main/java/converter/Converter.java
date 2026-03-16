@@ -15,6 +15,7 @@ import peg.PegPrinter;
 import peg.grammar.AmbiguousChoiceDetector;
 import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
+import transformation.AppendKeywords;
 import transformation.FixRepetitions;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
@@ -65,6 +66,7 @@ public class Converter {
       for (Rule rule : newRules) {
         grammar.addRule(rule);
       }
+      grammar = grammar.transform(new AppendKeywords(grammar));
 
       System.out.println("===========");
       for (Entry<String, Set<Node>> e : grammar.getFirsts().entrySet()) {
