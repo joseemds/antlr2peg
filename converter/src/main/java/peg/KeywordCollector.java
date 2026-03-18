@@ -43,6 +43,7 @@ public class KeywordCollector {
   }
 
   private boolean isWord(String s) {
-    return !s.isBlank() && s.replaceAll("'", "").chars().allMatch(Character::isLetter);
+		String sanitizedString = s.replaceAll("'", "");
+    return !sanitizedString.isBlank() && sanitizedString.length() > 1&& sanitizedString.chars().allMatch(Character::isLetter);
   }
 }

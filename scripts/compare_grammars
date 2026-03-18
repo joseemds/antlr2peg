@@ -1,0 +1,344 @@
+#!/usr/bin/env python3
+# vim: set filetype=python :
+"""
+run_grammar_tests.py
+~~~~~~~~~~~~~~~~~~~~
+Run ANTLR4 and Lua grammar tests against a directory of input files,
+compare results, log a JSON report, and print a coloured summary.
+
+Usage (positional):
+    python run_grammar_tests.py <grammar.g4> <input-dir> <script.lua>
+
+Or with named flags:
+    python run_grammar_tests.py \
+        --antlr-grammar MyGrammar.g4 \
+        --lua-grammar   my_parser.lua \
+        --input-dir     tests/inputs \
+        --start-rule    program \
+        --ext           .txt
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+
+# ── ANSI colours ──────────────────────────────────────────────────────────────
+
+RESET  = "\033[0m"
+BOLD   = "\033[1m"
+DIM    = "\033[2m"
+RED    = "\033[0;31m"
+GREEN  = "\033[0;32m"
+YELLOW = "\033[1;33m"
+CYAN   = "\033[0;36m"
+
+
+def c(code: str, text: str) -> str:
+    """Wrap *text* in an ANSI escape *code* (no-ops on non-TTY)."""
+    if not sys.stdout.isatty():
+        return text
+    return f"{code}{text}{RESET}"
+
+
+def sep(width: int = 68) -> None:
+    print(c(DIM, "─" * width))
+
+
+# ── Data model ────────────────────────────────────────────────────────────────
+
+@dataclass
+class FileResult:
+    name: str
+    antlr_pass: bool
+    lua_pass: bool
+
+
+@dataclass
+class TestReport:
+    grammar: str
+    lua_script: str
+    input_dir: str
+    start_rule: str
+    extension: str
+    timestamp: str
+    total: int
+    passed_at_both: int
+    failed_at_both: int
+    # antlr4 rejected it, lua accepted it
+    failed_antlr_parsed_lua: list[str]
+    failed_antlr_parsed_lua_count: int
+    # lua rejected it, antlr4 accepted it
+    failed_lua_parsed_antlr: list[str]
+    failed_lua_parsed_antlr_count: int
+
+    def to_dict(self) -> dict:
+        return {
+            "meta": {
+                "grammar":    self.grammar,
+                "lua_script": self.lua_script,
+                "input_dir":  self.input_dir,
+                "start_rule": self.start_rule,
+                "extension":  self.extension,
+                "timestamp":  self.timestamp,
+                "total_files": self.total,
+            },
+            "stats": {
+                "passed_at_both":               self.passed_at_both,
+                "failed_at_both":               self.failed_at_both,
+                "failed_antlr_parsed_lua_count": self.failed_antlr_parsed_lua_count,
+                "failed_lua_parsed_antlr_count": self.failed_lua_parsed_antlr_count,
+            },
+            "divergences": {
+                "failed_antlr_parsed_lua": self.failed_antlr_parsed_lua,
+                "failed_lua_parsed_antlr": self.failed_lua_parsed_antlr,
+            },
+        }
+
+
+
+def detect_start_rule(grammar: Path) -> str:
+    """Return the first lowercase rule name found in the grammar file."""
+    pattern = re.compile(r"^([a-z][A-Za-z0-9_]*)\s*:")
+    for line in grammar.read_text(encoding="utf-8").splitlines():
+        m = pattern.match(line)
+        if m:
+            return m.group(1)
+    raise SystemExit(
+        f"Could not auto-detect start rule from {grammar}.\n"
+        "Pass it explicitly with --start-rule / -s."
+    )
+
+
+def run_antlr(grammar: Path, start_rule: str, input_file: Path) -> bool:
+    result = subprocess.run(
+        ["antlr4-parse", str(grammar), start_rule, str(input_file)],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    return result.returncode == 0
+
+
+def run_lua(lua_script: Path, input_file: Path) -> bool:
+    with input_file.open("rb") as fh:
+        result = subprocess.run(
+            ["lua", str(lua_script)],
+            stdin=fh,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    return result.returncode == 0
+
+
+def print_file_list(label: str, color: str, files: list[str]) -> None:
+    count = len(files)
+    print(c(color, f"  {label}: {count}"))
+    for name in files:
+        print(f"    {c(DIM, '•')} {name}")
+
+
+# ── Core logic ────────────────────────────────────────────────────────────────
+
+def collect_inputs(input_dir: Path, ext: str | None) -> list[Path]:
+    if ext:
+        files = sorted(input_dir.glob(f"*{ext}"))
+    else:
+        files = sorted(p for p in input_dir.iterdir() if p.is_file())
+    return files
+
+
+def run_tests(
+    grammar: Path,
+    lua_script: Path,
+    input_dir: Path,
+    start_rule: str,
+    ext: str | None,
+) -> tuple[list[FileResult], TestReport]:
+    files = collect_inputs(input_dir, ext)
+    if not files:
+        raise SystemExit(f"No input files found in {input_dir}" +
+                         (f" with extension '{ext}'" if ext else ""))
+
+    # ── Header ────────────────────────────────────────────────────────────────
+    print()
+    print(c(CYAN + BOLD, "  GRAMMAR TEST RUNNER"))
+    sep()
+    print(f"  Grammar    : {c(BOLD, str(grammar))}  (start rule: {c(CYAN, start_rule)})")
+    print(f"  Lua script : {c(BOLD, str(lua_script))}")
+    print(f"  Input dir  : {c(BOLD, str(input_dir))}  ({len(files)} files)")
+    sep()
+    print()
+
+    results: list[FileResult] = []
+
+    for path in files:
+        antlr_ok = run_antlr(grammar, start_rule, path)
+        lua_ok   = run_lua(lua_script, path)
+
+        results.append(FileResult(name=path.name, antlr_pass=antlr_ok, lua_pass=lua_ok))
+
+        antlr_sym = c(GREEN, "✔") if antlr_ok else c(RED, "✘")
+        lua_sym   = c(GREEN, "✔") if lua_ok   else c(RED, "✘")
+        print(f"  {path.name:<40}  antlr4={antlr_sym}  lua={lua_sym}")
+
+    both_pass          = [r.name for r in results if     r.antlr_pass and     r.lua_pass]
+    both_fail          = [r.name for r in results if not r.antlr_pass and not r.lua_pass]
+    antlr_only         = [r.name for r in results if     r.antlr_pass and not r.lua_pass]
+    lua_only           = [r.name for r in results if not r.antlr_pass and     r.lua_pass]
+
+    # ── Summary ───────────────────────────────────────────────────────────────
+    print()
+    sep()
+    print(c(CYAN + BOLD, f"  RESULTS SUMMARY  (total files: {len(results)})"))
+    sep()
+
+    antlr_pass = [r.name for r in results if r.antlr_pass]
+    antlr_fail = [r.name for r in results if not r.antlr_pass]
+    lua_pass   = [r.name for r in results if r.lua_pass]
+    lua_fail   = [r.name for r in results if not r.lua_pass]
+
+    print()
+    print(c(BOLD, "  antlr4-parse"))
+    print_file_list("Pass", GREEN, antlr_pass)
+    print_file_list("Fail", RED,   antlr_fail)
+
+    print()
+    print(c(BOLD, "  lua"))
+    print_file_list("Pass", GREEN, lua_pass)
+    print_file_list("Fail", RED,   lua_fail)
+
+    print()
+    sep()
+    print(c(CYAN + BOLD, "  DIVERGENCES"))
+    sep()
+    print()
+    print_file_list("antlr4 ✔  /  lua ✘  (antlr4 accepts, lua rejects)", YELLOW, antlr_only)
+    print()
+    print_file_list("lua ✔  /  antlr4 ✘  (lua accepts, antlr4 rejects)", YELLOW, lua_only)
+
+    print()
+    sep()
+    print(c(CYAN + BOLD, "  AGREEMENT"))
+    sep()
+    print()
+    print_file_list("Both Pass", GREEN, both_pass)
+    print()
+    print_file_list("Both Fail", RED,   both_fail)
+
+    print()
+    sep()
+    print(f"  {c(BOLD, f'  {"Tool":<30} {"Pass":>6} / {"Fail":<6}')}")
+    sep()
+    print(f"  {'antlr4-parse':<30} {len(antlr_pass):>6} / {len(antlr_fail):<6}")
+    print(f"  {'lua':<30} {len(lua_pass):>6} / {len(lua_fail):<6}")
+    sep()
+    print(f"  {'Diverge (antlr4✔  lua✘)':<30} {len(antlr_only):>6}")
+    print(f"  {'Diverge (lua✔  antlr4✘)':<30} {len(lua_only):>6}")
+    sep()
+    print()
+
+    report = TestReport(
+        grammar=str(grammar),
+        lua_script=str(lua_script),
+        input_dir=str(input_dir),
+        start_rule=start_rule,
+        extension=ext or "",
+        timestamp=datetime.now(timezone.utc).isoformat(),
+        total=len(results),
+        passed_at_both=len(both_pass),
+        failed_at_both=len(both_fail),
+        failed_antlr_parsed_lua=lua_only,
+        failed_antlr_parsed_lua_count=len(lua_only),
+        failed_lua_parsed_antlr=antlr_only,
+        failed_lua_parsed_antlr_count=len(antlr_only),
+    )
+
+    return results, report
+
+
+def save_log(report: TestReport, log_dir: Path = Path("_log")) -> Path:
+    log_dir.mkdir(parents=True, exist_ok=True)
+    safe_ts = report.timestamp.replace(":", "-").replace("+", "Z")[:19] + "Z"
+    out = log_dir / f"{safe_ts}.json"
+    out.write_text(json.dumps(report.to_dict(), indent=2), encoding="utf-8")
+    return out
+
+
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="run_grammar_tests",
+        description="Compare antlr4-parse and a Lua grammar against a directory of input files.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+    p.add_argument("grammar",    nargs="?", help="Path to the .g4 grammar file (positional)")
+    p.add_argument("input_dir",  nargs="?", help="Directory containing input files (positional)")
+    p.add_argument("lua_script", nargs="?", help="Path to the Lua parser script (positional)")
+
+    g = p.add_argument_group("named arguments (override positionals)")
+    g.add_argument("--antlr-grammar",  metavar="FILE",  help=".g4 grammar file")
+    g.add_argument("--lua-grammar",    metavar="FILE",  help="Lua parser script")
+    g.add_argument("--input-dir",      metavar="DIR",   dest="named_input_dir", help="Input directory")
+    g.add_argument("--start-rule", "-s", metavar="RULE", help="ANTLR4 start rule (auto-detected if omitted)")
+    g.add_argument("--ext", "-e",        metavar="EXT",  help="Filter input files by extension, e.g. .txt")
+    g.add_argument("--log-dir",          metavar="DIR",  default="_log", help="Directory for JSON logs (default: _log)")
+
+    return p
+
+
+def resolve_args(args: argparse.Namespace) -> tuple[Path, Path, Path, str | None, str | None, Path]:
+    """Merge positional and named arguments; named take priority."""
+    grammar_str    = args.antlr_grammar  or args.grammar
+    lua_str        = args.lua_grammar    or args.lua_script
+    input_dir_str  = args.named_input_dir or args.input_dir
+
+    missing = []
+    if not grammar_str:   missing.append("grammar (.g4)")
+    if not lua_str:       missing.append("lua script")
+    if not input_dir_str: missing.append("input directory")
+
+    if missing:
+        raise SystemExit(
+            "Missing required arguments: " + ", ".join(missing) + "\n"
+            "Run with --help for usage."
+        )
+
+    grammar   = Path(grammar_str)
+    lua       = Path(lua_str)
+    input_dir = Path(input_dir_str)
+
+    for p, label in [(grammar, "Grammar file"), (lua, "Lua script")]:
+        if not p.is_file():
+            raise SystemExit(f"{label} not found: {p}")
+    if not input_dir.is_dir():
+        raise SystemExit(f"Input directory not found: {input_dir}")
+
+    return grammar, lua, input_dir, args.start_rule, args.ext, Path(args.log_dir)
+
+
+def main() -> None:
+    parser = build_parser()
+    args   = parser.parse_args()
+
+    grammar, lua_script, input_dir, start_rule, ext, log_dir = resolve_args(args)
+
+    if start_rule is None:
+        start_rule = detect_start_rule(grammar)
+
+    _, report = run_tests(grammar, lua_script, input_dir, start_rule, ext)
+
+    log_path = save_log(report, log_dir)
+    print(c(DIM, f"  Log saved → {log_path}"))
+    print()
+
+
+if __name__ == "__main__":
+    main()
