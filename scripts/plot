@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# vim: set filetype=python :
+
 """
 Usage: python plot_grammar_results.py results.json [output.png]
 """

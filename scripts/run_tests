@@ -1,0 +1,216 @@
+#!/usr/bin/env python3
+# vim: set filetype=python :
+"""
+Run ANTLR4 and Lua parser tests against pre-generated test inputs.
+
+Usage:
+    run_tests.py -g DOT.g4 -e dot -s graph -p /tmp/DOT/DOT.lua
+    run_tests.py -g DOT.g4 -e dot -s graph  # auto-discovers lua parser
+"""
+import argparse
+import json
+import re
+import subprocess
+import sys
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    p.add_argument("--grammar", "-g", type=Path, required=True, help=".g4 ANTLR4 grammar file")
+    p.add_argument("--ext", "-e", metavar="EXTENSION", required=True, help="Extension of the generated test files")
+    p.add_argument("--start-rule", "-s", help="Name of the grammar start rule (auto-detected if omitted)")
+    p.add_argument("--lua-parser", "-p", type=Path, default=None, help="Path to the Lua parser file (default: ./<stem>/<stem>.lua)")
+    p.add_argument("--input-dir", "-i", type=Path, default=None, help="Directory containing test files (default: /tmp/<stem>/gen)")
+    p.add_argument("--out", "-o", type=Path, default=Path("/tmp"), help="Base output dir used during generation (default: /tmp)")
+    p.add_argument("--log-dir", type=Path, default=Path("_log"), help="Directory for JSON reports (default: _log)")
+    p.add_argument("--verbose", "-v", action="store_true", help="Show subprocess output")
+    return p
+
+
+def run_cmd(cmd: list[str], verbose: bool = False, stdin=None) -> subprocess.CompletedProcess:
+    stdout = None if verbose else subprocess.DEVNULL
+    stderr = None if verbose else subprocess.DEVNULL
+    return subprocess.run(cmd, check=True, stdout=stdout, stderr=stderr, stdin=stdin)
+
+
+def detect_start_rule(grammar: Path) -> str:
+    pattern = re.compile(r"^([a-z][A-Za-z0-9_]*)\s*:")
+    for line in grammar.read_text(encoding="utf-8").splitlines():
+        m = pattern.match(line)
+        if m:
+            return m.group(1)
+    raise SystemExit(
+        f"Could not auto-detect start rule from {grammar}.\n"
+        "Pass it explicitly with --start-rule / -s."
+    )
+
+
+def run_lua_test(lua_parser: Path, input_file: Path, verbose: bool = False) -> bool:
+    with input_file.open("rb") as fh:
+        try:
+            run_cmd(["lua", str(lua_parser)], verbose=verbose, stdin=fh)
+            return True
+        except subprocess.CalledProcessError:
+            return False
+
+
+def run_antlr_test(antlr4_grammar: Path, start_rule: str, input_file: Path, verbose: bool = False) -> bool:
+    try:
+        run_cmd(
+            ["antlr4-parse", str(antlr4_grammar), start_rule, str(input_file)],
+            verbose=verbose,
+        )
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
+@dataclass
+class FileResult:
+    name: str
+    antlr_pass: bool
+    lua_pass: bool
+
+
+def run_tests(
+    grammar: Path,
+    lua_parser: Path,
+    input_dir: Path,
+    ext: str,
+    start_rule: str,
+    verbose: bool = False,
+) -> list[FileResult]:
+    files = sorted(input_dir.glob(f"*.{ext}"))
+    if not files:
+        raise SystemExit(f"No input files found in {input_dir} with extension '.{ext}'")
+
+    results = []
+    for path in files:
+        antlr_ok = run_antlr_test(grammar, start_rule, path, verbose=verbose)
+        lua_ok = run_lua_test(lua_parser, path, verbose=verbose)
+        results.append(FileResult(name=path.name, antlr_pass=antlr_ok, lua_pass=lua_ok))
+
+    return results
+
+
+def print_report(results: list[FileResult]) -> None:
+    total = len(results)
+    both_pass   = [r.name for r in results if     r.antlr_pass and     r.lua_pass]
+    both_fail   = [r.name for r in results if not r.antlr_pass and not r.lua_pass]
+    antlr_only  = [r.name for r in results if     r.antlr_pass and not r.lua_pass]
+    lua_only    = [r.name for r in results if not r.antlr_pass and     r.lua_pass]
+
+    def section(title, files):
+        print(f"\n  {title} ({len(files)}/{total}):")
+        for name in files:
+            print(f"    - {name}")
+
+    print(f"\n{'='*50}")
+    print(f"Results: {total} test(s) run")
+    print(f"  ANTLR : {len(both_pass) + len(antlr_only)}/{total} passed")
+    print(f"  Lua   : {len(both_pass) + len(lua_only)}/{total} passed")
+
+    section("Both passed",                          both_pass)
+    section("Both failed",                          both_fail)
+    section("ANTLR passed / Lua failed (diverged)", antlr_only)
+    section("Lua passed / ANTLR failed (diverged)", lua_only)
+    print(f"\n{'='*50}")
+
+
+def save_report(results: list[FileResult], grammar: Path, lua_parser: Path,
+                input_dir: Path, start_rule: str, ext: str, log_dir: Path) -> Path:
+    log_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now(timezone.utc).isoformat()
+    safe_ts = timestamp.replace(":", "-").replace("+", "Z")[:19] + "Z"
+
+    both_pass  = [r.name for r in results if     r.antlr_pass and     r.lua_pass]
+    both_fail  = [r.name for r in results if not r.antlr_pass and not r.lua_pass]
+    antlr_only = [r.name for r in results if     r.antlr_pass and not r.lua_pass]
+    lua_only   = [r.name for r in results if not r.antlr_pass and     r.lua_pass]
+
+    report = {
+        "meta": {
+            "grammar":    str(grammar),
+            "lua_parser": str(lua_parser),
+            "input_dir":  str(input_dir),
+            "start_rule": start_rule,
+            "extension":  ext,
+            "timestamp":  timestamp,
+            "total":      len(results),
+        },
+        "stats": {
+            "antlr_passed": len(both_pass) + len(antlr_only),
+            "lua_passed":   len(both_pass) + len(lua_only),
+            "both_passed":  len(both_pass),
+            "both_failed":  len(both_fail),
+            "diverged":     len(antlr_only) + len(lua_only),
+        },
+        "divergences": {
+            "antlr_pass_lua_fail": antlr_only,
+            "lua_pass_antlr_fail": lua_only,
+        },
+    }
+
+    out = log_dir / f"{safe_ts}.json"
+    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return out
+
+
+def resolve_paths(args: argparse.Namespace) -> tuple[Path, Path]:
+    stem = args.grammar.stem
+    lua_parser = args.lua_parser or (Path(".") / stem / f"{stem}.lua")
+    input_dir  = args.input_dir  or (args.out / stem / "gen")
+
+    if not args.grammar.exists():
+        raise SystemExit(f"Grammar file not found: {args.grammar}")
+    if not lua_parser.exists():
+        raise SystemExit(f"Lua parser not found: {lua_parser}")
+    if not input_dir.exists():
+        raise SystemExit(f"Input directory not found: {input_dir}")
+
+    return lua_parser, input_dir
+
+
+def main() -> None:
+    parser = build_parser()
+    args = parser.parse_args()
+
+    try:
+        lua_parser, input_dir = resolve_paths(args)
+        start_rule = args.start_rule or detect_start_rule(args.grammar)
+
+        results = run_tests(
+            grammar=args.grammar,
+            lua_parser=lua_parser,
+            input_dir=input_dir,
+            ext=args.ext,
+            start_rule=start_rule,
+            verbose=args.verbose,
+        )
+
+        print_report(results)
+
+        log_path = save_report(
+            results=results,
+            grammar=args.grammar,
+            lua_parser=lua_parser,
+            input_dir=input_dir,
+            start_rule=start_rule,
+            ext=args.ext,
+            log_dir=args.log_dir,
+        )
+        print(f"  Log saved -> {log_path}\n")
+
+    except KeyboardInterrupt:
+        print("\nInterrupted.", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

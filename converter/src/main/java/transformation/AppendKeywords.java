@@ -21,16 +21,12 @@ public class AppendKeywords implements RuleTransformation {
   public Rule apply(Rule rule) {
     if (POSSIBLE_RULE_NAME.contains(rule.name().toUpperCase()) && grammar.isLexicalRule(rule)) {
 
-
-			List<String> keywords = keywordsCollector.collectKeywords();
-			if(keywords.isEmpty()){
-				return rule;
-			}
+      List<String> keywords = keywordsCollector.collectKeywords();
+      if (keywords.isEmpty()) {
+        return rule;
+      }
       List<Node> possibleKeywords =
-          keywords.stream()
-              .map(grammar::mkLiteral)
-              .map(l -> (Node) l)
-              .toList();
+          keywords.stream().map(grammar::mkLiteral).map(l -> (Node) l).toList();
 
       Node keywordChoices = this.grammar.mkOrderedChoice(possibleKeywords);
       Node notKeywords = this.grammar.mkNot(keywordChoices, false);

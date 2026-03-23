@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+# vim: set filetype=python :
+"""
+Generate test inputs from an ANTLR4 grammar using grammarinator.
+Usage:
+    gen_tests -g DOT.g4 -e dot -n 50
+"""
+import os
+import argparse
+import subprocess
+from pathlib import Path
+
+
+def build_parser():
+    p = argparse.ArgumentParser()
+    p.add_argument("--grammar", "-g", type=Path, required=True, help=".g4 ANTLR4 grammar file")
+    p.add_argument("--ext", "-e", metavar="EXTENSION", required=True, help="Extension for generated test files")
+    p.add_argument("--out", "-o", type=Path, default=Path("/tmp"), help="Output dir (default: /tmp)")
+    p.add_argument("--n-tests", "-n", type=int, default=20, help="Number of test files to generate (default: 20)")
+    p.add_argument("--max-depth", "-d", type=int, default=20, help="Maximum grammar depth (default: 20)")
+    p.add_argument("--seed", type=int, default=None, help="Random seed (random if omitted)")
+    p.add_argument("--gen-dir", type=Path, default=Path("gen"), help="Sub-directory for generated files (default: gen)")
+    return p
+
+
+def process_grammar(grammar_file: Path, out_dir: Path) -> Path:
+    target_dir = out_dir / grammar_file.stem
+    target_dir.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        "grammarinator-process",
+        str(grammar_file),
+        "-o", str(target_dir),
+    ]
+    print(f"Processing grammar: {' '.join(cmd)}")
+    subprocess.run(cmd, check=True)
+    return target_dir
+
+
+def generate_tests(
+    grammar_file: Path,
+    extension: str,
+    out_dir: Path,
+    n_tests: int = 20,
+    gen_dir: Path = Path("gen"),
+    seed: int = None,
+    max_depth: int = 20,
+) -> Path:
+    filename = grammar_file.stem
+    base_dir = out_dir / filename / gen_dir
+    base_dir.mkdir(parents=True, exist_ok=True)
+    out_pattern = base_dir / f"test_%d.gen.{extension}"
+
+    if seed is None:
+        seed = int.from_bytes(os.urandom(4), "big")
+
+    generator_class = f"{filename}Generator.{filename}Generator"
+    print(f"Using seed: {seed}")
+    cmd = [
+        "grammarinator-generate",
+        generator_class,
+        "-d", str(max_depth),
+        "-o", str(out_pattern),
+        "-n", str(n_tests),
+        "--random-seed", str(seed),
+        "-s", "grammarinator.runtime.simple_space_serializer",
+        "--sys-path", str(out_dir / filename),
+    ]
+    print(f"Generating tests: {' '.join(cmd)}")
+    subprocess.run(cmd, check=True)
+    return base_dir
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+    args.out.mkdir(parents=True, exist_ok=True)
+
+    process_grammar(args.grammar, args.out)
+    test_dir = generate_tests(
+        grammar_file=args.grammar,
+        extension=args.ext,
+        out_dir=args.out,
+        n_tests=args.n_tests,
+        gen_dir=args.gen_dir,
+        seed=args.seed,
+        max_depth=args.max_depth,
+    )
+    print(f"Generated {args.n_tests} test(s) in: {test_dir}")
+
+
+if __name__ == "__main__":
+    main()

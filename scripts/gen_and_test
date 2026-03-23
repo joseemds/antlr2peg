@@ -1,0 +1,215 @@
+#!/usr/bin/env python3
+# vim: set filetype=python :
+"""
+Create a parser from an ANTLR4 grammar, generate inputs with grammarinator,
+and test the generated parser against the generated entries.
+
+Usage:
+    gen_and_test -g DOT.g4 -e dot -s graph -n 50
+"""
+import os
+import argparse
+import subprocess
+import sys
+from pathlib import Path
+
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    p.add_argument("--grammar", "-g", type=Path, required=True, help=".g4 ANTLR4 grammar file")
+    p.add_argument("--ext", "-e", metavar="EXTENSION", required=True, help="Extension used in the generated test files")
+    p.add_argument("--start-rule", "-s", required=True, help="Name of the grammar start rule")
+    p.add_argument("--out", "-o", type=Path, default=Path("/tmp"), help="Output dir (default: /tmp)")
+    p.add_argument("--n-tests", "-n", type=int, default=20, help="Number of test files to generate (default: 20)")
+    p.add_argument("--max-depth", "-d", type=int, default=20, help="Maximum grammar depth (default: 20)")
+    p.add_argument("--seed", type=int, default=None, help="Random seed (random if omitted)")
+    p.add_argument("--gen-dir", type=Path, default=Path("gen"), help="Sub-directory name for generated files (default: gen)")
+    p.add_argument("--verbose", "-v", action="store_true", help="Show subprocess output")
+    return p
+
+
+def run_cmd(cmd: list[str], verbose: bool = False, stdin=None) -> subprocess.CompletedProcess:
+    """Run a command, surfacing output only when verbose. Raises on failure."""
+    stdout = None if verbose else subprocess.DEVNULL
+    stderr = None if verbose else subprocess.DEVNULL
+    return subprocess.run(cmd, check=True, stdout=stdout, stderr=stderr, stdin=stdin)
+
+
+def generate_parser(grammar_file: Path, out: Path, verbose: bool = False) -> Path:
+    output_path = out / grammar_file.stem / (grammar_file.stem + ".lua")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    cmd = ["./antlr2peg", "-i", str(grammar_file), "-o", str(output_path)]
+    print(f"Generating Lua parser: {' '.join(cmd)}")
+    run_cmd(cmd, verbose=verbose)
+    return output_path
+
+
+def process_grammar(grammar_file: Path, out_dir: Path, verbose: bool = False) -> Path:
+    target_dir = out_dir / grammar_file.stem
+    target_dir.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        "grammarinator-process",
+        str(grammar_file),
+        "-o", str(target_dir),
+    ]
+    print(f"Processing grammar: {' '.join(cmd)}")
+    run_cmd(cmd, verbose=verbose)
+    return target_dir
+
+
+def generate_tests(
+    grammar_file: Path,
+    extension: str,
+    out_dir: Path,
+    processed_dir: Path,
+    n_tests: int = 20,
+    gen_dir: Path = Path("gen"),
+    seed: int | None = None,
+    max_depth: int = 20,
+    verbose: bool = False,
+) -> Path:
+    filename = grammar_file.stem
+    base_dir = out_dir / filename / gen_dir
+    out_pattern = base_dir / f"test_%d.gen.{extension}"
+    out_pattern.parent.mkdir(parents=True, exist_ok=True)
+
+    if seed is None:
+        seed = int.from_bytes(os.urandom(4), "big")
+
+    generator_class = f"{filename}Generator.{filename}Generator"
+    print(f"Using seed: {seed}")
+    cmd = [
+        "grammarinator-generate",
+        generator_class,
+        "-d", str(max_depth),
+        "-o", str(out_pattern),
+        "-n", str(n_tests),
+        "--random-seed", str(seed),
+        "-s", "grammarinator.runtime.simple_space_serializer",
+        "--sys-path", str(processed_dir),
+    ]
+    print(f"Generating tests: {' '.join(cmd)}")
+    run_cmd(cmd, verbose=verbose)
+    return base_dir
+
+
+def run_lua_test(lua_parser: Path, input_file: Path, verbose: bool = False) -> bool:
+    with input_file.open("rb") as fh:
+        try:
+            run_cmd(["lua", str(lua_parser)], verbose=verbose, stdin=fh)
+            return True
+        except subprocess.CalledProcessError:
+            return False
+
+
+def run_antlr_test(antlr4_grammar: Path, start_rule: str, input_file: Path, verbose: bool = False) -> bool:
+    try:
+        run_cmd(
+            ["antlr4-parse", str(antlr4_grammar), start_rule, str(input_file)],
+            verbose=verbose,
+        )
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
+def run_tests(
+    grammar: Path,
+    lua_parser: Path,
+    input_dir: Path,
+    ext: str,
+    start_rule: str,
+    verbose: bool = False,
+) -> None:
+    files = sorted(input_dir.glob(f"*.{ext}"))
+    if not files:
+        raise SystemExit(
+            f"No input files found in {input_dir} with extension '.{ext}'"
+        )
+
+    total = len(files)
+    antlr_passed = lua_passed = 0
+    antlr_only_failures = []
+    lua_only_failures = []
+    both_failed = []
+
+    for path in files:
+        antlr_ok = run_antlr_test(grammar, start_rule, path, verbose=verbose)
+        lua_ok = run_lua_test(lua_parser, path, verbose=verbose)
+
+        antlr_passed += antlr_ok
+        lua_passed += lua_ok
+
+        if not antlr_ok and lua_ok:
+            antlr_only_failures.append(path.name)
+        elif antlr_ok and not lua_ok:
+            lua_only_failures.append(path.name)
+        elif not antlr_ok and not lua_ok:
+            both_failed.append(path.name)
+
+    print(f"\n{'='*50}")
+    print(f"Results: {total} test(s) run")
+    print(f"  ANTLR : {antlr_passed}/{total} passed")
+    print(f"  Lua   : {lua_passed}/{total} passed")
+
+    if antlr_only_failures:
+        print(f"\n  ANTLR-only failures ({len(antlr_only_failures)}):")
+        for name in antlr_only_failures:
+            print(f"    - {name}")
+    if lua_only_failures:
+        print(f"\n  Lua-only failures ({len(lua_only_failures)}):")
+        for name in lua_only_failures:
+            print(f"    - {name}")
+    if both_failed:
+        print(f"\n  Both failed ({len(both_failed)}):")
+        for name in both_failed:
+            print(f"    - {name}")
+    print(f"{'='*50}")
+
+
+def validate_args(args: argparse.Namespace) -> None:
+    if not args.grammar.exists():
+        raise SystemExit(f"Grammar file not found: {args.grammar}")
+    if not args.grammar.suffix == ".g4":
+        raise SystemExit(f"Expected a .g4 file, got: {args.grammar}")
+
+
+def main() -> None:
+    parser = build_parser()
+    args = parser.parse_args()
+    validate_args(args)
+
+    try:
+        processed_dir = process_grammar(args.grammar, args.out, verbose=args.verbose)
+        inputs = generate_tests(
+            grammar_file=args.grammar,
+            extension=args.ext,
+            out_dir=args.out,
+            processed_dir=processed_dir,
+            n_tests=args.n_tests,
+            gen_dir=args.gen_dir,
+            seed=args.seed,
+            max_depth=args.max_depth,
+            verbose=args.verbose,
+        )
+        lua_parser = generate_parser(args.grammar, args.out, verbose=args.verbose)
+        run_tests(
+            grammar=args.grammar,
+            lua_parser=lua_parser,
+            input_dir=inputs,
+            ext=args.ext,
+            start_rule=args.start_rule,
+            verbose=args.verbose,
+        )
+    except subprocess.CalledProcessError as e:
+        raise SystemExit(f"Command failed: {e.cmd}\nReturn code: {e.returncode}")
+    except KeyboardInterrupt:
+        print("\nInterrupted.", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
