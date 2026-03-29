@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import peg.PegGrammar;
 import peg.node.*;
 import peg.node.Node;
+import utils.Utils;
 
 public class LpegBackend {
   private PegGrammar grammar;
@@ -129,7 +130,8 @@ public class LpegBackend {
   }
 
   private String printLiteral(Literal lit) {
-    String content = lit.content();
+    String content = Utils.sanitizeString(lit.content());
+    // String content = lit.content();
     if (grammar.getOptions().caseInsensitive) {
       content = "ci(" + lit.content() + ")";
     }
@@ -139,7 +141,13 @@ public class LpegBackend {
   }
 
   private String printCharset(Charset c) {
-    return c.content().stream().map(this::printCharset).collect(Collectors.joining(" + "));
+    String out = c.content().stream().map(this::printCharset).collect(Collectors.joining(" + "));
+
+    if (c.content().size() > 1 || grammar.getOptions().caseInsensitive) {
+      return "(" + out + ")";
+    }
+
+    return out;
   }
 
   private String printCharset(CharacterSet cs) {
