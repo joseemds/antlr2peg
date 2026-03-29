@@ -1,7 +1,9 @@
 package transformation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +22,7 @@ public class FixRepetitions implements RuleTransformation {
   private static volatile int counter = 0;
   private final ArrayList<Rule> newRules = new ArrayList<>();
   private final Map<String, Set<Node>> followsSets;
+  private final Map<String, String> fixedRepetition = new HashMap<>();
   private StatsTracker statsTracker;
 
   public FixRepetitions(PegGrammar grammar, StatsTracker tracker) {
@@ -64,6 +67,29 @@ public class FixRepetitions implements RuleTransformation {
     };
   }
 
+  // FollowSet não é ordenavel
+  private String createKey(Term term, Set<Node> followOfTerm) {
+    char[] chars = followOfTerm.toString().toCharArray();
+    Arrays.sort(chars);
+    return term + "|" + new String(chars);
+  }
+
+  private String getOrCreateFixedRule(
+      Term term, List<Node> firstOfBody, Set<Node> followOfTerm, Node context) {
+    String cacheKey = createKey(term, followOfTerm);
+    if (fixedRepetition.containsKey(cacheKey)) {
+      return fixedRepetition.get(cacheKey);
+    }
+
+    String ruleName = genName();
+    fixedRepetition.put(cacheKey, ruleName);
+    Node newNode = fixRepetition(term, firstOfBody, new ArrayList<>(followOfTerm), ruleName);
+    statsTracker.bumpRepetitionsTransformed();
+    Rule r = grammar.mkParsingRule(ruleName, newNode);
+    addRule(r, context);
+    return ruleName;
+  }
+
   private Node fixTerm(Term term, String parentRule) {
     if (term.op().isEmpty()) return term;
 
@@ -72,12 +98,7 @@ public class FixRepetitions implements RuleTransformation {
     boolean hasIntersection = !Collections.disjoint(pFirst, repFollow);
 
     if (hasIntersection) {
-      String newRuleName = genName();
-      Node newNode = fixRepetition(term, pFirst, new ArrayList<>(repFollow), newRuleName);
-      statsTracker.bumpRepetitionsTransformed();
-      Rule r = new Rule(newRuleName, newNode);
-      addRule(r, term);
-      return new Ident(newRuleName);
+      return new Ident(getOrCreateFixedRule(term, pFirst, repFollow, term));
     }
     return term;
   }
@@ -98,12 +119,8 @@ public class FixRepetitions implements RuleTransformation {
         boolean hasIntersection = !Collections.disjoint(firstOfBody, new ArrayList<>(followOfTerm));
 
         if (hasIntersection) {
-          String ruleName = this.genName();
-          Node newNode =
-              fixRepetition(term, firstOfBody, new ArrayList<Node>(followOfTerm), ruleName);
-          Rule r = grammar.mkParsingRule(ruleName, newNode);
-          addRule(r, seq);
-          newChildren.add(grammar.mkIdent(ruleName));
+          newChildren.add(
+              grammar.mkIdent(getOrCreateFixedRule(term, firstOfBody, followOfTerm, seq)));
 
         } else {
           newChildren.add(term);

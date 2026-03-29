@@ -15,10 +15,11 @@ import peg.PegPrinter;
 import peg.grammar.AmbiguousChoiceDetector;
 import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
-import transformation.AppendKeywords;
+import transformation.AppendWordSuffix;
 import transformation.FixRepetitions;
 import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
+import transformation.PrependKeywords;
 import transformation.ReorderByUniquePath;
 import utils.StatsTracker;
 
@@ -66,7 +67,8 @@ public class Converter {
       for (Rule rule : newRules) {
         grammar.addRule(rule);
       }
-      grammar = grammar.transform(new AppendKeywords(grammar));
+      grammar = grammar.transform(new PrependKeywords(grammar));
+      grammar = grammar.transform(new AppendWordSuffix(grammar));
 
       System.out.println("===========");
       for (Entry<String, Set<Node>> e : grammar.getFirsts().entrySet()) {

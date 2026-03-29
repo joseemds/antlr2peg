@@ -1,18 +1,19 @@
 package transformation;
 
+import java.util.Comparator;
 import java.util.List;
 import peg.KeywordCollector;
 import peg.PegGrammar;
 import peg.node.Node;
 import peg.node.Rule;
 
-public class AppendKeywords implements RuleTransformation {
+public class PrependKeywords implements RuleTransformation {
 
   private final List<String> POSSIBLE_RULE_NAME = List.of("ID", "ID_", "IDENTIFIER", "IDENT");
   private final KeywordCollector keywordsCollector;
   private final PegGrammar grammar;
 
-  public AppendKeywords(PegGrammar grammar) {
+  public PrependKeywords(PegGrammar grammar) {
     this.keywordsCollector = new KeywordCollector(grammar);
     this.grammar = grammar;
   }
@@ -26,7 +27,11 @@ public class AppendKeywords implements RuleTransformation {
         return rule;
       }
       List<Node> possibleKeywords =
-          keywords.stream().map(grammar::mkLiteral).map(l -> (Node) l).toList();
+          keywords.stream()
+              .sorted(Comparator.comparingInt(String::length).reversed())
+              .map(grammar::mkLiteral)
+              .map(l -> (Node) l)
+              .toList();
 
       Node keywordChoices = this.grammar.mkOrderedChoice(possibleKeywords);
       Node notKeywords = this.grammar.mkNot(keywordChoices, false);

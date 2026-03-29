@@ -1,6 +1,8 @@
 package peg;
 
 import charset.CharacterSet;
+import charset.LiteralNode;
+import charset.RangeNode;
 import exception.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +42,10 @@ public class PegGrammar {
 
   public Term mkTerm(Node node, Optional<Operator> op) {
     return new Term(node, op);
+  }
+
+  public CharacterSet mkRange(String to, String from) {
+    return new RangeNode(to, from);
   }
 
   public List<Rule> getRules() {
@@ -82,12 +88,20 @@ public class PegGrammar {
     return new Literal(content);
   }
 
+  public LiteralNode mkCharsetLiteral(String content) {
+    return new LiteralNode(content);
+  }
+
   // public Charset mkCharset(String content) {
   //   return new Charset(content);
   // }
 
   public Charset mkCharset(List<CharacterSet> cs) {
     return new Charset(cs);
+  }
+
+  public Charset mkCharset(CharacterSet... cs) {
+    return new Charset(List.of(cs));
   }
 
   public Rule mkRule(String lhs, Node rhs, RuleKind kind) {
