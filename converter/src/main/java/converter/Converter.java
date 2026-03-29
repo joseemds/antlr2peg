@@ -83,7 +83,7 @@ public class Converter {
       return ast;
 
     } catch (IOException e) {
-      throw new IllegalArgumentException("Error when reading inputFile " + file);
+      throw new IllegalArgumentException("Error when reading inputFile " + file, e);
     }
   }
 

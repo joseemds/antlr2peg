@@ -52,7 +52,7 @@ public class CliRunner {
     }
     PegGrammar pegGrammar = null;
 
-    if (options.lexerFile != null || options.lexerFile != "") {
+    if (options.lexerFile != null && !options.lexerFile.isEmpty()) {
       pegGrammar =
           Converter.convertToPegGrammar(options.input, options.lexerFile, statsTracker, options);
     } else {

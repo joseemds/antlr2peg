@@ -7,6 +7,7 @@ import exception.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class PegGrammar {
   private List<Rule> rules = new ArrayList<>();
   private Map<String, Set<Node>> firstSets = new HashMap<>();
   private Map<String, Set<Node>> followSets = new HashMap<>();
+  private Map<Node, Set<Node>> nodeFollowSets = new IdentityHashMap<>();
   public Map<String, Node> nonTerminals = new HashMap<>();
 
   public PegGrammar() {
@@ -256,161 +258,116 @@ public class PegGrammar {
     return result;
   }
 
-  public Set<Node> localFollowOf(Node target, Node parent) {
-    Set<Node> result = new HashSet<>();
-
-    switch (parent) {
-      case Sequence seq -> {
-        List<Node> nodes = seq.nodes();
-        int i = nodes.indexOf(target);
-
-        if (i >= 0) {
-          for (int j = i + 1; j < nodes.size(); j++) {
-            Node next = nodes.get(j);
-            List<Node> nextFirst = firstOf(next);
-
-            nextFirst.stream().filter(n -> !(n instanceof Empty)).forEach(result::add);
-
-            if (!isPossiblyEmpty(next)) {
-              return result;
-            }
-          }
-
-          return result;
-        }
-
-        for (Node child : nodes) {
-          result.addAll(localFollowOf(target, child));
-        }
-      }
-
-      case OrderedChoice oc -> {
-        for (Node alt : oc.nodes()) {
-          result.addAll(localFollowOf(target, alt));
-        }
-      }
-
-      case Term t -> {
-        if (t.node() == target) {
-          if (t.op().isPresent()) {
-            switch (t.op().get()) {
-              case STAR, PLUS -> {
-                var first = firstOf(target);
-                first.stream().filter(n -> !(n instanceof Empty)).forEach(result::add);
-              }
-              case OPTIONAL -> {}
-            }
-          } else {
-          }
-          return result;
-        }
-
-        result.addAll(localFollowOf(target, t.node()));
-      }
-
-      default -> {}
-    }
-    return result;
-  }
-
   public void computeFollowSets() {
-    for (Rule r : rules) {
-      if (!isSyntacticRule(r)) continue;
-      followSets.putIfAbsent(r.name(), new HashSet<>());
+
+    for (Rule rule : rules) {
+      if (isSyntacticRule(rule)) {
+        followSets.putIfAbsent(rule.name(), new HashSet<>());
+      }
     }
 
-    if (!rules.isEmpty()) {
-      var firstRule = rules.getFirst();
-      var firstRuleFollows = followSets.get(firstRule.name());
-      if (!isSyntacticRule(firstRule) || firstRuleFollows == null) {
-        throw new WrongStartRuleException(
-            "%s may not be the starting rule".formatted(firstRule.name()));
-      }
-      firstRuleFollows.add(new EOF());
+    if (rules.isEmpty()) return;
+
+    Rule startRule = rules.getFirst();
+    if (!isSyntacticRule(startRule)) {
+      throw new WrongStartRuleException(
+          "%s may not be the starting rule".formatted(startRule.name()));
     }
+    followSets.get(startRule.name()).add(new EOF());
 
     boolean changed;
-
     do {
       changed = false;
-
       for (Rule rule : rules) {
         if (!isSyntacticRule(rule)) continue;
-        String ruleName = rule.name();
-        Node rhs = rule.rhs();
 
-        changed |= propagateFollow(rhs, followSets.get(ruleName));
+        Set<Node> ruleFollow = followSets.get(rule.name());
+        changed |= pushFollow(rule.rhs(), ruleFollow);
       }
-
     } while (changed);
   }
 
-  private boolean propagateFollow(Node node, Set<Node> followOfParent) {
+  private boolean pushFollow(Node node, Set<Node> follow) {
     boolean changed = false;
 
+    Set<Node> thisFollow = nodeFollowSets.computeIfAbsent(node, k -> new HashSet<>());
+    changed |= thisFollow.addAll(follow);
+
     switch (node) {
-      case Ident id -> {
-        Rule r = findRuleByName(id.name());
-        if (!isSyntacticRule(r)) {
-          break;
-        }
-        Set<Node> idFollows = followSets.computeIfAbsent(id.name(), k -> new HashSet<>());
-        changed |= idFollows.addAll(followOfParent);
+      case Ident ident -> {
+        Rule r = findRuleByName(ident.name());
+        if (!isSyntacticRule(r)) break; // lexical idents: nothing to propagate
+
+        Set<Node> dest = followSets.computeIfAbsent(ident.name(), k -> new HashSet<>());
+        changed |= dest.addAll(follow);
       }
+
       case Sequence seq -> {
         List<Node> nodes = seq.nodes();
+
         for (int i = 0; i < nodes.size(); i++) {
-          Node current = nodes.get(i);
-          Set<Node> currFollow = new HashSet<>();
+          Set<Node> innerFollow = firstOfSequenceTail(nodes, i + 1);
 
-          boolean restIsNullable = true;
-          for (int j = i + 1; j < nodes.size(); j++) {
-            Node next = nodes.get(j);
-            List<Node> nextFirst = firstOf(next);
-            currFollow.addAll(nextFirst.stream().filter(x -> !(x instanceof Empty)).toList());
+          boolean tailNullable = innerFollow.remove(new Empty()); // strip ε marker
 
-            if (!isPossiblyEmpty(next)) {
-              restIsNullable = false;
-              break;
-            }
+          if (tailNullable) {
+            innerFollow.addAll(follow);
           }
 
-          if (restIsNullable) {
-            currFollow.addAll(followOfParent);
-          }
-
-          changed |= propagateFollow(current, currFollow);
+          changed |= pushFollow(nodes.get(i), innerFollow);
         }
       }
+
       case OrderedChoice oc -> {
         for (Node alternative : oc.nodes()) {
-          changed |= propagateFollow(alternative, followOfParent);
+          changed |= pushFollow(alternative, follow);
         }
       }
+
       case Term t -> {
-        Set<Node> innerFollow = new HashSet<>(followOfParent);
+        Set<Node> innerFollow = new HashSet<>(follow);
+
         if (t.op().isPresent()) {
           switch (t.op().get()) {
             case STAR, PLUS -> {
               List<Node> selfFirst = firstOf(t.node());
-              innerFollow.addAll(selfFirst.stream().filter(x -> !(x instanceof Empty)).toList());
+              selfFirst.stream().filter(n -> !(n instanceof Empty)).forEach(innerFollow::add);
             }
             case OPTIONAL -> {}
           }
         }
-        changed |= propagateFollow(t.node(), innerFollow);
+
+        changed |= pushFollow(t.node(), innerFollow);
       }
-        // NO-OPs
+
       case Not not -> {}
       case And and -> {}
+
       case Literal lit -> {}
       case Charset cs -> {}
-      case Empty e -> {}
       case Wildcard w -> {}
-      case EOF e -> {}
+      case Empty e -> {}
+      case EOF eof -> {}
     }
 
     return changed;
+  }
+
+  private Set<Node> firstOfSequenceTail(List<Node> nodes, int from) {
+    Set<Node> result = new HashSet<>();
+
+    for (int i = from; i < nodes.size(); i++) {
+      List<Node> fi = firstOf(nodes.get(i));
+
+      fi.stream().filter(n -> !(n instanceof Empty)).forEach(result::add);
+
+      if (!isPossiblyEmpty(nodes.get(i))) {
+        return result;
+      }
+    }
+
+    result.add(new Empty());
+    return result;
   }
 
   public boolean isPossiblyEmpty(Node n) {

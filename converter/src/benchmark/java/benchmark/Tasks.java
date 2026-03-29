@@ -2,13 +2,10 @@ package benchmark;
 
 import cli.CliOptions;
 import cli.CliRunner;
-import utils.StatsTracker;
-
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import utils.StatsTracker;
 
 public class Tasks {
   private final CliRunner runner = new CliRunner();
@@ -17,6 +14,20 @@ public class Tasks {
     CliOptions options = new CliOptions();
     options.setInputFile(grammarFile);
     runner.run(options);
+  }
+
+  public StatsTracker compilePeg(Path antlrGrammar, Path antlrLexer) {
+    CliOptions options = new CliOptions();
+    try {
+      Path outputFile = Files.createTempFile(antlrGrammar.getFileName().toString(), ".gen.lua");
+      options.setInputFile(antlrGrammar.toString());
+      options.setLexerFile(antlrLexer.toString());
+      options.setOutputFile(outputFile.toString());
+      return runner.runWithStats(options);
+
+    } catch (IOException e) {
+      throw new Error("Error when creating output file");
+    }
   }
 
   public StatsTracker compilePeg(Path antlrGrammar) {
