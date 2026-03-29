@@ -109,7 +109,13 @@ public class LpegBackend {
       case Charset charset -> printCharset(charset);
       case Literal lit -> printLiteral(lit);
       case Empty e -> "EMPTY";
-      case Not term -> "neg(" + printNode(term.node()) + ")";
+      case Not not -> {
+        if (not.consumeInput()) {
+          yield "neg(" + printNode(not.node()) + ")";
+        } else {
+          yield "-(" + printNode(not.node()) + ")";
+        }
+      }
       case And term -> "#(" + printNode(term.node()) + ")";
       case Wildcard w -> "P(1)"; // Fetch next token && make wildcard = !nextToken;
       case EOF e -> "EOF";

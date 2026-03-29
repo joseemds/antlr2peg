@@ -130,6 +130,10 @@ public class PegGrammar {
     return new Not(node);
   }
 
+  public Not mkNot(Node node, boolean consumeInput) {
+    return new Not(node, consumeInput);
+  }
+
   public Wildcard mkWildcard() {
     return new Wildcard();
   }
