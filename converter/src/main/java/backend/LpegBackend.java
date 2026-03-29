@@ -124,7 +124,7 @@ public class LpegBackend {
   }
 
   private String printRule(Rule rule) {
-    String ws = rule.kind() == RuleKind.LEXING ? " * V\"WS\"^0" : "";
+    String ws = rule.kind() == RuleKind.LEXING ? " * V\"SKIP_\"^0" : "";
     this.currentRuleKind = rule.kind();
     return rule.name() + " = " + printNode(rule.rhs()) + ws;
   }

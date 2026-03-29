@@ -1,5 +1,7 @@
 package cli;
 
+import java.util.List;
+
 public class CliOptions {
   public boolean printHelp = false;
   public boolean dumpTree = false;
@@ -7,6 +9,8 @@ public class CliOptions {
   public String lexerFile;
   public String input;
   public String output;
+  public String identifierRule;
+  public List<String> skipRules;
 
   public CliOptions() {}
 

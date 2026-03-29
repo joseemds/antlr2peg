@@ -13,7 +13,6 @@ import java.util.Set;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import peg.PegGrammar;
-import peg.PegPrinter;
 import peg.grammar.AmbiguousChoiceDetector;
 import peg.grammar.UniqueTokenTracker;
 import peg.node.*;
