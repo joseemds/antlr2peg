@@ -19,6 +19,13 @@ class CliParser {
       String arg = argv[i];
 
       switch (arg) {
+        case "-l":
+        case "--lexer":
+          options.setLexerFile(argv[i + 1]);
+          break;
+
+        case "-g":
+        case "--grammar":
         case "-i":
         case "--input":
           options.setInputFile(argv[i + 1]);

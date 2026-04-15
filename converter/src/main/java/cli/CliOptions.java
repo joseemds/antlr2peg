@@ -4,6 +4,7 @@ public class CliOptions {
   public boolean printHelp = false;
   public boolean dumpTree = false;
   public boolean stats = true;
+  public String lexerFile;
   public String input;
   public String output;
 
@@ -23,5 +24,17 @@ public class CliOptions {
 
   public void setPrintHelp(boolean printHelp) {
     this.printHelp = printHelp;
+  }
+
+  public void setLexerFile(String lexerFile) {
+    this.lexerFile = lexerFile;
+  }
+
+  public void setSkipRules(List<String> skipRules) {
+    this.skipRules = skipRules;
+  }
+
+  public void setIdentifier(String identifierRule) {
+    this.identifierRule = identifierRule;
   }
 }

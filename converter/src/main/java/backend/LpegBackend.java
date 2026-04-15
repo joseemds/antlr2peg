@@ -40,7 +40,7 @@ public class LpegBackend {
 			return re.compile(s)
 		end
 		local tk = function (s)
-			return P(s) * V"WS"^0
+			return P(s) * V"SKIP_"^0
 		end
 		local EOF = P(-1)
 
@@ -61,7 +61,7 @@ public class LpegBackend {
 
 		local grammar = {
 			\"start_\",
-      start_ = V"WS"^0 * V\"%s\",
+      start_ = V"SKIP_"^0 * V\"%s\",
 			%s
 			EOF = EOF,
       EMPTY = EMPTY,

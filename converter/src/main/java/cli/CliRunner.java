@@ -18,6 +18,7 @@ public class CliRunner {
       """
     antlr2peg -i input.g4 -o output.lua
 		-i to indicate input file
+	  -l to indicate (separated) lexer file (optional)
 		-o to indicate output file
 		--print-tree To create a graphviz file represeting the tree
 		""";
@@ -49,8 +50,15 @@ public class CliRunner {
     if (options.printHelp) {
       this.printHelp();
     }
+    PegGrammar pegGrammar = null;
 
-    PegGrammar pegGrammar = Converter.convertToPegGrammar(options.input, statsTracker);
+    if (options.lexerFile != null || options.lexerFile != "") {
+      pegGrammar =
+          Converter.convertToPegGrammar(options.input, options.lexerFile, statsTracker, options);
+    } else {
+      pegGrammar = Converter.convertToPegGrammar(options.input, statsTracker, options);
+    }
+
     AmbiguousChoiceDetector hasAmbiguousChoice =
         new AmbiguousChoiceDetector(pegGrammar, statsTracker);
     LeftRecursionChecker isLeftRecursive = new LeftRecursionChecker(pegGrammar);

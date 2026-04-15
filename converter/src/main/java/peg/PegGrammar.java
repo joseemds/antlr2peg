@@ -52,6 +52,10 @@ public class PegGrammar {
     return this.rules;
   }
 
+  public void mergeGrammars(PegGrammar lexer) {
+    this.rules.addAll(lexer.getRules());
+  }
+
   public Map<String, Set<Node>> getFirsts() {
     return this.firstSets;
   }

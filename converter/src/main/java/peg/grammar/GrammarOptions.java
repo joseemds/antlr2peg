@@ -8,6 +8,7 @@ public class GrammarOptions {
   public void setOption(String key, String value) {
     switch (key) {
       case "caseInsensitive" -> this.caseInsensitive = Boolean.parseBoolean(value);
+      case "tokenVocab" -> {}
       default -> throw new SemanticActionNotAllowedException("Option is not supported");
     }
   }
