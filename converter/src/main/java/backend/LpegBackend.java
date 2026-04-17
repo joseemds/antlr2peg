@@ -3,6 +3,7 @@ package backend;
 import charset.CharacterSet;
 import charset.LiteralNode;
 import charset.RangeNode;
+import charset.UTF8RangeNode;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -154,7 +155,12 @@ public class LpegBackend {
     return switch (cs) {
       case RangeNode range -> printCharset(range);
       case LiteralNode literal -> printCharset(literal);
+      case UTF8RangeNode utf8Range -> printUTF8Range(utf8Range);
     };
+  }
+
+  private String printUTF8Range(UTF8RangeNode utf8RangeNode) {
+    return "utfR(%s,%s)".formatted(utf8RangeNode.from(), utf8RangeNode.to());
   }
 
   private String printCharset(RangeNode range) {
