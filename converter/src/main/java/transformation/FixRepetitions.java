@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import peg.PegGrammar;
 import peg.node.And;
+import peg.node.Empty;
 import peg.node.Ident;
 import peg.node.Node;
 import peg.node.OrderedChoice;
@@ -47,7 +49,6 @@ public class FixRepetitions implements RuleTransformation {
   @Override
   public Rule apply(Rule rule) {
     if (!grammar.isSyntacticRule(rule)) return rule;
-    // System.out.printf("Follow %s = %s\n",rule.name() ,followsSets.get(rule.name()));
     return new Rule(rule.name(), fix(rule.rhs(), rule.name()), rule.kind());
   }
 
@@ -58,16 +59,14 @@ public class FixRepetitions implements RuleTransformation {
         for (Node n : oc.nodes()) {
           fix(n, parentRule);
         }
-        ;
-
         yield oc;
       }
-      case Term term -> fixTerm(term, parentRule);
+
+      case Term term -> fixTerm(term, parentRule, List.of());
       default -> node;
     };
   }
 
-  // FollowSet não é ordenavel
   private String createKey(Term term, Set<Node> followOfTerm) {
     char[] chars = followOfTerm.toString().toCharArray();
     Arrays.sort(chars);
@@ -90,11 +89,11 @@ public class FixRepetitions implements RuleTransformation {
     return ruleName;
   }
 
-  private Node fixTerm(Term term, String parentRule) {
+  private Node fixTerm(Term term, String parentRule, List<Node> tailNodes) {
     if (term.op().isEmpty()) return term;
 
     var pFirst = grammar.firstOf(term.node());
-    var repFollow = calculateFollow(term, parentRule);
+    var repFollow = calculateFollow(term, parentRule, tailNodes);
     boolean hasIntersection = !Collections.disjoint(pFirst, repFollow);
 
     if (hasIntersection) {
@@ -114,14 +113,14 @@ public class FixRepetitions implements RuleTransformation {
 
         List<Node> firstOfBody = grammar.firstOf(term.node());
 
-        Set<Node> followOfTerm = calculateFollow(term, parentRule);
+        List<Node> tail = currentChildren.subList(i + 1, currentChildren.size());
+        Set<Node> followOfTerm = calculateFollow(term, parentRule, tail);
 
         boolean hasIntersection = !Collections.disjoint(firstOfBody, new ArrayList<>(followOfTerm));
 
         if (hasIntersection) {
           newChildren.add(
               grammar.mkIdent(getOrCreateFixedRule(term, firstOfBody, followOfTerm, seq)));
-
         } else {
           newChildren.add(term);
         }
@@ -161,14 +160,40 @@ public class FixRepetitions implements RuleTransformation {
     };
   }
 
-  private Set<Node> calculateFollow(Term term, String parentRule) {
-    if (term.node() instanceof Ident ident) {
-      Rule r = grammar.findRuleByName(ident.name());
-      if (!grammar.isSyntacticRule(r)) return followsSets.get(parentRule);
-      return followsSets.get(ident.name());
+  private Set<Node> calculateFollow(Term term, String parentRule, List<Node> tailNodes) {
+    Set<Node> parentFollow = followsSets.getOrDefault(parentRule, Set.of());
+
+    if (tailNodes.isEmpty()) {
+      if (term.node() instanceof Ident ident) {
+        Rule r = grammar.findRuleByName(ident.name());
+        if (grammar.isSyntacticRule(r)) {
+          return followsSets.getOrDefault(ident.name(), parentFollow);
+        }
+      }
+      return parentFollow;
     }
 
-    var result = followsSets.get(parentRule);
+    Set<Node> follow = new HashSet<>(firstOfTail(tailNodes));
+    follow.remove(new peg.node.Empty()); // strip ε — we add parentFollow explicitly below
+
+    boolean tailNullable = tailNodes.stream().allMatch(grammar::isPossiblyEmpty);
+    if (tailNullable) {
+      follow.addAll(parentFollow);
+    }
+
+    return follow;
+  }
+
+  private Set<Node> firstOfTail(List<Node> nodes) {
+    Set<Node> result = new HashSet<>();
+    for (Node n : nodes) {
+      List<peg.node.Node> fi = grammar.firstOf(n);
+      fi.stream().filter(x -> !(x instanceof Empty)).forEach(result::add);
+      if (!grammar.isPossiblyEmpty(n)) {
+        return result;
+      }
+    }
+    result.add(new Empty());
     return result;
   }
 }
