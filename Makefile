@@ -15,7 +15,7 @@ jar:
 	cd converter && ./gradlew shadowJar
 
 benchmark:
-	cd converter && ./gradlew benchmark
+	cd converter && ./gradlew benchmark --args="grammars.json"
 
 format:
 	cd converter && ./gradlew spotlessApply

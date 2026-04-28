@@ -16,13 +16,14 @@ public class Tasks {
     runner.run(options);
   }
 
-  public StatsTracker compilePeg(Path antlrGrammar, Path antlrLexer) {
+  public StatsTracker compilePeg(Path antlrGrammar, Path antlrLexer, String startRule) {
     CliOptions options = new CliOptions();
     try {
       Path outputFile = Files.createTempFile(antlrGrammar.getFileName().toString(), ".gen.lua");
       options.setInputFile(antlrGrammar.toString());
       options.setLexerFile(antlrLexer.toString());
       options.setOutputFile(outputFile.toString());
+      options.setStartRule(startRule);
       return runner.runWithStats(options);
 
     } catch (IOException e) {
@@ -30,12 +31,13 @@ public class Tasks {
     }
   }
 
-  public StatsTracker compilePeg(Path antlrGrammar) {
+  public StatsTracker compilePeg(Path antlrGrammar, String startRule) {
     CliOptions options = new CliOptions();
     try {
       Path outputFile = Files.createTempFile(antlrGrammar.getFileName().toString(), ".gen.lua");
       options.setInputFile(antlrGrammar.toString());
       options.setOutputFile(outputFile.toString());
+      options.setStartRule(startRule);
       return runner.runWithStats(options);
 
     } catch (IOException e) {
