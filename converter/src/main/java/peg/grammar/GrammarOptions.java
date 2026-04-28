@@ -2,11 +2,13 @@ package peg.grammar;
 
 import exception.SemanticActionNotAllowedException;
 import java.util.List;
+import java.util.Optional;
 
 public class GrammarOptions {
   public boolean caseInsensitive;
+  public Optional<String> startRule = Optional.empty();
   public String identifierRule;
-  public List<String> skipRules;
+  public Optional<List<String>> skipRules = Optional.empty();
 
   public void setOption(String key, String value) {
     switch (key) {

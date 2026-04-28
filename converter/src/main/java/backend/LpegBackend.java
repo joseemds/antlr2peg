@@ -89,6 +89,9 @@ public class LpegBackend {
   ;
 
   public String getFirstRule(List<Rule> rules) {
+    if (grammar.getOptions().startRule.isPresent()) {
+      return grammar.findRuleByName(grammar.getOptions().startRule.get()).name();
+    }
     Rule startRule = rules.getFirst();
     return startRule.name();
   }

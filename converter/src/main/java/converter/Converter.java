@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
@@ -39,8 +38,9 @@ public class Converter {
     walker.walk(lexerListener, lexerAst);
 
     var grammarOptions = grammarListener.getGrammarOptions();
-    grammarOptions.skipRules = Objects.requireNonNullElse(cliOptions.skipRules, List.of("WS"));
+    grammarOptions.skipRules = cliOptions.skipRules;
     grammarOptions.identifierRule = cliOptions.identifierRule;
+    grammarOptions.startRule = cliOptions.startRule;
     var grammar = grammarListener.getGrammar();
     grammar.mergeGrammars(lexerListener.getGrammar());
     grammar.setGrammarOptions(grammarOptions);
@@ -57,8 +57,9 @@ public class Converter {
     AntlrToPegListener pegListener = new AntlrToPegListener();
     walker.walk(pegListener, ast);
     var grammarOptions = pegListener.getGrammarOptions();
-    grammarOptions.skipRules = Objects.requireNonNullElse(cliOptions.skipRules, List.of("WS"));
+    grammarOptions.skipRules = cliOptions.skipRules;
     grammarOptions.identifierRule = cliOptions.identifierRule;
+    grammarOptions.startRule = cliOptions.startRule;
     var grammar = pegListener.getGrammar();
     grammar.setGrammarOptions(grammarOptions);
 

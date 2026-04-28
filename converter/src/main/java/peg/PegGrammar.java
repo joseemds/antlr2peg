@@ -187,6 +187,12 @@ public class PegGrammar {
   }
 
   public void computeFirst() {
+    for (Rule rule : rules) {
+      if (isSyntacticRule(rule)) {
+        firstSets.putIfAbsent(rule.name(), new HashSet<>());
+      }
+    }
+
     boolean changed;
     do {
       changed = false;
@@ -268,7 +274,12 @@ public class PegGrammar {
 
     if (rules.isEmpty()) return;
 
-    Rule startRule = rules.getFirst();
+    Rule startRule =
+        this.grammarOptions
+            .startRule
+            .flatMap(name -> rules.stream().filter(r -> r.name().equals(name)).findFirst())
+            .orElse(rules.getFirst());
+
     if (!isSyntacticRule(startRule)) {
       throw new WrongStartRuleException(
           "%s may not be the starting rule".formatted(startRule.name()));

@@ -1,6 +1,7 @@
 package cli;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CliOptions {
   public boolean printHelp = false;
@@ -10,7 +11,8 @@ public class CliOptions {
   public String input;
   public String output;
   public String identifierRule;
-  public List<String> skipRules;
+  public Optional<String> startRule = Optional.empty();
+  public Optional<List<String>> skipRules = Optional.empty();
 
   public CliOptions() {}
 
@@ -35,10 +37,15 @@ public class CliOptions {
   }
 
   public void setSkipRules(List<String> skipRules) {
-    this.skipRules = skipRules;
+    this.skipRules = Optional.of(skipRules);
   }
 
   public void setIdentifier(String identifierRule) {
     this.identifierRule = identifierRule;
   }
+
+  public void setStartRule(String startRule) {
+    this.startRule = Optional.of(startRule);
+  }
+  ;
 }
