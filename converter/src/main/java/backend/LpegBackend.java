@@ -18,16 +18,21 @@ public class LpegBackend {
   private PegGrammar grammar;
   private final Map<String, Set<Node>> firstSets;
   private final Map<String, Set<Node>> followSets;
+  private final boolean hasSkipRules;
 
   public LpegBackend(PegGrammar grammar) {
     this.grammar = grammar;
     this.firstSets = grammar.getFirsts();
     this.followSets = grammar.getFirsts();
+    this.hasSkipRules = grammar.getOptions().skipRules.isPresent();
   }
 
   private RuleKind currentRuleKind;
 
   public String convert(List<Rule> rules) {
+    String skipRuleAfter = this.hasSkipRules ? "* V\"SKIP_\"^0" : "";
+    String skipRuleBefore = this.hasSkipRules ? "V\"SKIP_\"^0 * " : "";
+
     return String.format(
         """
 		local lpeg = require "lpeglabel"
@@ -41,7 +46,7 @@ public class LpegBackend {
 			return re.compile(s)
 		end
 		local tk = function (s)
-			return P(s) * V"SKIP_"^0
+			return P(s) %s
 		end
 		local EOF = P(-1)
 
@@ -62,7 +67,7 @@ public class LpegBackend {
 
 		local grammar = {
 			\"start_\",
-      start_ = V"SKIP_"^0 * V\"%s\",
+      start_ = %s V\"%s\",
 			%s
 			EOF = EOF,
       EMPTY = EMPTY,
@@ -84,7 +89,7 @@ public class LpegBackend {
 	 local input = io.read("*a")
 	 print(parse(input))
 		""",
-        getFirstRule(rules), printRules(rules), getKeywords(rules));
+        skipRuleAfter, skipRuleBefore, getFirstRule(rules), printRules(rules), getKeywords(rules));
   }
   ;
 
@@ -128,7 +133,7 @@ public class LpegBackend {
   }
 
   private String printRule(Rule rule) {
-    String ws = rule.kind() == RuleKind.LEXING ? " * V\"SKIP_\"^0" : "";
+    String ws = (rule.kind() == RuleKind.LEXING && this.hasSkipRules) ? " * V\"SKIP_\"^0" : "";
     this.currentRuleKind = rule.kind();
     return rule.name() + " = " + printNode(rule.rhs()) + ws;
   }

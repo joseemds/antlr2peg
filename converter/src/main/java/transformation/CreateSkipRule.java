@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import peg.PegGrammar;
+import peg.node.Ident;
 import peg.node.Node;
 import peg.node.Operator;
 import peg.node.Rule;
@@ -45,6 +46,10 @@ public class CreateSkipRule {
           grammar.mkTerm(grammar.mkOrderedChoice(foundSkipRules), Optional.of(Operator.PLUS));
 
       Rule r = grammar.mkParsingRule("SKIP_", rhs);
+
+      grammar.getOptions().skipRules =
+          Optional.of(
+              foundSkipRules.stream().map(skipR -> (Ident) skipR).map(i -> i.name()).toList());
 
       grammar.addRule(r);
 
