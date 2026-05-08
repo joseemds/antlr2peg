@@ -37,7 +37,7 @@ public class LpegBackend {
         """
 		local lpeg = require "lpeglabel"
 		local re = require "relabel"
-		local P, S, V, R = lpeg.P, lpeg.S, lpeg.V, lpeg.R
+		local P, S, V, R, utfR = lpeg.P, lpeg.S, lpeg.V, lpeg.R, lpeg.utfR
     local EMPTY = P''
     local neg = function (pat)
      return P(1) - pat
@@ -168,7 +168,16 @@ public class LpegBackend {
   }
 
   private String printUTF8Range(UTF8RangeNode utf8RangeNode) {
-    return "utfR(%s,%s)".formatted(utf8RangeNode.from(), utf8RangeNode.to());
+    return "utfR(%s,%s)"
+        .formatted(escapeUTF8(utf8RangeNode.from()), escapeUTF8(utf8RangeNode.to()));
+  }
+
+  private int escapeUTF8(String s) {
+    if (s.startsWith("\\u")) {
+
+      return Integer.parseInt(s.substring(2), 16);
+    }
+    return s.codePointAt(0);
   }
 
   private String printCharset(RangeNode range) {
@@ -185,10 +194,20 @@ public class LpegBackend {
   }
 
   private String printCharset(LiteralNode literal) {
-    String base = "P('%s')".formatted(literal.ch());
+    String ch =
+        switch (literal.ch()) {
+          case "\\-" -> "-";
+          case "\\n" -> "\\n";
+          case "\\r" -> "\\r";
+          case "\\t" -> "\\t";
+          case "\\'" -> "'";
+          case "\\\\" -> "\\\\";
+          default -> literal.ch();
+        };
+    String base = "P('%s')".formatted(ch);
     if (grammar.getOptions().caseInsensitive) {
-      if (isLower(literal.ch())) return base + " + P('%s')".formatted(literal.ch().toUpperCase());
-      if (isUpper(literal.ch())) return base + " + P('%s')".formatted(literal.ch().toLowerCase());
+      if (isLower(ch)) return base + " + P('%s')".formatted(ch.toUpperCase());
+      if (isUpper(ch)) return base + " + P('%s')".formatted(ch.toLowerCase());
     }
     return base;
   }
