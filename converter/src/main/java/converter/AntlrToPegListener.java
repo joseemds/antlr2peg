@@ -169,7 +169,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   @Override
   public void exitBlockSet(ANTLRv4Parser.BlockSetContext ctx) {
     var nodes = mkNodeList(ctx.setElement());
-    var node = grammar.mkSequence(nodes);
+    var node = grammar.mkOrderedChoice(nodes);
     properties.put(ctx, node);
   }
 
