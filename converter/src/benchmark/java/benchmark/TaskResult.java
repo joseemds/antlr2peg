@@ -1,6 +1,7 @@
 package benchmark;
 
-import utils.StatsTracker;
+import cli.RunResult;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 enum ErrorKind {
   LEFT_RECURSION,
@@ -13,8 +14,9 @@ enum ErrorKind {
   UNKNOWN
 }
 
+@JsonSerialize(using = TaskResultSerializer.class)
 sealed interface TaskResult permits TaskResult.Success, TaskResult.Failure {
-  record Success(StatsTracker tracker) implements TaskResult {}
+  record Success(RunResult result) implements TaskResult {}
 
   record Failure(ErrorKind kind, String message) implements TaskResult {}
 }

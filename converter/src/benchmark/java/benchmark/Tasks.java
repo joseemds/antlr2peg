@@ -2,10 +2,10 @@ package benchmark;
 
 import cli.CliOptions;
 import cli.CliRunner;
+import cli.RunResult;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import utils.StatsTracker;
 
 public class Tasks {
   private final CliRunner runner = new CliRunner();
@@ -16,7 +16,7 @@ public class Tasks {
     runner.run(options);
   }
 
-  public StatsTracker compilePeg(Path antlrGrammar, Path antlrLexer, String startRule) {
+  public RunResult compilePeg(Path antlrGrammar, Path antlrLexer, String startRule) {
     CliOptions options = new CliOptions();
     try {
       Path outputFile = Files.createTempFile(antlrGrammar.getFileName().toString(), ".gen.lua");
@@ -31,7 +31,7 @@ public class Tasks {
     }
   }
 
-  public StatsTracker compilePeg(Path antlrGrammar, String startRule) {
+  public RunResult compilePeg(Path antlrGrammar, String startRule) {
     CliOptions options = new CliOptions();
     try {
       Path outputFile = Files.createTempFile(antlrGrammar.getFileName().toString(), ".gen.lua");

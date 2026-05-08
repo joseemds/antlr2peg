@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+# vim: set filetype=python :
+"""
+Run Lua parser tests against grammars-v4 examples.
+
+Usage:
+    run_lua_tests.py grammars.json results.json
+    run_lua_tests.py grammars.json results.json --only abb csv
+    run_lua_tests.py grammars.json results.json --verbose
+"""
+import argparse
+import json
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    p.add_argument("grammars", type=Path, help="JSON file listing grammars and examples")
+    p.add_argument("results",  type=Path, help="JSON file with Lua generation results")
+    p.add_argument(
+        "--only", nargs="+", metavar="NAME",
+        help="Only run these grammar names (default: all)",
+    )
+    p.add_argument(
+        "--base-dir", type=Path, default=Path("."),
+        help="Base directory that grammar paths are relative to (default: cwd)",
+    )
+    p.add_argument(
+        "--out", "-o", type=Path, default=None, metavar="FILE",
+        help="Write a JSON report to this file (default: no file written)",
+    )
+    p.add_argument("--verbose", "-v", action="store_true", help="Show subprocess output")
+    return p
+
+
+def run_lua(lua_script: Path, input_file: Path, verbose: bool = False) -> bool:
+    """Run `lua <lua_script> < <input_file>` and return True on success."""
+    stdout = None if verbose else subprocess.DEVNULL
+    stderr = None if verbose else subprocess.DEVNULL
+    try:
+        with input_file.open("rb") as fh:
+            subprocess.run(
+                ["lua", str(lua_script)],
+                stdin=fh, stdout=stdout, stderr=stderr,
+                check=True,
+            )
+        return True
+    except subprocess.CalledProcessError:
+        return False
+    except FileNotFoundError:
+        # `lua` binary not on PATH
+        raise SystemExit("'lua' executable not found – is it installed and on PATH?")
+
+
+@dataclass
+class ExampleResult:
+    example: str
+    lua_pass: bool
+
+
+@dataclass
+class GrammarResult:
+    name:     str
+    lua_output: Path
+    examples: list[ExampleResult]
+
+    @property
+    def passed(self) -> int:
+        return sum(1 for e in self.examples if e.lua_pass)
+
+    @property
+    def total(self) -> int:
+        return len(self.examples)
+
+
+def load_json(path: Path) -> object:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        raise SystemExit(f"File not found: {path}")
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid JSON in {path}: {exc}")
+
+
+def run_grammar(
+    entry: dict,
+    result: dict,
+    base_dir: Path,
+    verbose: bool,
+) -> GrammarResult:
+    name       = entry["name"]
+    lua_output = Path(result["output"])
+    parser_dir = (base_dir / entry["parser"]).parent
+
+    example_results: list[ExampleResult] = []
+    for filename in entry.get("example", []):
+        input_file = parser_dir / "examples" / filename
+        if not input_file.exists():
+            print(f"  [WARN] Example not found, skipping: {input_file}", file=sys.stderr)
+            continue
+
+        ok = run_lua(lua_output, input_file, verbose=verbose)
+        example_results.append(ExampleResult(example=filename, lua_pass=ok))
+
+    return GrammarResult(name=name, lua_output=lua_output, examples=example_results)
+
+def print_report(grammar_results: list[GrammarResult]) -> None:
+    sep = "=" * 55
+    print(f"\n{sep}")
+    print("Lua Parser Test Report")
+    print(sep)
+
+    total_examples = sum(g.total  for g in grammar_results)
+    total_passed   = sum(g.passed for g in grammar_results)
+
+    for gr in grammar_results:
+        status = "✓" if gr.passed == gr.total else "✗"
+        print(f"\n  [{status}] {gr.name}  ({gr.passed}/{gr.total} passed)")
+        for ex in gr.examples:
+            mark = "PASS" if ex.lua_pass else "FAIL"
+            print(f"        [{mark}] {ex.example}")
+
+    print(f"\n{sep}")
+    print(f"  Total: {total_passed}/{total_examples} examples passed across {len(grammar_results)} grammar(s)")
+    print(f"{sep}\n")
+
+
+def save_report(grammar_results: list[GrammarResult], out: Path) -> None:
+    from datetime import datetime, timezone
+
+    total_examples = sum(g.total  for g in grammar_results)
+    total_passed   = sum(g.passed for g in grammar_results)
+
+    report = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "summary": {
+            "grammars_run":     len(grammar_results),
+            "examples_total":   total_examples,
+            "examples_passed":  total_passed,
+            "examples_failed":  total_examples - total_passed,
+        },
+        "grammars": {
+            gr.name: {
+                "lua_script":      str(gr.lua_output),
+                "examples_total":  gr.total,
+                "examples_passed": gr.passed,
+                "examples_failed": gr.total - gr.passed,
+                "all_passed":      gr.passed == gr.total,
+                "examples": {
+                    ex.example: "pass" if ex.lua_pass else "fail"
+                    for ex in gr.examples
+                },
+            }
+            for gr in grammar_results
+        },
+    }
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"  Report saved -> {out}")
+
+
+def main() -> None:
+    parser = build_parser()
+    args = parser.parse_args()
+
+    grammars_data: list[dict] = load_json(args.grammars)
+    results_data:  dict       = load_json(args.results)
+
+    if args.only:
+        only_set = set(args.only)
+        grammars_data = [g for g in grammars_data if g["name"] in only_set]
+        missing = only_set - {g["name"] for g in grammars_data}
+        if missing:
+            print(f"[WARN] --only names not found in grammars file: {', '.join(sorted(missing))}", file=sys.stderr)
+
+    grammar_results: list[GrammarResult] = []
+
+    for entry in grammars_data:
+        name = entry["name"]
+
+        if name not in results_data:
+            print(f"[SKIP] '{name}' not in results file", file=sys.stderr)
+            continue
+
+        result = results_data[name]
+        if result.get("status") != "success":
+            print(f"[SKIP] '{name}' status={result.get('status')!r}, skipping", file=sys.stderr)
+            continue
+
+        if args.verbose:
+            print(f"[RUN ] {name}")
+
+        gr = run_grammar(entry, result, base_dir=args.base_dir, verbose=args.verbose)
+        grammar_results.append(gr)
+
+    if not grammar_results:
+        print("No grammars were run.", file=sys.stderr)
+        sys.exit(1)
+
+    print_report(grammar_results)
+
+    if args.out:
+        save_report(grammar_results, args.out)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nInterrupted.", file=sys.stderr)
+        sys.exit(1)

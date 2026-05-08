@@ -3,6 +3,7 @@ package cli;
 import converter.Converter;
 import exception.LeftRecursionException;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import peg.GraphvizPrinter;
@@ -36,17 +37,17 @@ public class CliRunner {
   }
   ;
 
-  public StatsTracker runWithStats(CliOptions options) {
+  public RunResult runWithStats(CliOptions options) {
     StatsTracker statsTracker = new StatsTracker();
-    run(options, statsTracker);
-    return statsTracker;
+    Path output = run(options, statsTracker);
+    return new RunResult(output, statsTracker);
   }
 
-  public void run(CliOptions options) {
-    run(options, new StatsTracker());
+  public Path run(CliOptions options) {
+    return run(options, new StatsTracker());
   }
 
-  public void run(CliOptions options, StatsTracker statsTracker) {
+  public Path run(CliOptions options, StatsTracker statsTracker) {
     if (options.printHelp) {
       this.printHelp();
     }
@@ -71,10 +72,8 @@ public class CliRunner {
     try {
       Files.writeString(outputFile, Converter.convertToLpeg(pegGrammar));
     } catch (IOException e) {
-      System.out.println("Failed when creating ouput file");
-      e.printStackTrace();
+      throw new UncheckedIOException("Failed when creating output file", e);
     }
-    Converter.convertToLpeg(pegGrammar);
 
     if (options.dumpTree) {
       GraphvizPrinter graphvizPrinter = new GraphvizPrinter();
@@ -85,6 +84,7 @@ public class CliRunner {
         e.printStackTrace();
       }
     }
+    return outputFile;
   }
 
   private void printHelp() {

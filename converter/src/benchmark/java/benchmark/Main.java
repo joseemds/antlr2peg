@@ -1,12 +1,12 @@
 package benchmark;
 
+import cli.RunResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import exception.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import utils.StatsTracker;
 
 public class Main {
   private static final Tasks tasks = new Tasks();
@@ -101,21 +101,22 @@ public class Main {
   private static void processGrammar(
       GrammarEntry def, Path baseDir, Map<String, TaskResult> results) {
     try {
-      StatsTracker tracker;
+      RunResult result;
       boolean hasSeparateLexer = def.lexer() != null && !def.lexer().isBlank();
       if (hasSeparateLexer) {
         Path parserPath = baseDir.resolve(def.parser());
         Path lexerPath = baseDir.resolve(def.lexer());
         System.out.println(
             "Parser path " + parserPath + " def.parser " + def.parser() + " def: " + def);
-        tracker = tasks.compilePeg(parserPath, lexerPath, def.start());
+        result = tasks.compilePeg(parserPath, lexerPath, def.start());
       } else {
         Path parserPath = baseDir.resolve(def.parser());
         System.out.println(
             "Parser path " + parserPath + " def.parser " + def.parser() + " def: " + def);
-        tracker = tasks.compilePeg(parserPath, def.start());
+        result = tasks.compilePeg(parserPath, def.start());
       }
-      results.put(def.name(), new TaskResult.Success(tracker));
+
+      results.put(def.name(), new TaskResult.Success(result));
 
     } catch (LeftRecursionException e) {
       results.put(def.name(), new TaskResult.Failure(ErrorKind.LEFT_RECURSION, e.getMessage()));
