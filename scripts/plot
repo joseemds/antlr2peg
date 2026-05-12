@@ -24,9 +24,9 @@ PALETTE = {
 }
 
 def classify(entry):
-    if "tracker" in entry:
+    if entry["status"] == "success":
         return "SUCCESS"
-    kind = entry.get("kind", "")
+    kind = entry.get("error_kind", "")
     if kind in ("MISSING_FILE", "MULTIPLE_FILES", "LEFT_RECURSION", "MISSING_RULE", "HAS_SEMANTIC_ACTION", "WRONG_START_RULE"):
         return kind
     return "UNKNOWN"

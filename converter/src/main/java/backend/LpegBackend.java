@@ -202,7 +202,12 @@ public class LpegBackend {
           case "\\t" -> "\\t";
           case "\\'" -> "'";
           case "\\\\" -> "\\\\";
-          default -> literal.ch();
+          default -> {
+            if (literal.ch().startsWith("\\u")) {
+              yield "\\u{" + literal.ch().substring(2) + "}";
+            }
+            yield literal.ch();
+          }
         };
     String base = "P('%s')".formatted(ch);
     if (grammar.getOptions().caseInsensitive) {
