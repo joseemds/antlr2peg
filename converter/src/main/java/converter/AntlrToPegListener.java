@@ -322,4 +322,12 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
           "Grammar contains semantic actions, which are not supported");
     }
   }
+
+  @Override
+  public void exitModeSpec(ANTLRv4Parser.ModeSpecContext ctx) {
+    if (ctx != null) {
+      throw new SemanticActionNotAllowedException(
+          "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)");
+    }
+  }
 }

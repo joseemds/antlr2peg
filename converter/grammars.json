@@ -6675,5 +6675,15 @@
   "example": [
    "test.yar"
   ]
+ },
+ {
+	 "name": "Zig",
+	 "lexer": "zig/ZigLexer.g4",
+	 "parser": "zig/ZigParser.g4",
+	 "start": "root",
+	 "examples": [
+	   "f1.zig",
+		 "f2.zig"
+	 ]
  }
 ]
