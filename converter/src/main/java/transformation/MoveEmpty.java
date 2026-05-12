@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import peg.node.*;
+import utils.StatsTracker;
 
-public class MoveEmpty implements Transformation {
+public class MoveEmpty implements RuleTransformation {
+
+  private final StatsTracker statsTracker;
+
+  public MoveEmpty(StatsTracker statsTracker) {
+    this.statsTracker = statsTracker;
+  }
 
   @Override
-  public Node apply(Node node) {
-    return this.transformNode(node);
+  public Rule apply(Rule r) {
+    return new Rule(r.name(), this.transformNode(r.rhs()), r.kind());
   }
 
   private Node transformNode(Node n) {
@@ -29,6 +36,7 @@ public class MoveEmpty implements Transformation {
         for (Node alt : choice.nodes()) {
           Node tAlt = transformNode(alt);
           if (isPossiblyEmpty(tAlt)) {
+            statsTracker.bumpEmptyRule();
             empties.add(tAlt);
           } else {
             transformed.add(tAlt);

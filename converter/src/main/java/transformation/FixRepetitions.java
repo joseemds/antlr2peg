@@ -1,9 +1,7 @@
 package transformation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +22,6 @@ public class FixRepetitions implements RuleTransformation {
   private static volatile int counter = 0;
   private final ArrayList<Rule> newRules = new ArrayList<>();
   private final Map<String, Set<Node>> followsSets;
-  private final Map<String, String> fixedRepetition = new HashMap<>();
   private StatsTracker statsTracker;
 
   public FixRepetitions(PegGrammar grammar, StatsTracker tracker) {
@@ -68,13 +65,7 @@ public class FixRepetitions implements RuleTransformation {
     };
   }
 
-  private String createKey(Repetition rep, Set<Node> followOfTerm) {
-    char[] chars = followOfTerm.toString().toCharArray();
-    Arrays.sort(chars);
-    return rep + "|" + new String(chars);
-  }
-
-  private String getOrCreateFixedRule(
+  private String createFixedRule(
       Repetition rep, List<Node> firstOfBody, Set<Node> followOfTerm, Node context) {
     String ruleName = genName();
     Node newNode = fixRepetition(rep, firstOfBody, new ArrayList<>(followOfTerm), ruleName);
@@ -90,7 +81,7 @@ public class FixRepetitions implements RuleTransformation {
     boolean hasIntersection = !Collections.disjoint(pFirst, repFollow);
 
     if (hasIntersection) {
-      return new Ident(getOrCreateFixedRule(rep, pFirst, repFollow, rep));
+      return new Ident(createFixedRule(rep, pFirst, repFollow, rep));
     }
     return rep;
   }
@@ -112,8 +103,7 @@ public class FixRepetitions implements RuleTransformation {
         boolean hasIntersection = !Collections.disjoint(firstOfBody, new ArrayList<>(followOfTerm));
 
         if (hasIntersection) {
-          newChildren.add(
-              grammar.mkIdent(getOrCreateFixedRule(rep, firstOfBody, followOfTerm, seq)));
+          newChildren.add(grammar.mkIdent(createFixedRule(rep, firstOfBody, followOfTerm, seq)));
         } else {
           newChildren.add(rep);
         }
@@ -166,7 +156,7 @@ public class FixRepetitions implements RuleTransformation {
     }
 
     Set<Node> follow = new HashSet<>(firstOfTail(tailNodes));
-    follow.remove(new peg.node.Empty());
+    follow.remove(new Empty());
 
     boolean tailNullable = tailNodes.stream().allMatch(grammar::isPossiblyEmpty);
     if (tailNullable) {
@@ -179,7 +169,7 @@ public class FixRepetitions implements RuleTransformation {
   private Set<Node> firstOfTail(List<Node> nodes) {
     Set<Node> result = new HashSet<>();
     for (Node n : nodes) {
-      List<peg.node.Node> fi = grammar.firstOf(n);
+      List<Node> fi = grammar.firstOf(n);
       fi.stream().filter(x -> !(x instanceof Empty)).forEach(result::add);
       if (!grammar.isPossiblyEmpty(n)) {
         return result;

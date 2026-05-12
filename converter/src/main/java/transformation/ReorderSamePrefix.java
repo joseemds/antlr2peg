@@ -3,10 +3,15 @@ package transformation;
 import java.util.*;
 import peg.PegGrammar;
 import peg.node.*;
+import utils.StatsTracker;
 
 public class ReorderSamePrefix implements Transformation {
 
-  public ReorderSamePrefix(PegGrammar grammar) {}
+  public StatsTracker statsTracker;
+
+  public ReorderSamePrefix(PegGrammar grammar, StatsTracker statsTracker) {
+    this.statsTracker = statsTracker;
+  }
 
   @Override
   public Node apply(Node n) {
@@ -51,9 +56,16 @@ public class ReorderSamePrefix implements Transformation {
           int shared = sharedPrefixLength(ea, eb);
           if (shared == 0) return 0;
 
-          if (shared == ea.size() && eb.size() > ea.size()) return 1;
+          if (shared == ea.size() && eb.size() > ea.size()) {
+            statsTracker.bumpPrefixReorder();
+            return 1;
+          }
 
-          if (shared == eb.size() && ea.size() > eb.size()) return -1;
+          if (shared == eb.size() && ea.size() > eb.size()) {
+
+            statsTracker.bumpPrefixReorder();
+            return 1;
+          }
 
           return 0;
         });

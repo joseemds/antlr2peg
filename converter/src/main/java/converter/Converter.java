@@ -103,13 +103,13 @@ public class Converter {
     }
 
     grammar = grammar.transform(new FlattenGrammar());
-    grammar = grammar.transform(new MoveEmpty());
+    grammar = grammar.transform(new MoveEmpty(statsTracker));
     UniqueTokenTracker uniqueTokenTracker = new UniqueTokenTracker(grammar);
 
     uniqueTokenTracker.printUniqueTokens();
     uniqueTokenTracker.printUniquePaths();
-    grammar = grammar.transform(new ReorderLiteralsBySize());
-    grammar = grammar.transform(new ReorderSamePrefix(grammar));
+    grammar = grammar.transform(new ReorderLiteralsBySize(grammar));
+    grammar = grammar.transform(new ReorderSamePrefix(grammar, statsTracker));
     grammar = grammar.transform(new ReorderByUniquePath(grammar, statsTracker));
     FixRepetitions fixRepetitions = new FixRepetitions(grammar, statsTracker);
     grammar = grammar.transform(fixRepetitions);

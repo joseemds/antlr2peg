@@ -44,6 +44,8 @@ class CliParser {
         case "--help":
           options.setPrintHelp(true);
           break;
+        case "-s":
+          options.setStartRule(argv[i + 1]);
         case "--identifier":
           options.setIdentifier(argv[i + 1]);
           break;

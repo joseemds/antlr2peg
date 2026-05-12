@@ -4,11 +4,11 @@ import charset.CharacterSet;
 import charset.LiteralNode;
 import charset.RangeNode;
 import charset.UTF8RangeNode;
+import exception.SemanticActionNotAllowedException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import peg.PegGrammar;
 import peg.node.*;
 import peg.node.Node;
@@ -63,7 +63,7 @@ public class LpegBackend {
 		local re = require "relabel"
 		local P, S, V, R, utfR = lpeg.P, lpeg.S, lpeg.V, lpeg.R, lpeg.utfR
     local EMPTY = P''
-		local _idRest = R"az" + R"AZ" + R"09"
+		local _idRest = R"az" + R"AZ" + R"09" + P"_"
     local neg = function (pat)
      return P(1) - pat
     end
@@ -101,10 +101,10 @@ public class LpegBackend {
 			%s
 			EOF = EOF,
       EMPTY = EMPTY,
-      %s
 		}
 
 		local parse = function (input)
+			lpeg.setmaxstack(6400)
 			local result, label, errpos = lpeg.match(grammar, input)
 			if result then
 				print("Parsed: ", result)
@@ -119,7 +119,7 @@ public class LpegBackend {
 	 local input = io.read("*a")
 	 print(parse(input))
 		""",
-        skipRuleAfter, skipRuleBefore, getFirstRule(rules), printRules(rules), getKeywords(rules));
+        skipRuleAfter, skipRuleBefore, getFirstRule(rules), printRules(rules));
   }
   ;
 
@@ -134,6 +134,10 @@ public class LpegBackend {
   public String printRules(List<Rule> rules) {
     StringBuilder sb = new StringBuilder();
     for (Rule rule : rules) {
+      if (rule.name().equals("_keywords")) {
+        sb.append(printKeywords(rule.rhs()));
+				continue;
+      }
       sb.append("  " + printRule(rule));
       sb.append(",\n");
     }
@@ -163,11 +167,13 @@ public class LpegBackend {
   }
 
   private String printRule(Rule rule) {
+    if (rule.name().equals("_keywords")) {}
+
     this.currentRuleKind = rule.kind();
     String name = LUA_KEYWORDS.contains(rule.name()) ? "[\"" + rule.name() + "\"]" : rule.name();
 
     if (rule.kind() == RuleKind.LEXING && this.hasSkipRules) {
-      return name + " = " + "(" + printNode(rule.rhs()) + ")" + "V\"SKIP\"^0";
+      return name + " = " + "(" + printNode(rule.rhs()) + ")" + " * V\"SKIP_\"^0";
     }
     return name + " = " + printNode(rule.rhs());
   }
@@ -207,6 +213,10 @@ public class LpegBackend {
 
   private int escapeUTF8(String s) {
     if (s.startsWith("\\u")) {
+      s = s.substring(2);
+
+      if (s.length() > 4)
+        throw new SemanticActionNotAllowedException("Unsupported UTF8 with more then 4 chars");
 
       return Integer.parseInt(s.substring(2), 16);
     }
@@ -227,25 +237,11 @@ public class LpegBackend {
   }
 
   private String printCharset(LiteralNode literal) {
-    String ch =
-        switch (literal.ch()) {
-          case "\\-" -> "-";
-          case "\\n" -> "\\n";
-          case "\\r" -> "\\r";
-          case "\\t" -> "\\t";
-          case "\\'" -> "'";
-          case "\\\\" -> "\\\\";
-          default -> {
-            if (literal.ch().startsWith("\\u")) {
-              yield "\\u{" + literal.ch().substring(2) + "}";
-            }
-            yield literal.ch();
-          }
-        };
-    String base = "P('%s')".formatted(ch);
+    String ch = Utils.sanitizeChar(literal.ch());
+    String base = "P(%s)".formatted(ch);
     if (grammar.getOptions().caseInsensitive) {
-      if (isLower(ch)) return base + " + P('%s')".formatted(ch.toUpperCase());
-      if (isUpper(ch)) return base + " + P('%s')".formatted(ch.toLowerCase());
+      if (isLower(ch)) return base + " + P(%s)".formatted(ch.toUpperCase());
+      if (isUpper(ch)) return base + " + P(%s)".formatted(ch.toLowerCase());
     }
     return base;
   }
@@ -345,23 +341,9 @@ public class LpegBackend {
     return sb.toString();
   }
 
-  public String getKeywords(List<Rule> rules) {
-    String keywords =
-        rules.stream()
-            .filter(r -> r.kind() == RuleKind.LEXING)
-            .filter(r -> r.rhs() instanceof Literal || r.rhs() instanceof Sequence)
-            .flatMap(
-                r ->
-                    switch (r.rhs()) {
-                      case OrderedChoice oc ->
-                          oc.nodes().stream()
-                              .filter(n -> n instanceof Literal)
-                              .map(n -> "P" + ((Literal) n).toString());
-                      case Literal l -> Stream.of("P" + l.toString());
-                      default -> Stream.empty();
-                    })
-            .collect(Collectors.joining(" + "));
-
-    return keywords.isBlank() ? "" : "KEYWORDS = " + keywords + ",";
+  private String printKeywords(Node keywords) {
+    OrderedChoice kws = (OrderedChoice) keywords;
+    return "_keywords = "
+        + kws.nodes().stream().map(l -> "keyword(" + (l) + ")").collect(Collectors.joining(" + ")) + ",";
   }
 }

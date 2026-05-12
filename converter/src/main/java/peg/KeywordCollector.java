@@ -18,6 +18,7 @@ public class KeywordCollector {
 
   public List<String> collectKeywords() {
     for (Rule r : this.grammar.getRules()) {
+      System.out.println(r.rhs());
       this.keywords.addAll(getKeyword(r.rhs()));
     }
 

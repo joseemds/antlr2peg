@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import peg.GraphvizPrinter;
 import peg.LeftRecursionChecker;
 import peg.PegGrammar;
-import peg.grammar.AmbiguousChoiceDetector;
 import utils.StatsTracker;
 
 public class CliRunner {
@@ -21,6 +20,7 @@ public class CliRunner {
 		-i to indicate input file
 	  -l to indicate (separated) lexer file (optional)
 		-o to indicate output file
+	  -s to indicate start rule
 		--print-tree To create a graphviz file represeting the tree
 		""";
 
@@ -60,10 +60,7 @@ public class CliRunner {
       pegGrammar = Converter.convertToPegGrammar(options.input, statsTracker, options);
     }
 
-    AmbiguousChoiceDetector hasAmbiguousChoice =
-        new AmbiguousChoiceDetector(pegGrammar, statsTracker);
     LeftRecursionChecker isLeftRecursive = new LeftRecursionChecker(pegGrammar);
-    hasAmbiguousChoice.checkAmbiguity();
     if (isLeftRecursive.check()) {
       throw new LeftRecursionException("Left recursion is not supported");
     }
