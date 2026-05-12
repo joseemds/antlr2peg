@@ -806,8 +806,8 @@
  },
  {
   "name": "C",
-  "lexer": "",
-  "parser": "c/C.g4",
+  "lexer": "c/CLexer.g4",
+  "parser": "c/CParser.g4",
   "start": "compilationUnit",
   "example": [
    "add.c",
@@ -2843,7 +2843,7 @@
  {
   "name": "Protobuf2",
   "lexer": "",
-  "parser": "protobuf2/Protobuf2.g4",
+  "parser": "protobuf/protobuf2/Protobuf2.g4",
   "start": "proto",
   "example": [
    "demo.proto"
@@ -2852,7 +2852,7 @@
  {
   "name": "Protobuf3",
   "lexer": "",
-  "parser": "protobuf3/Protobuf3.g4",
+  "parser": "protobuf/protobuf3/Protobuf3.g4",
   "start": "proto",
   "example": [
    "addressbook.proto",
@@ -5053,7 +5053,7 @@
  {
   "name": "Corundum",
   "lexer": "",
-  "parser": "ruby/Corundum.g4",
+  "parser": "corundum/Corundum.g4",
   "start": "prog",
   "example": [
    "test.rb"
@@ -6483,7 +6483,7 @@
  {
   "name": "vhdl",
   "lexer": "",
-  "parser": "vhdl/vhdl.g4",
+  "parser": "vhdl/vhdl/vhdl.g4",
   "start": "design_file",
   "example": [
    "add_pkg.vhd",
@@ -6681,9 +6681,21 @@
 	 "lexer": "zig/ZigLexer.g4",
 	 "parser": "zig/ZigParser.g4",
 	 "start": "root",
-	 "examples": [
+	 "example": [
 	   "f1.zig",
 		 "f2.zig"
+	 ]
+ },
+ {
+	 "name": "datalog",
+	 "lexer": "",
+	 "parser": "datalog/datalog.g4",
+	 "start": "program",
+	 "example": [
+		 "example1.txt",
+		 "example2.txt",
+		 "example3.txt",
+		 "example4.txt"
 	 ]
  }
 ]
