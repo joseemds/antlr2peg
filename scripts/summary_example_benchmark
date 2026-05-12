@@ -1,0 +1,13 @@
+jq '
+  .grammars as $g |
+  ($g | map(select(.)) | length) as $total |
+  ($g | map(select(.all_passed)) | length) as $passed |
+  ($g | map(select(.examples_total == .examples_failed and .examples_total > 0)) | length) as $failed |
+  ($g | map(select(.examples_failed > 0 and .examples_failed < .examples_total)) | length) as $mixed |
+  {
+    total:         $total,
+    all_passed:    "\($passed) (\(($passed / $total * 10000) | round / 100)%)",
+    all_failed:    "\($failed) (\(($failed / $total * 10000) | round / 100)%)",
+    mixed_results: "\($mixed) (\(($mixed / $total * 10000) | round / 100)%)"
+  }
+' "$1"

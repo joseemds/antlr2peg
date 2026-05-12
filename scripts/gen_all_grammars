@@ -1,0 +1,231 @@
+#!/usr/bin/env python3
+import os
+import sys
+import argparse
+import subprocess
+import json
+import importlib
+import random
+from dataclasses import dataclass
+from pathlib import Path
+
+from grammarinator.runtime import DefaultModel, RuleSize, UnlexerRule
+from grammarinator.tool import DefaultGeneratorFactory, GeneratorTool
+
+
+class NonEmptyStartModel(DefaultModel):
+    def __init__(self, start_rule):
+        self.start_rule = start_rule
+
+    def quantify(self, node, idx, cnt, start, stop, prob=0.5):
+        if node.name == self.start_rule and cnt == 0 and start == 0:
+            return True
+        return super().quantify(node, idx, cnt, start, stop, prob)
+
+
+def make_model_class(start_rule: str):
+    class _Model(NonEmptyStartModel):
+        def __init__(self):
+            super().__init__(start_rule)
+    return _Model
+
+
+SKIPS = []
+
+
+def load_json(path: Path) -> object:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        raise SystemExit(f"File not found: {path}")
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid JSON in {path}: {exc}")
+
+
+def build_parser():
+    p = argparse.ArgumentParser()
+    p.add_argument("--corpus", default=Path("/tmp/grammars"), type=Path)
+    p.add_argument("grammars", type=Path)
+    p.add_argument("results",  type=Path)
+    p.add_argument("--out", "-o", type=Path, default=Path("/tmp/test_all"))
+    p.add_argument("--jobs", "-j", type=int, default=None)
+    p.add_argument("--n-tests", "-n", type=int, default=100)
+    p.add_argument("--max-depth", "-d", type=int, default=20)
+    p.add_argument("--seed", type=int, default=None)
+    p.add_argument("--gen-dir", type=Path, default=Path("gen"))
+    return p
+
+
+def process_grammar(grammar_file: Path, out_dir: Path, lexer_file: Path = None) -> Path:
+    target_dir = out_dir / grammar_file.stem
+    target_dir.mkdir(parents=True, exist_ok=True)
+    cmd = ["grammarinator-process", str(grammar_file)]
+    if lexer_file is not None:
+        cmd.append(str(lexer_file))
+    cmd += ["-o", str(target_dir)]
+    print(f"Processing grammar: {' '.join(cmd)}")
+    subprocess.run(cmd, check=True)
+    return target_dir
+
+
+def load_generator_class(grammar_file: Path, out_dir: Path):
+    generator_name = grammar_file.stem.replace("Parser", "") + "Generator"
+    generator_dir = str(out_dir / grammar_file.stem)
+    if generator_dir not in sys.path:
+        sys.path.insert(0, generator_dir)
+    module = importlib.import_module(generator_name)
+    return getattr(module, generator_name)
+
+
+def hidden_serializer(generator, hidden_rules):
+    """
+    Creates a custom tree serializer that randomly injects hidden tokens
+    (like comments or whitespace) between unlexer rules.
+    If no hidden rules exist, it defaults to strict token concatenation (no spaces).
+    """
+    def serialize(node):
+        if isinstance(node, UnlexerRule):
+            yield node.src
+
+            if hidden_rules:
+                rule_name = random.choice(hidden_rules)
+                try:
+                    hidden_tree = getattr(generator, rule_name)()
+                    yield str(hidden_tree)
+                except Exception:
+                    pass
+                
+        elif hasattr(node, 'children') and node.children:
+            for child in node.children:
+                yield from serialize(child)
+                
+    return serialize
+
+
+def generate_tests(
+    grammar_file: Path,
+    extension: str,
+    start_rule: str,
+    out_dir: Path,
+    n_tests: int = 100,
+    gen_dir: Path = Path("gen"),
+    seed: int = None,
+    max_depth: int = 20,
+    jobs: int = None,
+    skip_rules: list[str] = None
+) -> Path:
+    if skip_rules is None:
+        skip_rules = []
+
+    base_dir = out_dir / grammar_file.stem / gen_dir
+    base_dir.mkdir(parents=True, exist_ok=True)
+    out_pattern = str(base_dir / f"test_%d.gen.{extension}")
+
+    if seed is None:
+        seed = int.from_bytes(os.urandom(4), "big")
+    print(f"Using seed: {seed}")
+
+    generator_cls = load_generator_class(grammar_file, out_dir)
+    
+    factory = DefaultGeneratorFactory(generator_cls, model_class=make_model_class(start_rule))
+
+    with GeneratorTool(
+        generator_factory=factory,
+        rule=start_rule,
+        out_format=out_pattern,
+        limit=RuleSize(depth=max_depth, tokens=RuleSize.max.tokens),
+        cleanup=False,
+    ) as tool:
+
+        serializer = hidden_serializer(generator, skip_rules)
+        
+        i = 0
+        attempts = 0
+        max_attempts = n_tests * 10
+        
+        while i < n_tests and attempts < max_attempts:
+            attempts += 1
+            try:
+                root = tool.generate()
+                
+                serialized_output = "".join(serializer(root))
+                
+                if serialized_output.strip():
+                    test_fn = out_pattern % i
+                    with open(test_fn, 'w', encoding='utf-8') as f:
+                        f.write(serialized_output)
+                    i += 1
+            except Exception as e:
+                # Ignore generation limits or deep recursion errors and try the next iteration
+                continue
+
+    return base_dir
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+    args.out.mkdir(parents=True, exist_ok=True)
+
+    failed: list[tuple[str, str]] = []
+    succeeded: list[str] = []
+
+    grammars_data: list[dict] = load_json(args.grammars)
+    results_data:  dict = load_json(args.results)
+
+    for antlr_grammar in grammars_data:
+        name = antlr_grammar["name"]
+        if name in SKIPS:
+            continue
+
+        if name not in results_data:
+            print(f"[SKIP] '{name}' not in results file", file=sys.stderr)
+            continue
+
+        entry = results_data[name]
+        if entry.get("status") != "success":
+            print(f"[SKIP] '{name}' status={entry.get('status')!r}", file=sys.stderr)
+            continue
+
+        grammar_parser = args.corpus / antlr_grammar["parser"]
+        lexer = None
+        if antlr_grammar["lexer"] != "":
+            lexer = args.corpus / antlr_grammar["lexer"]
+
+        start_rule = antlr_grammar["start"]
+        skip_rules = antlr_grammar.get("skip", [])
+
+        try:
+            process_grammar(grammar_parser, args.out, lexer)
+            generate_tests(
+                grammar_file=grammar_parser,
+                skip_rules=skip_rules,
+                extension=name.lower(),
+                start_rule=start_rule,
+                out_dir=args.out,
+                n_tests=args.n_tests,
+                gen_dir=args.gen_dir,
+                seed=args.seed,
+                max_depth=args.max_depth,
+                jobs=args.jobs,
+            )
+            succeeded.append(name)
+        except subprocess.CalledProcessError as exc:
+            reason = f"subprocess exited with code {exc.returncode}: {exc.cmd[0]}"
+            print(f"[FAIL] '{name}': {reason}", file=sys.stderr)
+            failed.append((name, reason))
+        except Exception as exc:
+            reason = f"{type(exc).__name__}: {exc}"
+            print(f"[FAIL] '{name}': {reason}", file=sys.stderr)
+            failed.append((name, reason))
+
+    print(f"\n=== Summary ===")
+    print(f"Succeeded: {len(succeeded)}")
+    if failed:
+        print(f"Failed:    {len(failed)}")
+        for name, reason in failed:
+            print(f"  - {name}: {reason}", file=sys.stderr)
+
+
+if __name__ == "__main__":
+    main()

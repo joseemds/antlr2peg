@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+GRAMMARS='["Abnf", "acme", "b", "CapnProto", "datalog", "DOT", "modelica", "pascal", "pdp7", "Thrift"]'
+
+jq --argjson grammars "$GRAMMARS" '
+	with_entries(select(.key | IN($grammars[])))
+' "$1"

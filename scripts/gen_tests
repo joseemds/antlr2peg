@@ -18,9 +18,11 @@ def build_parser():
     p.add_argument("--ext", "-e", metavar="EXTENSION", required=True, help="Extension for generated test files")
     p.add_argument("--out", "-o", type=Path, default=Path("/tmp"), help="Output dir (default: /tmp)")
     p.add_argument("--n-tests", "-n", type=int, default=20, help="Number of test files to generate (default: 20)")
-    p.add_argument("--max-depth", "-d", type=int, default=20, help="Maximum grammar depth (default: 20)")
+    p.add_argument("--max-depth", "-d", type=int, default=25, help="Maximum grammar depth (default: 25)")
     p.add_argument("--seed", type=int, default=None, help="Random seed (random if omitted)")
     p.add_argument("--gen-dir", type=Path, default=Path("gen"), help="Sub-directory for generated files (default: gen)")
+    p.add_argument("--jobs", "-j", type=Path, default=None, help="Sub-directory for generated files (default: gen)")
+    p.add_argument("--omit-spaces", action="store_true")
     return p
 
 
@@ -43,10 +45,12 @@ def generate_tests(
     grammar_file: Path,
     extension: str,
     out_dir: Path,
+    jobs : int,
     n_tests: int = 20,
     gen_dir: Path = Path("gen"),
     seed: int = None,
     max_depth: int = 20,
+    omit_spaces: bool = False
 ) -> Path:
     filename = grammar_file.stem
     base_dir = out_dir / filename / gen_dir
@@ -56,7 +60,10 @@ def generate_tests(
     if seed is None:
         seed = int.from_bytes(os.urandom(4), "big")
 
-    generator_class = f"{filename}Generator.{filename}Generator"
+
+
+
+    generator_class = f"{filename.replace("Parser", "")}Generator.{filename.replace("Parser", "")}Generator"
     print(f"Using seed: {seed}")
     cmd = [
         "grammarinator-generate",
@@ -65,9 +72,15 @@ def generate_tests(
         "-o", str(out_pattern),
         "-n", str(n_tests),
         "--random-seed", str(seed),
-        "-s", "grammarinator.runtime.simple_space_serializer",
         "--sys-path", str(out_dir / filename),
     ]
+
+    if not omit_spaces:
+        cmd += ["-s", "grammarinator.runtime.simple_space_serializer"]
+        
+    if jobs:
+        cmd += ["-j", str(jobs)]
+
     print(f"Generating tests: {' '.join(cmd)}")
     subprocess.run(cmd, check=True)
     return base_dir
@@ -80,6 +93,7 @@ def main():
 
     process_grammar(args.grammar, args.out, args.lexer)
     test_dir = generate_tests(
+        jobs=args.jobs,
         grammar_file=args.grammar,
         extension=args.ext,
         out_dir=args.out,
@@ -87,6 +101,7 @@ def main():
         gen_dir=args.gen_dir,
         seed=args.seed,
         max_depth=args.max_depth,
+        omit_spaces = args.omit_spaces
     )
     print(f"Generated {args.n_tests} test(s) in: {test_dir}")
 

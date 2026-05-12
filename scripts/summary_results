@@ -1,0 +1,23 @@
+jq '
+  to_entries as $entries |
+  ($entries | length) as $total |
+
+  ($entries | map(select(.value.status == "success")) | length) as $success |
+  ($entries | map(select(.value.error_kind == "LEFT_RECURSION")) | length) as $left_rec |
+  ($entries | map(select(.value.error_kind == "HAS_SEMANTIC_ACTION")) | length) as $semantic |
+  ($entries | map(select(.value.error_kind != null and .value.error_kind != "LEFT_RECURSION" and .value.error_kind != "HAS_SEMANTIC_ACTION")) | length) as $other_fail |
+
+  def pct($n): (($n / $total * 10000) | round / 100); 
+
+  {
+    total: $total,
+    success: "\($success) (\(pct($success))%)",
+    left_recursion: "\($left_rec) (\(pct($left_rec))%)",
+    has_semantic_action: "\($semantic) (\(pct($semantic))%)",
+    other_failures: {
+      count: "\($other_fail) (\(pct($other_fail))%)",
+      list: ($entries | map(select(.value.error_kind != null and .value.error_kind != "LEFT_RECURSION" and .value.error_kind != "HAS_SEMANTIC_ACTION")) | map({name: .key, error_kind: .value.error_kind, error_message: .value.error_message}))
+    },
+    check: ($success + $left_rec + $semantic + $other_fail) == $total
+  }
+' "$1"

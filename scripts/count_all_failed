@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+jq '.grammars| map(select(.examples_total == .examples_failed)) | length'

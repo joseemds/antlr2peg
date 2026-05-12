@@ -1,0 +1,416 @@
+#!/usr/bin/env python3
+# vim: set filetype=python :
+"""
+Run ANTLR4 and Lua parser tests for all grammars listed in a JSON manifest.
+
+Usage:
+    test_all.py grammars.json results.json tests_dir/
+    test_all.py grammars.json results.json tests_dir/ --verbose
+"""
+import argparse
+import json
+import re
+import subprocess
+import sys
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+SKIPS = ["nasm_x86_64_", "Ptx", "bdf", "chip8", "css3", "Cto", "pf", "pike", "ron", "Zig", "lolcode", "scotty"]
+TIMEOUT_SECONDS = 300 
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    p.add_argument("grammars",  type=Path, help="JSON manifest of grammars (same format as gen_all)")
+    p.add_argument("results",   type=Path, help="results.json with per-grammar status")
+    p.add_argument("tests_dir", type=Path, help="Root dir that contains per-grammar gen/ sub-dirs")
+    p.add_argument("--corpus",  type=Path, default=Path("/tmp/grammars"),
+                   help="Directory that holds the raw .g4 grammar files (default: /tmp/grammars)")
+    p.add_argument("--lua-dir", type=Path, default=None,
+                   help="Root dir for Lua parsers; expects <lua-dir>/<name>/<name>.lua "
+                        "(default: same as tests_dir)")
+    p.add_argument("--gen-dir", type=Path, default=Path("gen"),
+                   help="Sub-directory inside each grammar's output dir (default: gen)")
+    p.add_argument("--log-dir", type=Path, default=Path("_log"),
+                   help="Directory for per-grammar JSON reports (default: _log)")
+    p.add_argument("--verbose", "-v", action="store_true", help="Show subprocess output")
+    p.add_argument("--skip",    nargs="*", default=["angelscript"],
+                   help="Grammar names to skip (default: angelscript)")
+    p.add_argument("-j", "--jobs", type=int, default=1,
+                   help="Number of parallel jobs to run (default: 1)")
+    return p
+
+def load_json(path: Path) -> object:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        raise SystemExit(f"File not found: {path}")
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid JSON in {path}: {exc}")
+
+
+def detect_start_rule(grammar: Path) -> str:
+    pattern = re.compile(r"^([a-z][A-Za-z0-9_]*)\s*:")
+    for line in grammar.read_text(encoding="utf-8").splitlines():
+        m = pattern.match(line)
+        if m:
+            return m.group(1)
+    raise SystemExit(
+        f"Could not auto-detect start rule from {grammar}. "
+        "Add 'start' to the grammars manifest."
+    )
+
+
+def run_antlr_test(
+    grammar: Path,
+    start_rule: str,
+    input_file: Path,
+    lexer_file: Path = None,
+    verbose: bool = False,
+) -> bool:
+    cmd = ["antlr4-parse", str(grammar)]
+    if lexer_file is not None:
+        cmd.append(str(lexer_file))
+    cmd += [start_rule, str(input_file)]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=TIMEOUT_SECONDS)
+        if verbose:
+            if result.stdout:
+                print(result.stdout, end="")
+            if result.stderr:
+                print(result.stderr, end="", file=sys.stderr)
+        combined = (result.stdout + result.stderr).lower()
+        return result.returncode == 0 and "error" not in combined and "line" not in combined
+    except subprocess.TimeoutExpired:
+        print(f"[TIMEOUT] ANTLR parser timed out on {input_file.name}", file=sys.stderr)
+        return False
+    except FileNotFoundError:
+        raise SystemExit("antlr4-parse not found. Is it installed and on PATH?")
+
+
+def run_lua_test(lua_parser: Path, input_file: Path, verbose: bool = False) -> bool:
+    with input_file.open("rb") as fh:
+        stdout = None if verbose else subprocess.DEVNULL
+        stderr = None if verbose else subprocess.DEVNULL
+        try:
+            subprocess.run(
+                ["lua", str(lua_parser)],
+                check=True, stdout=stdout, stderr=stderr, stdin=fh, timeout=TIMEOUT_SECONDS
+            )
+            return True
+        except subprocess.TimeoutExpired:
+            print(f"[TIMEOUT] PEG parser timed out on {input_file.name}", file=sys.stderr)
+            return False
+        except subprocess.CalledProcessError:
+            return False
+        except FileNotFoundError:
+            raise SystemExit("lua runtime environment not found. Is it installed and on PATH?")
+
+
+@dataclass
+class GrammarResult:
+    name: str
+    total: int = 0
+    antlr_passed: set = field(default_factory=set)
+    lua_passed:   set = field(default_factory=set)
+    antlr_failed: set = field(default_factory=set)
+    lua_failed:   set = field(default_factory=set)
+    both_accept:  set = field(default_factory=set)
+    both_reject:  set = field(default_factory=set)
+    antlr_only:   set = field(default_factory=set)
+    lua_only:     set = field(default_factory=set)  
+    sets_agree:   bool = False
+
+    def finish(self):
+        self.both_accept = self.antlr_passed & self.lua_passed
+        self.both_reject = self.antlr_failed & self.lua_failed
+        self.antlr_only  = self.antlr_passed - self.lua_passed
+        self.lua_only    = self.lua_passed   - self.antlr_passed
+        self.sets_agree  = (self.antlr_passed == self.lua_passed)
+
+def run_grammar(
+    name: str,
+    grammar_file: Path,
+    lexer_file: Path | None,
+    start_rule: str,
+    ext: str,
+    lua_parser: Path,
+    input_dir: Path,
+    verbose: bool = False,
+) -> GrammarResult:
+    res = GrammarResult(name=name)
+
+    files = sorted(input_dir.glob(f"*.{ext}"))
+    if not files:
+        print(f"  [WARN] No *.{ext} files in {input_dir}", file=sys.stderr)
+        return res
+
+    res.total = len(files)
+    for path in files:
+        fname = path.name
+        a_ok = run_antlr_test(grammar_file, start_rule, path, lexer_file, verbose)
+        l_ok = run_lua_test(lua_parser, path, verbose)
+
+        if a_ok:
+            res.antlr_passed.add(fname)
+        else:
+            res.antlr_failed.add(fname)
+
+        if l_ok:
+            res.lua_passed.add(fname)
+        else:
+            res.lua_failed.add(fname)
+
+    res.finish()
+    return res
+
+
+BOLD  = "\033[1m"
+GREEN = "\033[32m"
+RED   = "\033[31m"
+CYAN  = "\033[36m"
+RESET = "\033[0m"
+
+def _c(text, color):
+    return f"{color}{text}{RESET}"
+
+
+def print_grammar_report(res: GrammarResult) -> None:
+    t = res.total
+    print(f"\n{'─'*60}")
+    print(f"  {_c(res.name, BOLD)}  ({t} test file{'s' if t != 1 else ''})")
+    print(f"{'─'*60}")
+    print(f"  ANTLR  passed : {len(res.antlr_passed):>4} / {t}")
+    print(f"  Lua    passed : {len(res.lua_passed):>4} / {t}")
+    print(f"  Both   accept : {len(res.both_accept):>4} / {t}")
+    print(f"  Both   reject : {len(res.both_reject):>4} / {t}")
+
+    agree_str = _c("✓ agree", GREEN) if res.sets_agree else _c("✗ diverge", RED)
+    print(f"  Sets          : {agree_str}")
+
+    def _list(label, files, color=None):
+        if not files:
+            return
+        print(f"\n  {label} ({len(files)}):")
+        for f in sorted(files):
+            line = f"    - {f}"
+            print(_c(line, color) if color else line)
+
+    _list("ANTLR passed / Lua failed  [antlr_only]", res.antlr_only, RED)
+    _list("Lua passed  / ANTLR failed [lua_only]",   res.lua_only,   CYAN)
+
+
+def print_summary(
+    all_results: list[GrammarResult],
+    skipped: list[str],
+    failed_setup: list[tuple[str, str]],
+) -> None:
+    print(f"\n{'═'*60}")
+    print(f"  {_c('OVERALL SUMMARY', BOLD)}")
+    print(f"{'═'*60}")
+    print(f"  Grammars processed : {len(all_results)}")
+    print(f"  Grammars skipped   : {len(skipped)}")
+    print(f"  Setup failures     : {len(failed_setup)}")
+
+    total_files   = sum(r.total          for r in all_results)
+    total_antlr   = sum(len(r.antlr_passed) for r in all_results)
+    total_lua     = sum(len(r.lua_passed)   for r in all_results)
+    total_ba      = sum(len(r.both_accept)  for r in all_results)
+    total_br      = sum(len(r.both_reject)  for r in all_results)
+    total_ao      = sum(len(r.antlr_only)   for r in all_results)
+    total_lo      = sum(len(r.lua_only)     for r in all_results)
+    fully_agree   = sum(1 for r in all_results if r.sets_agree)
+
+    print(f"\n  Across {total_files} total test file(s):")
+    print(f"    ANTLR  passed  : {total_antlr}")
+    print(f"    Lua    passed  : {total_lua}")
+    print(f"    Both   accept  : {total_ba}")
+    print(f"    Both   reject  : {total_br}")
+    print(f"    ANTLR✓ / Lua✗  : {total_ao}")
+    print(f"    Lua✓  / ANTLR✗ : {total_lo}")
+    print(f"\n  Grammars where sets fully agree : {fully_agree} / {len(all_results)}")
+
+    if failed_setup:
+        print(f"\n  {_c('Setup failures:', RED)}")
+        for name, reason in failed_setup:
+            print(f"    - {name}: {reason}")
+
+    print(f"{'═'*60}\n")
+
+
+def save_report(
+    all_results: list[GrammarResult],
+    skipped: list[str],
+    failed_setup: list[tuple[str, str]],
+    log_dir: Path,
+) -> Path:
+    log_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now(timezone.utc).isoformat()
+    safe_ts   = timestamp.replace(":", "-").replace("+", "Z")[:19] + "Z"
+
+    report = {
+        "meta": {
+            "timestamp": timestamp,
+            "grammars_processed": len(all_results),
+            "grammars_skipped":   skipped,
+            "setup_failures":      [{"name": n, "reason": r} for n, r in failed_setup],
+        },
+        "grammars": [],
+    }
+
+    for res in all_results:
+        report["grammars"].append({
+            "name":         res.name,
+            "total":        res.total,
+            "antlr_passed": len(res.antlr_passed),
+            "antlr_reject": len(res.antlr_failed),
+            "lua_passed":   len(res.lua_passed),
+            "lua_rejected": len(res.lua_failed),
+            "both_accept":  len(res.both_accept),
+            "both_reject":  len(res.both_reject),
+            "sets_agree":   res.sets_agree,
+            "divergences": {
+                "antlr_pass_lua_fail": sorted(res.antlr_only),
+                "lua_pass_antlr_fail": sorted(res.lua_only),
+            },
+        })
+
+    out = log_dir / f"test_all_{safe_ts}.json"
+    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return out
+
+def main() -> None:
+    args = build_parser().parse_args()
+
+    grammars_data: list[dict] = load_json(args.grammars)
+    results_data:  dict       = load_json(args.results)
+
+    lua_root = args.lua_dir or args.tests_dir
+    skips    = set(SKIPS)
+
+    all_results:  list[GrammarResult]    = []
+    skipped:      list[str]              = []
+    failed_setup: list[tuple[str, str]]  = []
+
+    tasks = []
+    for entry in grammars_data:
+        name = entry["name"]
+
+        if name in skips:
+            print(f"[SKIP] {name} (in skip list)")
+            skipped.append(name)
+            continue
+
+        if name not in results_data:
+            print(f"[SKIP] {name} — not in results file", file=sys.stderr)
+            skipped.append(name)
+            continue
+
+        result_entry = results_data[name]
+        if result_entry.get("status") != "success":
+            status = result_entry.get("status", "unknown")
+            print(f"[SKIP] {name} — status={status!r}", file=sys.stderr)
+            skipped.append(name)
+            continue
+
+        parser_rel  = entry.get("parser", "")
+        lexer_rel   = entry.get("lexer",  "")
+        start_rule  = entry.get("start",  "")
+        ext         = name.lower()
+
+        grammar_file = args.corpus / parser_rel if parser_rel else None
+        lexer_file   = args.corpus / lexer_rel  if lexer_rel  else None
+
+        if grammar_file:
+            stem = grammar_file.stem
+        else:
+            stem = name
+
+        input_dir  = args.tests_dir / stem / args.gen_dir
+        lua_parser = Path(result_entry["output"])
+
+        missing = []
+        if grammar_file and not grammar_file.exists():
+            missing.append(f"grammar {grammar_file}")
+        if lexer_file and not lexer_file.exists():
+            missing.append(f"lexer {lexer_file}")
+        if not lua_parser.exists():
+            missing.append(f"lua parser {lua_parser}")
+        if not input_dir.exists():
+            missing.append(f"input dir {input_dir}")
+
+        if missing:
+            reason = "not found: " + ", ".join(missing)
+            print(f"[FAIL] {name} — {reason}", file=sys.stderr)
+            failed_setup.append((name, reason))
+            continue
+
+        if not start_rule:
+            try:
+                start_rule = detect_start_rule(grammar_file)
+            except SystemExit as exc:
+                failed_setup.append((name, str(exc)))
+                continue
+                
+        tasks.append({
+            "name": name,
+            "grammar_file": grammar_file,
+            "lexer_file": lexer_file,
+            "start_rule": start_rule,
+            "ext": ext,
+            "lua_parser": lua_parser,
+            "input_dir": input_dir,
+            "verbose": args.verbose,
+        })
+
+    print_lock = threading.Lock()
+    def do_run(kwargs):
+        name = kwargs["name"]
+        with print_lock:
+            print(f"[START]: worker picked {name}")
+        return run_grammar(**kwargs)
+
+    if args.jobs > 1:
+        print(f"\n[INFO] Running {len(tasks)} grammars with {args.jobs} concurrent workers...")
+        with ThreadPoolExecutor(max_workers=args.jobs) as executor:
+            future_to_name = {executor.submit(do_run, t): t["name"] for t in tasks}
+            
+            for future in as_completed(future_to_name):
+                name = future_to_name[future]
+                try:
+                    res = future.result()
+                    all_results.append(res)
+                    print_grammar_report(res)
+                except Exception as exc:
+                    reason = f"{type(exc).__name__}: {exc}"
+                    print(f"[FAIL] {name} — {reason}", file=sys.stderr)
+                    failed_setup.append((name, reason))
+    else:
+        for t in tasks:
+            name = t["name"]
+            print(f"[RUN ] {name}  (start={t['start_rule']}, ext={t['ext']})")
+            try:
+                res = do_run(t)
+                all_results.append(res)
+                print_grammar_report(res)
+            except Exception as exc:
+                reason = f"{type(exc).__name__}: {exc}"
+                print(f"[FAIL] {name} — {reason}", file=sys.stderr)
+                failed_setup.append((name, reason))
+
+    print_summary(all_results, skipped, failed_setup)
+
+    log_path = save_report(all_results, skipped, failed_setup, args.log_dir)
+    print(f"  Log saved → {log_path}\n")
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nInterrupted.", file=sys.stderr)
+        sys.exit(1)

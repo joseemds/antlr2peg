@@ -1,0 +1,46 @@
+jq '
+  .grammars as $g |
+  ($g | map(select(.total > 0))) as $active |
+  ($active | length) as $total |
+
+  ($active | map(select(.sets_agree and .both_accept == .total)))                                                                          as $all_passed |
+  ($active | map(select(.sets_agree and .both_reject == .total)))                                                                          as $all_failed |
+  ($active | map(select(.sets_agree and .both_accept < .total and .both_reject < .total)))                                                 as $agree_partial |
+
+  ($active | map(select((.sets_agree | not) and .antlr_passed > .lua_passed and (.divergences.lua_pass_antlr_fail | length) == 0)))        as $antlr_more_oneway |
+  ($active | map(select((.sets_agree | not) and .antlr_passed > .lua_passed and (.divergences.lua_pass_antlr_fail | length) > 0)))         as $antlr_more_twoway |
+
+  ($active | map(select((.sets_agree | not) and .lua_passed > .antlr_passed and (.divergences.antlr_pass_lua_fail | length) == 0)))        as $lua_more_oneway |
+  ($active | map(select((.sets_agree | not) and .lua_passed > .antlr_passed and (.divergences.antlr_pass_lua_fail | length) > 0)))         as $lua_more_twoway |
+
+  def fmt($n): "\($n) (\(($n / $total * 10000) | round / 100)%)";
+  def bucket($arr): { count: fmt($arr | length), list: ($arr | map(.name)) }; 
+
+  {
+    total: $total,
+    agree: {
+      total:      fmt(($all_passed | length) + ($all_failed | length) + ($agree_partial | length)),
+      all_passed: bucket($all_passed),
+      all_failed: bucket($all_failed),
+      partial:    bucket($agree_partial)
+    },
+    disagree: {
+      total:      fmt(($antlr_more_oneway | length) + ($antlr_more_twoway | length) + ($lua_more_oneway | length) + ($lua_more_twoway | length)),
+      antlr_accepts_more: {
+        total:    fmt(($antlr_more_oneway | length) + ($antlr_more_twoway | length)),
+        one_way:  bucket($antlr_more_oneway),
+        two_way:  bucket($antlr_more_twoway)
+      },
+      lua_accepts_more: {
+        total:    fmt(($lua_more_oneway | length) + ($lua_more_twoway | length)),
+        one_way:  bucket($lua_more_oneway),
+        two_way:  bucket($lua_more_twoway)
+      }
+    },
+    check: (
+      ($all_passed | length) + ($all_failed | length) + ($agree_partial | length) +
+      ($antlr_more_oneway | length) + ($antlr_more_twoway | length) +
+      ($lua_more_oneway | length) + ($lua_more_twoway | length)
+    ) == $total
+  }
+' "$1"

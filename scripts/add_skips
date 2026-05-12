@@ -1,0 +1,3 @@
+jq --slurpfile skip $1 '
+  map(. + {"skip": ($skip[0][.name] // [])})
+' $2 > grammars_with_skip.json
