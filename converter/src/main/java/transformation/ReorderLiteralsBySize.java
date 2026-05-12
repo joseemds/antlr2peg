@@ -4,13 +4,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import peg.PegGrammar;
 import peg.node.*;
+import utils.StatsTracker;
 
 public class ReorderLiteralsBySize implements Transformation {
 
   private final PegGrammar grammar;
+  private final StatsTracker statsTracker;
 
-  public ReorderLiteralsBySize(PegGrammar grammar) {
+  public ReorderLiteralsBySize(PegGrammar grammar, StatsTracker statsTracker) {
     this.grammar = grammar;
+    this.statsTracker = statsTracker;
   }
 
   private boolean isLiteralOrLexicalRule(Node n) {
@@ -39,13 +42,13 @@ public class ReorderLiteralsBySize implements Transformation {
   private int compare(Node a, Node b) {
     Literal a_ = expand(a);
     Literal b_ = expand(b);
-    return Integer.compare(a_.content().length(), b_.content().length());
+    return Integer.compare(b_.content().length(), a_.content().length());
   }
 
   @Override
   public Node apply(Node node) {
     return switch (node) {
-      case Repetition rep -> new Repetition(apply(rep.node()), rep.op());
+      case Repetition rep -> new Repetition(apply(rep.node()), rep.op(), rep.kind());
       case Sequence seq -> {
         List<Node> transformed =
             seq.nodes().stream()
@@ -59,12 +62,13 @@ public class ReorderLiteralsBySize implements Transformation {
         boolean allLiterals = nodes.stream().allMatch(this::isLiteralOrLexicalRule);
         if (allLiterals) {
           List<Node> sorted = nodes.stream().sorted(this::compare).collect(Collectors.toList());
+          statsTracker.bumpChoiceOfLiteralsReordered();
           yield new OrderedChoice(sorted);
         } else {
           yield new OrderedChoice(nodes.stream().map(this::apply).collect(Collectors.toList()));
         }
       }
-      case Not n -> new Not(apply(n.node()));
+      case Not n -> new Not(apply(n.node()), n.consumeInput());
       case And n -> new And(apply(n.node()));
       default -> node;
     };

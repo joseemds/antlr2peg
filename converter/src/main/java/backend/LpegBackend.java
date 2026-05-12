@@ -101,6 +101,7 @@ public class LpegBackend {
 			%s
 			EOF = EOF,
       EMPTY = EMPTY,
+			_idRest = _idRest
 		}
 
 		local parse = function (input)

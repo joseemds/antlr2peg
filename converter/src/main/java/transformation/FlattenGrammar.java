@@ -35,7 +35,7 @@ public class FlattenGrammar implements RuleTransformation {
         yield new Sequence(children);
       }
 
-      case Not not -> new Not(flattenNode(not.node()));
+      case Not not -> new Not(flattenNode(not.node()), not.consumeInput());
       default -> node;
     };
   }

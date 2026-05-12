@@ -33,6 +33,8 @@ public class AmbiguousChoiceDetector {
           for (int j = i + 1; j < choices.size(); j++) {
             Node nodeJ = choices.get(j);
             List<Node> firstJ = grammar.firstOf(nodeJ, true);
+            // System.out.println(nodeI + " first = " + firstI);
+            // System.out.println(nodeJ + " first = " + firstJ);
 
             List<Node> intersection = new ArrayList<Node>(firstI);
             intersection.retainAll(firstJ);

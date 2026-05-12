@@ -45,6 +45,10 @@ public class PegGrammar {
     return new Repetition(node, op);
   }
 
+  public Repetition mkRepetition(Node node, Operator op, Repetition.Kind kind) {
+    return new Repetition(node, op, kind);
+  }
+
   public CharacterSet mkRange(String to, String from) {
     return new RangeNode(to, from);
   }
@@ -83,6 +87,13 @@ public class PegGrammar {
       default:
         throw new Error("Unexpected operator " + op);
     }
+  }
+
+  public Repetition.Kind kindOfOperator(String op) {
+    if (op.length() == 2 && op.charAt(1) == '?') {
+      return Repetition.Kind.LAZY;
+    }
+    return Repetition.Kind.EAGER;
   }
 
   public Ident mkIdent(String name) {
@@ -206,6 +217,10 @@ public class PegGrammar {
     } while (changed);
   }
 
+  private boolean isComposed(Node rhs) {
+    return rhs instanceof OrderedChoice || rhs instanceof Sequence;
+  }
+
   public List<Node> firstOf(Node node) {
     return firstOf(node, false);
   }
@@ -228,17 +243,31 @@ public class PegGrammar {
 
       case Ident ident -> {
         Rule r = findRuleByName(ident.name());
-
-        if (!expandLexical && !isSyntacticRule(r)) {
-          result.add(ident);
+        if (!isSyntacticRule(r)) {
+          if (expandLexical) {
+            if (visited.add(ident.name())) {
+              if (r.rhs() != null) result.addAll(firstOf(r.rhs(), true, visited));
+              visited.remove(ident.name());
+            }
+          } else {
+            result.add(ident);
+          }
         } else {
           if (visited.add(ident.name())) {
-            if (!expandLexical) {
-              result.addAll(firstSets.getOrDefault(ident.name(), Set.of()));
-            } else {
-              if (r.rhs() != null) {
-                result.addAll(firstOf(r.rhs(), true, visited));
+            Set<Node> precomputed = firstSets.getOrDefault(ident.name(), Set.of());
+            if (expandLexical) {
+              for (Node n : precomputed) {
+                if (n instanceof Ident lexIdent) {
+                  Rule lr = findRuleByName(lexIdent.name());
+                  if (isLexicalRule(lr) && lr.rhs() != null) {
+                    result.addAll(firstOf(lr.rhs(), true, visited));
+                  }
+                } else {
+                  result.add(n);
+                }
               }
+            } else {
+              result.addAll(precomputed);
             }
             visited.remove(ident.name());
           }

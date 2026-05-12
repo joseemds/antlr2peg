@@ -76,6 +76,18 @@ public class FixRepetitions implements RuleTransformation {
   }
 
   private Node fixRep(Repetition rep, String parentRule, List<Node> tailNodes) {
+    if (rep.isLazy()) {
+      if (tailNodes.isEmpty()) {
+        Set<Node> parentFollow = followsSets.getOrDefault(parentRule, Set.of());
+        var followChoice = grammar.mkOrderedChoice(new ArrayList<Node>(parentFollow));
+        var newRepNode = grammar.mkSequence(grammar.mkNot(followChoice, false), rep.node());
+        return grammar.mkRepetition(newRepNode, rep.op());
+      }
+      var nextFirst = new ArrayList<Node>(firstOfTail(tailNodes));
+      var nextFirstChoice = grammar.mkOrderedChoice(nextFirst);
+      var newRepNode = grammar.mkSequence(grammar.mkNot(nextFirstChoice, false), rep.node());
+      return grammar.mkRepetition(newRepNode, rep.op());
+    }
     var pFirst = grammar.firstOf(rep.node());
     var repFollow = calculateFollow(rep, parentRule, tailNodes);
     boolean hasIntersection = !Collections.disjoint(pFirst, repFollow);
@@ -92,12 +104,16 @@ public class FixRepetitions implements RuleTransformation {
 
     for (int i = 0; i < currentChildren.size(); i++) {
       Node current = currentChildren.get(i);
+      List<Node> tail = currentChildren.subList(i + 1, currentChildren.size());
 
       if (current instanceof Repetition rep) {
+        if (rep.isLazy()) {
+          newChildren.add(fixRep(rep, parentRule, tail));
+          continue;
+        }
 
         List<Node> firstOfBody = grammar.firstOf(rep.node());
 
-        List<Node> tail = currentChildren.subList(i + 1, currentChildren.size());
         Set<Node> followOfTerm = calculateFollow(rep, parentRule, tail);
 
         boolean hasIntersection = !Collections.disjoint(firstOfBody, new ArrayList<>(followOfTerm));

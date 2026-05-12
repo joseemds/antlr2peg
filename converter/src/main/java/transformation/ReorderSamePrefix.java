@@ -35,8 +35,8 @@ public class ReorderSamePrefix implements Transformation {
         }
         yield new Sequence(children);
       }
-      case Not not -> new Not(reorderNode(not.node()));
-      case Repetition rep -> new Repetition(reorderNode(rep.node()), rep.op());
+      case Not not -> new Not(reorderNode(not.node()), not.consumeInput());
+      case Repetition rep -> new Repetition(reorderNode(rep.node()), rep.op(), rep.kind());
       default -> node;
     };
   }
@@ -62,9 +62,8 @@ public class ReorderSamePrefix implements Transformation {
           }
 
           if (shared == eb.size() && ea.size() > eb.size()) {
-
             statsTracker.bumpPrefixReorder();
-            return 1;
+            return -1;
           }
 
           return 0;

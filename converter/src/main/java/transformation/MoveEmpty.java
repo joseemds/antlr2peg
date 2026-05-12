@@ -21,7 +21,7 @@ public class MoveEmpty implements RuleTransformation {
 
   private Node transformNode(Node n) {
     return switch (n) {
-      case Repetition rep -> new Repetition(transformNode(rep.node()), rep.op());
+      case Repetition rep -> new Repetition(transformNode(rep.node()), rep.op(), rep.kind());
       case Sequence seq -> {
         List<Node> transformed =
             seq.nodes().stream()
@@ -48,7 +48,7 @@ public class MoveEmpty implements RuleTransformation {
       case Ident ident -> ident;
       case Literal lit -> lit;
       case Charset charset -> charset;
-      case Not not -> new Not(transformNode(not.node()));
+      case Not not -> new Not(transformNode(not.node()), not.consumeInput());
       case Empty e -> e;
       case Wildcard w -> w;
       case EOF e -> e;

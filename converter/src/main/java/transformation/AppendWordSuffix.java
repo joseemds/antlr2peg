@@ -17,13 +17,14 @@ public class AppendWordSuffix implements RuleTransformation {
   @Override
   public Rule apply(Rule rule) {
     if (grammar.isLexicalRule(rule) && isWordLiteral(rule)) {
-      Node wordChar =
-          grammar.mkOrderedChoice(
-              grammar.mkCharset(
-                  grammar.mkRange("a", "z"),
-                  grammar.mkRange("0", "9"),
-                  grammar.mkCharsetLiteral("_")));
-      Node wordBoundary = grammar.mkNot(wordChar, false);
+      // Node wordChar =
+      //     grammar.mkOrderedChoice(
+      //         grammar.mkCharset(
+      //             grammar.mkRange("a", "z"),
+      //             grammar.mkRange("0", "9"),
+      //             grammar.mkCharsetLiteral("_")));
+      Node idRestRef = grammar.mkIdent("_idRest");
+      Node wordBoundary = grammar.mkNot(idRestRef, false);
       Node newRhs = grammar.mkSequence(rule.rhs(), wordBoundary);
       return new Rule(rule.name(), newRhs, rule.kind());
     }

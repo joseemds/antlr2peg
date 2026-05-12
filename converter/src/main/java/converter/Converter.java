@@ -102,13 +102,15 @@ public class Converter {
       }
     }
 
+    statsTracker.setRulesBefore(grammar.getRules().size());
+
     grammar = grammar.transform(new FlattenGrammar());
     grammar = grammar.transform(new MoveEmpty(statsTracker));
     UniqueTokenTracker uniqueTokenTracker = new UniqueTokenTracker(grammar);
 
     uniqueTokenTracker.printUniqueTokens();
     uniqueTokenTracker.printUniquePaths();
-    grammar = grammar.transform(new ReorderLiteralsBySize(grammar));
+    grammar = grammar.transform(new ReorderLiteralsBySize(grammar, statsTracker));
     grammar = grammar.transform(new ReorderSamePrefix(grammar, statsTracker));
     grammar = grammar.transform(new ReorderByUniquePath(grammar, statsTracker));
     FixRepetitions fixRepetitions = new FixRepetitions(grammar, statsTracker);
@@ -135,6 +137,8 @@ public class Converter {
 
     AmbiguousChoiceDetector hasAmbiguousChoice = new AmbiguousChoiceDetector(grammar, statsTracker);
     hasAmbiguousChoice.checkAmbiguity();
+
+    statsTracker.setRulesAfter(grammar.getRules().size());
   }
 
   public static String convertToLpeg(PegGrammar pegGrammar) {

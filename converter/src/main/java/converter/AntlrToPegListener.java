@@ -129,8 +129,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     if (ctx.lexerAtom() != null) {
       var node = properties.get(ctx.lexerAtom());
       if (ctx.ebnfSuffix() != null) {
-        var op = grammar.operatorOfString(ctx.ebnfSuffix().getText().substring(0, 1));
-        properties.put(ctx, grammar.mkRepetition(node, op));
+        String suffix = ctx.ebnfSuffix().getText();
+        var op = grammar.operatorOfString(suffix);
+        var kind = grammar.kindOfOperator(suffix);
+        properties.put(ctx, grammar.mkRepetition(node, op, kind));
       } else {
         properties.put(ctx, node);
       }
@@ -140,8 +142,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
       var nodes = mkNodeList(blockCtx.lexerAltList().lexerAlt());
       var choice = grammar.mkOrderedChoice(nodes);
       if (ctx.ebnfSuffix() != null) {
-        var op = grammar.operatorOfString(ctx.ebnfSuffix().getText().substring(0, 1));
-        properties.put(ctx, grammar.mkRepetition(choice, op));
+        String suffix = ctx.ebnfSuffix().getText();
+        var op = grammar.operatorOfString(suffix);
+        var kind = grammar.kindOfOperator(suffix);
+        properties.put(ctx, grammar.mkRepetition(choice, op, kind));
       } else {
         properties.put(ctx, choice);
       }
@@ -247,8 +251,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     if (ctx.labeledElement() != null) {
       var node = properties.get(ctx.labeledElement());
       if (ctx.ebnfSuffix() != null) {
-        var op = grammar.operatorOfString(ctx.ebnfSuffix().getText());
-        properties.put(ctx, grammar.mkRepetition(node, op));
+        String suffix = ctx.ebnfSuffix().getText();
+        var op = grammar.operatorOfString(suffix);
+        var kind = grammar.kindOfOperator(suffix);
+        properties.put(ctx, grammar.mkRepetition(node, op, kind));
       } else {
         properties.put(ctx, node);
       }
@@ -256,8 +262,32 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     } else if (ctx.atom() != null) {
       var node = properties.get(ctx.atom());
       if (ctx.ebnfSuffix() != null) {
-        var op = grammar.operatorOfString(ctx.ebnfSuffix().getText());
-        properties.put(ctx, grammar.mkRepetition(node, op));
+        String suffix = ctx.ebnfSuffix().getText();
+        var op = grammar.operatorOfString(suffix);
+        var kind = grammar.kindOfOperator(suffix);
+        properties.put(ctx, grammar.mkRepetition(node, op, kind));
+      } else {
+        properties.put(ctx, node);
+      }
+
+    } else if (ctx.atom() != null) {
+      var node = properties.get(ctx.atom());
+      if (ctx.ebnfSuffix() != null) {
+        String suffix = ctx.ebnfSuffix().getText();
+        var op = grammar.operatorOfString(suffix);
+        var kind = grammar.kindOfOperator(suffix);
+        properties.put(ctx, grammar.mkRepetition(node, op, kind));
+      } else {
+        properties.put(ctx, node);
+      }
+
+    } else if (ctx.atom() != null) {
+      var node = properties.get(ctx.atom());
+      if (ctx.ebnfSuffix() != null) {
+        String suffix = ctx.ebnfSuffix().getText();
+        var op = grammar.operatorOfString(suffix);
+        var kind = grammar.kindOfOperator(suffix);
+        properties.put(ctx, grammar.mkRepetition(node, op, kind));
       } else {
         properties.put(ctx, node);
       }
@@ -308,8 +338,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   public void exitEbnf(ANTLRv4Parser.EbnfContext ctx) {
     var node = properties.get(ctx.block());
     if (ctx.blockSuffix() != null) {
-      var op = grammar.operatorOfString(ctx.blockSuffix().getText());
-      properties.put(ctx, grammar.mkRepetition(node, op));
+      String suffix = ctx.blockSuffix().getText();
+      var op = grammar.operatorOfString(suffix);
+      var kind = grammar.kindOfOperator(suffix);
+      properties.put(ctx, grammar.mkRepetition(node, op, kind));
     } else {
       properties.put(ctx, node);
     }
