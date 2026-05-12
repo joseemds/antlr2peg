@@ -19,6 +19,30 @@ public class LpegBackend {
   private final Map<String, Set<Node>> firstSets;
   private final Map<String, Set<Node>> followSets;
   private final boolean hasSkipRules;
+  private static final Set<String> LUA_KEYWORDS =
+      Set.of(
+          "and",
+          "break",
+          "do",
+          "else",
+          "elseif",
+          "end",
+          "false",
+          "for",
+          "function",
+          "goto",
+          "if",
+          "in",
+          "local",
+          "nil",
+          "not",
+          "or",
+          "repeat",
+          "return",
+          "then",
+          "true",
+          "until",
+          "while");
 
   public LpegBackend(PegGrammar grammar) {
     this.grammar = grammar;
@@ -135,7 +159,8 @@ public class LpegBackend {
   private String printRule(Rule rule) {
     String ws = (rule.kind() == RuleKind.LEXING && this.hasSkipRules) ? " * V\"SKIP_\"^0" : "";
     this.currentRuleKind = rule.kind();
-    return rule.name() + " = " + printNode(rule.rhs()) + ws;
+    String name = LUA_KEYWORDS.contains(rule.name()) ? "[\"" + rule.name() + "\"]" : rule.name();
+    return name + " = " + printNode(rule.rhs()) + ws;
   }
 
   private String printLiteral(Literal lit) {
