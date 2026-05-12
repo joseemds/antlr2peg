@@ -136,7 +136,7 @@ public class LpegBackend {
     for (Rule rule : rules) {
       if (rule.name().equals("_keywords")) {
         sb.append(printKeywords(rule.rhs()));
-				continue;
+        continue;
       }
       sb.append("  " + printRule(rule));
       sb.append(",\n");
@@ -344,6 +344,7 @@ public class LpegBackend {
   private String printKeywords(Node keywords) {
     OrderedChoice kws = (OrderedChoice) keywords;
     return "_keywords = "
-        + kws.nodes().stream().map(l -> "keyword(" + (l) + ")").collect(Collectors.joining(" + ")) + ",";
+        + kws.nodes().stream().map(l -> "keyword(" + (l) + ")").collect(Collectors.joining(" + "))
+        + ",";
   }
 }

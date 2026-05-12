@@ -28,12 +28,15 @@ public class AmbiguousChoiceDetector {
         if (choices.size() < 2) return;
         for (int i = 0; i < choices.size(); i++) {
           Node nodeI = choices.get(i);
-          List<Node> firstI = grammar.firstOf(nodeI);
+          List<Node> firstI = grammar.firstOf(nodeI, true);
+
           for (int j = i + 1; j < choices.size(); j++) {
             Node nodeJ = choices.get(j);
-            List<Node> firstJ = grammar.firstOf(nodeJ);
+            List<Node> firstJ = grammar.firstOf(nodeJ, true);
+
             List<Node> intersection = new ArrayList<Node>(firstI);
             intersection.retainAll(firstJ);
+
             if (!intersection.isEmpty()) {
               System.err.printf(
                   "Warning: At Rule %s, choice (%s) and (%s) may match the same input\n",

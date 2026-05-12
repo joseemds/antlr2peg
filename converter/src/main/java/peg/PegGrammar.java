@@ -207,6 +207,14 @@ public class PegGrammar {
   }
 
   public List<Node> firstOf(Node node) {
+    return firstOf(node, false);
+  }
+
+  public List<Node> firstOf(Node node, boolean expandLexical) {
+    return firstOf(node, expandLexical, new HashSet<>());
+  }
+
+  private List<Node> firstOf(Node node, boolean expandLexical, Set<String> visited) {
     List<Node> result = new ArrayList<>();
 
     switch (node) {
@@ -216,21 +224,30 @@ public class PegGrammar {
       case Empty e -> result.add(e);
       case EOF eof -> result.add(eof);
       case Not n -> result.add(new Empty());
-      case And and -> {
-        result.add(new Empty());
-      }
+      case And and -> result.add(new Empty());
+
       case Ident ident -> {
         Rule r = findRuleByName(ident.name());
-        if (!isSyntacticRule(r)) {
+
+        if (!expandLexical && !isSyntacticRule(r)) {
           result.add(ident);
         } else {
-          result.addAll(firstSets.getOrDefault(ident.name(), Set.of()));
+          if (visited.add(ident.name())) {
+            if (!expandLexical) {
+              result.addAll(firstSets.getOrDefault(ident.name(), Set.of()));
+            } else {
+              if (r.rhs() != null) {
+                result.addAll(firstOf(r.rhs(), true, visited));
+              }
+            }
+            visited.remove(ident.name());
+          }
         }
       }
 
       case Sequence seq -> {
         for (Node part : seq.nodes()) {
-          List<Node> partFirst = firstOf(part);
+          List<Node> partFirst = firstOf(part, expandLexical, visited);
           result.addAll(partFirst.stream().filter(x -> !(x instanceof Empty)).toList());
           if (!isPossiblyEmpty(part)) break;
         }
@@ -241,24 +258,57 @@ public class PegGrammar {
 
       case OrderedChoice oc -> {
         for (Node option : oc.nodes()) {
-          result.addAll(firstOf(option));
+          result.addAll(firstOf(option, expandLexical, visited));
         }
       }
 
       case Repetition r -> {
         switch (r.op()) {
           case OPTIONAL, STAR -> {
-            result.addAll(firstOf(r.node()));
+            result.addAll(firstOf(r.node(), expandLexical, visited));
             result.add(new Empty());
           }
           case PLUS -> {
-            result.addAll(firstOf(r.node()));
+            result.addAll(firstOf(r.node(), expandLexical, visited));
           }
         }
       }
     }
 
     return result;
+  }
+
+  public boolean isPossiblyEmpty(Node n) {
+    return isPossiblyEmpty(n, new HashSet<>());
+  }
+
+  public boolean isPossiblyEmpty(Node n, Set<String> visited) {
+    return switch (n) {
+      case Repetition r -> {
+        if (r.op() == Operator.OPTIONAL || r.op() == Operator.STAR) yield true;
+        yield isPossiblyEmpty(r.node(), visited);
+      }
+      case Ident ident -> {
+        if (!visited.add(ident.name())) yield false;
+
+        Rule r = findRuleByName(ident.name());
+
+        boolean empty = isPossiblyEmpty(r.rhs(), visited);
+
+        visited.remove(ident.name());
+        yield empty;
+      }
+      case Sequence seq -> seq.nodes().stream().allMatch(node -> isPossiblyEmpty(node, visited));
+      case OrderedChoice choice ->
+          choice.nodes().stream().anyMatch(node -> isPossiblyEmpty(node, visited));
+      case Literal lit -> lit.content().isEmpty();
+      case Charset charset -> false;
+      case Not not -> true;
+      case And and -> true;
+      case Empty e -> true;
+      case Wildcard w -> false;
+      case EOF e -> false;
+    };
   }
 
   public void computeFollowSets() {
@@ -376,37 +426,6 @@ public class PegGrammar {
     return result;
   }
 
-  public boolean isPossiblyEmpty(Node n) {
-    return isPossiblyEmpty(n, new HashSet<>());
-  }
-
-  public boolean isPossiblyEmpty(Node n, Set<String> visited) {
-    return switch (n) {
-      case Repetition r -> {
-        if (r.op() == Operator.OPTIONAL || r.op() == Operator.STAR) yield true;
-        yield isPossiblyEmpty(r.node(), visited);
-      }
-      case Ident ident -> {
-        if (visited.contains(ident.name())) yield false;
-        visited.add(ident.name());
-        Rule r = findRuleByName(ident.name());
-        if (r.rhs() == null || !isSyntacticRule(r)) yield false;
-
-        yield isPossiblyEmpty(r.rhs(), visited);
-      }
-      case Sequence seq -> seq.nodes().stream().allMatch(node -> isPossiblyEmpty(node, visited));
-      case OrderedChoice choice ->
-          choice.nodes().stream().anyMatch(node -> isPossiblyEmpty(node, visited));
-      case Literal lit -> lit.content().isEmpty();
-      case Charset charset -> false;
-      case Not not -> true;
-      case And and -> true;
-      case Empty e -> true;
-      case Wildcard w -> false;
-      case EOF e -> false;
-    };
-  }
-
   public void computeNonTerminals() {
     for (Rule r : rules) {
       nonTerminals.put(r.name(), r.rhs());
@@ -428,6 +447,10 @@ public class PegGrammar {
 
   public boolean isLexicalRule(Rule r) {
     return r.kind() == RuleKind.LEXING;
+  }
+
+  public boolean isFragment(Rule r) {
+    return r.kind() == RuleKind.FRAGMENT;
   }
 
   public boolean isTerminal(Node n) {
