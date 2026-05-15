@@ -5,7 +5,7 @@ public class StatsTracker {
   private int repetitionsTransformed = 0;
   private int uniquePathSwaps = 0;
 
-  public void bumpChoiceAmbiguites() {
+  public void bumpChoiceAmbiguities() {
     this.choiceAmbiguities++;
   }
 

@@ -1,5 +1,6 @@
 package peg.grammar;
 
+import java.util.ArrayList;
 import java.util.List;
 import peg.PegGrammar;
 import peg.node.*;
@@ -30,13 +31,13 @@ public class AmbiguousChoiceDetector {
           for (int j = i + 1; j < choices.size(); j++) {
             Node nodeJ = choices.get(j);
             List<Node> firstJ = grammar.firstOf(nodeJ);
-            List<Node> intersection = firstI;
+            List<Node> intersection = new ArrayList<Node>(firstI);
             intersection.retainAll(firstJ);
             if (!intersection.isEmpty()) {
               System.err.printf(
-                  "Warning: At Rule %s, choice %d (%s) and %d (%s) may match the same input\n",
-                  ruleName, i + 1, nodeI, j + 1, nodeJ);
-              statsTracker.bumpChoiceAmbiguites();
+                  "Warning: At Rule %s, choice (%s) and (%s) may match the same input\n",
+                  ruleName, nodeI, nodeJ);
+              statsTracker.bumpChoiceAmbiguities();
             }
           }
         }
