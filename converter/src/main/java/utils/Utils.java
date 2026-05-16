@@ -4,9 +4,15 @@ public class Utils {
   public static String sanitizeString(String s) {
     if (s == null) return null;
     s = sanitizeUnicode(s);
-    String inner = s.substring(1, s.length() - 1);
-    String escaped = inner.replace("\\'", "'").replace("'", "\\'");
-    return "'" + escaped + "'";
+
+    if (s.startsWith("'") && s.endsWith("'") && s.length() >= 2) {
+      s = s.substring(1, s.length() - 1);
+    }
+
+    s = s.replace("\\'", "'");
+    s = s.replace("'", "\\'");
+
+    return "'" + s + "'";
   }
 
   public static String sanitizeUnicode(String s) {
