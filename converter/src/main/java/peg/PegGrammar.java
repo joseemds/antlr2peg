@@ -217,7 +217,9 @@ public class PegGrammar {
       case Empty e -> result.add(e);
       case EOF eof -> result.add(eof);
       case Not n -> result.add(new Empty());
-      case And and -> {}
+      case And and -> {
+        result.add(new Empty());
+      }
       case Ident ident -> {
         Rule r = findRuleByName(ident.name());
         if (!isSyntacticRule(r)) {

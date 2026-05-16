@@ -25,6 +25,7 @@ public class AmbiguousChoiceDetector {
     switch (node) {
       case OrderedChoice oc -> {
         List<Node> choices = oc.nodes();
+        if (choices.size() < 2) return;
         for (int i = 0; i < choices.size(); i++) {
           Node nodeI = choices.get(i);
           List<Node> firstI = grammar.firstOf(nodeI);
@@ -52,6 +53,10 @@ public class AmbiguousChoiceDetector {
       }
       case Not not -> {
         checkNode(not.node(), ruleName);
+      }
+
+      case And and -> {
+        checkNode(and.node(), ruleName);
       }
 
       default -> {}

@@ -116,6 +116,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   @Override
   public void exitLexerElements(ANTLRv4Parser.LexerElementsContext ctx) {
+    if (ctx.lexerElement().isEmpty()) {
+      properties.put(ctx, grammar.mkEmpty());
+      return;
+    }
     var nodes = mkNodeList(ctx.lexerElement());
     var node = grammar.mkSequence(nodes);
     properties.put(ctx, node);
@@ -310,6 +314,10 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   @Override
   public void exitAltList(ANTLRv4Parser.AltListContext ctx) {
+    if (ctx.alternative().isEmpty()) {
+      properties.put(ctx, grammar.mkEmpty());
+      return;
+    }
     var nodes = mkNodeList(ctx.alternative());
     var node = grammar.mkOrderedChoice(nodes);
     properties.put(ctx, node);
