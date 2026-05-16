@@ -23,7 +23,7 @@ public class CreateSkipRule {
     }
 
     List<Node> skipRules =
-        grammar.getOptions().skipRules.get().stream()
+        grammar.getOptions().skipRules.stream()
             .map(grammar::mkIdent)
             .map(i -> (Node) i)
             .collect(Collectors.toList());

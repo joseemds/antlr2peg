@@ -90,7 +90,8 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     grammar.addRule(rule);
 
     if (skipCurrentRule) {
-      grammarOptions.skipRules.ifPresent(list -> list.add(ident));
+      System.out.println("Skip rule detected: " + ident);
+      grammarOptions.skipRules.add(ident);
     }
 
     skipCurrentRule = false;

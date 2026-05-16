@@ -48,7 +48,7 @@ public class LpegBackend {
     this.grammar = grammar;
     this.firstSets = grammar.getFirsts();
     this.followSets = grammar.getFirsts();
-    this.hasSkipRules = grammar.getOptions().skipRules.isPresent();
+    this.hasSkipRules = !grammar.getOptions().skipRules.isEmpty();
   }
 
   private RuleKind currentRuleKind;
