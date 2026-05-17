@@ -22,6 +22,7 @@ import transformation.FlattenGrammar;
 import transformation.MoveEmpty;
 import transformation.PrependKeywords;
 import transformation.ReorderByUniquePath;
+import transformation.ReorderLiteralsBySize;
 import transformation.ReorderSamePrefix;
 import utils.StatsTracker;
 
@@ -107,6 +108,7 @@ public class Converter {
 
     uniqueTokenTracker.printUniqueTokens();
     uniqueTokenTracker.printUniquePaths();
+    grammar = grammar.transform(new ReorderLiteralsBySize());
     grammar = grammar.transform(new ReorderSamePrefix(grammar));
     grammar = grammar.transform(new ReorderByUniquePath(grammar, statsTracker));
     FixRepetitions fixRepetitions = new FixRepetitions(grammar, statsTracker);
