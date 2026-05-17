@@ -18,6 +18,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
   private final GrammarOptions grammarOptions = new GrammarOptions();
   private final PegGrammar grammar = new PegGrammar();
   private ParseTreeProperty<Node> properties = new ParseTreeProperty<>();
+  private boolean skipCurrentRule = false;
 
   private void copyNode(ParserRuleContext parent, ParserRuleContext child) {
     properties.put(parent, properties.get(child));
@@ -87,6 +88,12 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     }
     var rule = grammar.mkRule(ident, rhs, ruleKind);
     grammar.addRule(rule);
+
+    if (skipCurrentRule) {
+      grammarOptions.skipRules.ifPresent(list -> list.add(ident));
+    }
+
+    skipCurrentRule = false;
   }
 
   @Override
@@ -328,6 +335,21 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     if (ctx != null) {
       throw new SemanticActionNotAllowedException(
           "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)");
+    }
+  }
+
+  @Override
+  public void exitLexerCommand(ANTLRv4Parser.LexerCommandContext ctx) {
+    String cmd = ctx.lexerCommandName().getText().toLowerCase();
+    if (cmd.equals("skip") || cmd.equals("channel")) {
+      if (cmd.equals("skip")) {
+        skipCurrentRule = true;
+      } else if (cmd.equals("channel") && ctx.lexerCommandExpr() != null) {
+        String arg = ctx.lexerCommandExpr().getText();
+        if (arg.equals("HIDDEN") || arg.equals("1")) {
+          skipCurrentRule = true;
+        }
+      }
     }
   }
 }
