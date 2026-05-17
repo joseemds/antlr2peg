@@ -1,6 +1,5 @@
 package cli;
 
-import java.util.List;
 import java.util.Optional;
 
 public class CliOptions {
@@ -12,7 +11,6 @@ public class CliOptions {
   public String output;
   public String identifierRule;
   public Optional<String> startRule = Optional.empty();
-  public Optional<List<String>> skipRules = Optional.empty();
 
   public CliOptions() {}
 
@@ -34,10 +32,6 @@ public class CliOptions {
 
   public void setLexerFile(String lexerFile) {
     this.lexerFile = lexerFile;
-  }
-
-  public void setSkipRules(List<String> skipRules) {
-    this.skipRules = Optional.of(skipRules);
   }
 
   public void setIdentifier(String identifierRule) {

@@ -1,7 +1,5 @@
 package cli;
 
-import java.util.Arrays;
-
 class CliParser {
   private String[] argv;
 
@@ -45,9 +43,6 @@ class CliParser {
         case "-h":
         case "--help":
           options.setPrintHelp(true);
-          break;
-        case "--skip":
-          options.setSkipRules(Arrays.asList(argv[i + 1].split(",")));
           break;
         case "--identifier":
           options.setIdentifier(argv[i + 1]);

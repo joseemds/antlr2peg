@@ -39,7 +39,8 @@ public class Converter {
     walker.walk(lexerListener, lexerAst);
 
     var grammarOptions = grammarListener.getGrammarOptions();
-    grammarOptions.skipRules = cliOptions.skipRules;
+    var lexerOptions = grammarListener.getGrammarOptions();
+    grammarOptions.skipRules = lexerOptions.skipRules;
     grammarOptions.identifierRule = cliOptions.identifierRule;
     grammarOptions.startRule = cliOptions.startRule;
     var grammar = grammarListener.getGrammar();
@@ -58,7 +59,6 @@ public class Converter {
     AntlrToPegListener pegListener = new AntlrToPegListener();
     walker.walk(pegListener, ast);
     var grammarOptions = pegListener.getGrammarOptions();
-    grammarOptions.skipRules = cliOptions.skipRules;
     grammarOptions.identifierRule = cliOptions.identifierRule;
     grammarOptions.startRule = cliOptions.startRule;
     var grammar = pegListener.getGrammar();
