@@ -36,15 +36,6 @@ public class FlattenGrammar implements RuleTransformation {
       }
 
       case Not not -> new Not(flattenNode(not.node()));
-      case Term term -> {
-        Node innerNode = flattenNode(term.node());
-
-        if (term.op().isEmpty()) {
-          yield innerNode;
-        }
-
-        yield new Term(innerNode, term.op());
-      }
       default -> node;
     };
   }

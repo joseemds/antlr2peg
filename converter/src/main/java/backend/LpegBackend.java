@@ -260,10 +260,7 @@ public class LpegBackend {
 
   private String printTerm(Term term) {
     String nodeStr = printNode(term.node());
-    if (term.op().isPresent()) {
-      return "(" + nodeStr + ")" + printOperator(term.op().get());
-    }
-    return nodeStr;
+    return "(" + nodeStr + ")" + printOperator(term.op());
   }
 
   private String printOperator(Operator op) {
@@ -301,7 +298,7 @@ public class LpegBackend {
 
       if (node instanceof Term t && t.node() instanceof Wildcard && i + 1 < seq.nodes().size()) {
         Node nextNode = seq.nodes().get(i + 1);
-        String op = t.op().isPresent() ? printOperator(t.op().get()) : "";
+        String op = printOperator(t.op());
         nodeStr = "neg(" + printNode(nextNode) + ")" + op;
       }
 

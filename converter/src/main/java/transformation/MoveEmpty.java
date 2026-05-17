@@ -51,8 +51,7 @@ public class MoveEmpty implements Transformation {
   private boolean isPossiblyEmpty(Node n) {
     return switch (n) {
       case Term t -> {
-        if (t.op().isPresent()
-            && (t.op().get() == Operator.OPTIONAL || t.op().get() == Operator.STAR)) {
+        if (t.op() == Operator.OPTIONAL || t.op() == Operator.STAR) {
           yield true;
         }
         yield isPossiblyEmpty(t.node());

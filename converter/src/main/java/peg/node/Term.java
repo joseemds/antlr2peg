@@ -1,11 +1,9 @@
 package peg.node;
 
-import java.util.Optional;
-
-public record Term(Node node, Optional<Operator> op) implements Node {
+public record Term(Node node, Operator op) implements Node {
   @Override
   public final String toString() {
-    return op.isPresent() ? "(" + node + ")" + printOperator(op.get()) : node.toString();
+    return "(" + node + ")" + printOperator(op);
   }
 
   private String printOperator(Operator op) {

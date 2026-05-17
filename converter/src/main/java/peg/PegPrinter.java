@@ -34,11 +34,7 @@ public class PegPrinter {
   }
 
   private String printTerm(Term term) {
-    String nodeStr = printNode(term.node());
-    if (term.op().isPresent()) {
-      return nodeStr + printOperator(term.op().get());
-    }
-    return nodeStr;
+    return term.toString();
   }
 
   private String printOperator(Operator op) {

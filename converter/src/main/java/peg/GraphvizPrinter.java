@@ -59,8 +59,7 @@ public class GraphvizPrinter {
           case Term term -> {
             String childId = printNode(term.node(), dotBuilder, counter);
             dotBuilder.append(String.format("  %s -> %s;\n", nodeId, childId));
-            String op = term.op().map(this::printOperator).orElse("");
-            yield op.isEmpty() ? "Term" : "Term " + op;
+            yield "Term " + term.op();
           }
           case Not not -> {
             String childId = printNode(not.node(), dotBuilder, counter);

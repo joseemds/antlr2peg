@@ -90,8 +90,6 @@ public class FixRepetitions implements RuleTransformation {
   }
 
   private Node fixTerm(Term term, String parentRule, List<Node> tailNodes) {
-    if (term.op().isEmpty()) return term;
-
     var pFirst = grammar.firstOf(term.node());
     var repFollow = calculateFollow(term, parentRule, tailNodes);
     boolean hasIntersection = !Collections.disjoint(pFirst, repFollow);
@@ -109,7 +107,7 @@ public class FixRepetitions implements RuleTransformation {
     for (int i = 0; i < currentChildren.size(); i++) {
       Node current = currentChildren.get(i);
 
-      if (current instanceof Term term && term.op().isPresent()) {
+      if (current instanceof Term term) {
 
         List<Node> firstOfBody = grammar.firstOf(term.node());
 
@@ -133,10 +131,8 @@ public class FixRepetitions implements RuleTransformation {
   }
 
   private Node fixRepetition(Term t, List<Node> termFirst, List<Node> termFollow, String rulename) {
-    if (t.op().isEmpty())
-      throw new IllegalStateException("term should have an operator when called here");
     Ident id = new Ident(rulename);
-    return switch (t.op().get()) {
+    return switch (t.op()) {
       case OPTIONAL -> {
         Node termFollowSeq = grammar.mkOrderedChoice(termFollow);
         Node lhs = grammar.mkSequence(t.node(), grammar.mkAnd(termFollowSeq));

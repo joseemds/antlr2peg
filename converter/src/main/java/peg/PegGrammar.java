@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import peg.grammar.GrammarOptions;
@@ -42,7 +41,7 @@ public class PegGrammar {
     return this.grammarOptions;
   }
 
-  public Term mkTerm(Node node, Optional<Operator> op) {
+  public Term mkTerm(Node node, Operator op) {
     return new Term(node, op);
   }
 
@@ -247,18 +246,14 @@ public class PegGrammar {
       }
 
       case Term t -> {
-        if (t.op().isPresent()) {
-          switch (t.op().get()) {
-            case OPTIONAL, STAR -> {
-              result.addAll(firstOf(t.node()));
-              result.add(new Empty());
-            }
-            case PLUS -> {
-              result.addAll(firstOf(t.node()));
-            }
+        switch (t.op()) {
+          case OPTIONAL, STAR -> {
+            result.addAll(firstOf(t.node()));
+            result.add(new Empty());
           }
-        } else {
-          result.addAll(firstOf(t.node()));
+          case PLUS -> {
+            result.addAll(firstOf(t.node()));
+          }
         }
       }
     }
@@ -340,14 +335,12 @@ public class PegGrammar {
       case Term t -> {
         Set<Node> innerFollow = new HashSet<>(follow);
 
-        if (t.op().isPresent()) {
-          switch (t.op().get()) {
-            case STAR, PLUS -> {
-              List<Node> selfFirst = firstOf(t.node());
-              selfFirst.stream().filter(n -> !(n instanceof Empty)).forEach(innerFollow::add);
-            }
-            case OPTIONAL -> {}
+        switch (t.op()) {
+          case STAR, PLUS -> {
+            List<Node> selfFirst = firstOf(t.node());
+            selfFirst.stream().filter(n -> !(n instanceof Empty)).forEach(innerFollow::add);
           }
+          case OPTIONAL -> {}
         }
 
         changed |= pushFollow(t.node(), innerFollow);
@@ -390,8 +383,7 @@ public class PegGrammar {
   public boolean isPossiblyEmpty(Node n, Set<String> visited) {
     return switch (n) {
       case Term t -> {
-        if (t.op().isPresent()
-            && (t.op().get() == Operator.OPTIONAL || t.op().get() == Operator.STAR)) yield true;
+        if (t.op() == Operator.OPTIONAL || t.op() == Operator.STAR) yield true;
         yield isPossiblyEmpty(t.node(), visited);
       }
       case Ident ident -> {

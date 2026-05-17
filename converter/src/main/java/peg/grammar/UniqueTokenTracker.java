@@ -78,9 +78,8 @@ public class UniqueTokenTracker {
               && oc.nodes().stream()
                   .allMatch(alt -> hasUniquePathForNode(alt, new HashSet<>(visited)));
       case Term t -> {
-        if (t.op().isPresent()) {
-          Operator op = t.op().get();
-          if (op == Operator.OPTIONAL || op == Operator.STAR) yield false;
+        if (t.op() == Operator.OPTIONAL || t.op() == Operator.STAR) {
+          yield false;
         }
         yield hasUniquePathForNode(t.node(), visited);
       }

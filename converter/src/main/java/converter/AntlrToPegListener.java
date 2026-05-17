@@ -5,7 +5,6 @@ import charset.CharacterSet;
 import exception.SemanticActionNotAllowedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import peg.PegGrammar;
@@ -127,22 +126,27 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   @Override
   public void exitLexerElement(ANTLRv4Parser.LexerElementContext ctx) {
-    Optional<Operator> suffix = Optional.empty();
-    if (ctx.ebnfSuffix() != null) {
-      // TODO: operadores com > 1
-      suffix = Optional.of(grammar.operatorOfString(ctx.ebnfSuffix().getText().substring(0, 1)));
-    }
     if (ctx.lexerAtom() != null) {
-      var node = grammar.mkTerm(properties.get(ctx.lexerAtom()), suffix);
-      properties.put(ctx, node);
+      var node = properties.get(ctx.lexerAtom());
+      if (ctx.ebnfSuffix() != null) {
+        var op = grammar.operatorOfString(ctx.ebnfSuffix().getText().substring(0, 1));
+        properties.put(ctx, grammar.mkTerm(node, op));
+      } else {
+        properties.put(ctx, node);
+      }
 
     } else if (ctx.lexerBlock() != null) {
       var blockCtx = ctx.lexerBlock();
       var nodes = mkNodeList(blockCtx.lexerAltList().lexerAlt());
       var choice = grammar.mkOrderedChoice(nodes);
-      var node = grammar.mkTerm(choice, suffix);
-      properties.put(ctx, node);
+      if (ctx.ebnfSuffix() != null) {
+        var op = grammar.operatorOfString(ctx.ebnfSuffix().getText().substring(0, 1));
+        properties.put(ctx, grammar.mkTerm(choice, op));
+      } else {
+        properties.put(ctx, choice);
+      }
     } else if (ctx.actionBlock() != null) {
+      // no-op
     }
   }
 
@@ -240,22 +244,28 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   @Override
   public void exitElement(ANTLRv4Parser.ElementContext ctx) {
-    Optional<Operator> suffix = Optional.empty();
-    if (ctx.ebnfSuffix() != null) {
-      suffix = Optional.of(grammar.operatorOfString(ctx.ebnfSuffix().getText()));
-    }
-
     if (ctx.labeledElement() != null) {
       var node = properties.get(ctx.labeledElement());
-      var term = grammar.mkTerm(node, suffix);
-      properties.put(ctx, term);
+      if (ctx.ebnfSuffix() != null) {
+        var op = grammar.operatorOfString(ctx.ebnfSuffix().getText());
+        properties.put(ctx, grammar.mkTerm(node, op));
+      } else {
+        properties.put(ctx, node);
+      }
+
     } else if (ctx.atom() != null) {
       var node = properties.get(ctx.atom());
-      var term = grammar.mkTerm(node, suffix);
-      properties.put(ctx, term);
+      if (ctx.ebnfSuffix() != null) {
+        var op = grammar.operatorOfString(ctx.ebnfSuffix().getText());
+        properties.put(ctx, grammar.mkTerm(node, op));
+      } else {
+        properties.put(ctx, node);
+      }
+
     } else if (ctx.ebnf() != null) {
       copyNode(ctx, ctx.ebnf());
     } else if (ctx.actionBlock() != null) {
+      // no-op
     }
   }
 
@@ -296,15 +306,13 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
 
   @Override
   public void exitEbnf(ANTLRv4Parser.EbnfContext ctx) {
-    Optional<Operator> suffix = Optional.empty();
-    var choices = properties.get(ctx.block());
-
+    var node = properties.get(ctx.block());
     if (ctx.blockSuffix() != null) {
-      suffix = Optional.of(grammar.operatorOfString(ctx.blockSuffix().getText()));
+      var op = grammar.operatorOfString(ctx.blockSuffix().getText());
+      properties.put(ctx, grammar.mkTerm(node, op));
+    } else {
+      properties.put(ctx, node);
     }
-
-    var node = grammar.mkTerm(choices, suffix);
-    properties.put(ctx, node);
   }
 
   @Override
