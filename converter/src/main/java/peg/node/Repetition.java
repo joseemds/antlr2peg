@@ -1,6 +1,6 @@
 package peg.node;
 
-public record Term(Node node, Operator op) implements Node {
+public record Repetition(Node node, Operator op) implements Node {
   @Override
   public final String toString() {
     return "(" + node + ")" + printOperator(op);

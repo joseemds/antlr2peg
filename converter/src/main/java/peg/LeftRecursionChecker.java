@@ -6,8 +6,8 @@ import java.util.Set;
 import peg.node.Ident;
 import peg.node.Node;
 import peg.node.OrderedChoice;
+import peg.node.Repetition;
 import peg.node.Sequence;
-import peg.node.Term;
 
 public class LeftRecursionChecker {
   private final PegGrammar grammar;
@@ -33,7 +33,7 @@ public class LeftRecursionChecker {
 
   public boolean check(Node node, String currRule, Set<String> visited) {
     return switch (node) {
-      case Term term -> check(term.node(), currRule, visited);
+      case Repetition rep -> check(rep.node(), currRule, visited);
       case Ident id -> {
         if (id.name().equals(currRule)) yield true;
         if (visited.contains(id.name())) yield true;

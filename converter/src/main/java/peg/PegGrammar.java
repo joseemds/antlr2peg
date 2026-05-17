@@ -41,8 +41,8 @@ public class PegGrammar {
     return this.grammarOptions;
   }
 
-  public Term mkTerm(Node node, Operator op) {
-    return new Term(node, op);
+  public Repetition mkRepetition(Node node, Operator op) {
+    return new Repetition(node, op);
   }
 
   public CharacterSet mkRange(String to, String from) {
@@ -245,14 +245,14 @@ public class PegGrammar {
         }
       }
 
-      case Term t -> {
-        switch (t.op()) {
+      case Repetition r -> {
+        switch (r.op()) {
           case OPTIONAL, STAR -> {
-            result.addAll(firstOf(t.node()));
+            result.addAll(firstOf(r.node()));
             result.add(new Empty());
           }
           case PLUS -> {
-            result.addAll(firstOf(t.node()));
+            result.addAll(firstOf(r.node()));
           }
         }
       }
@@ -332,18 +332,18 @@ public class PegGrammar {
         }
       }
 
-      case Term t -> {
+      case Repetition r -> {
         Set<Node> innerFollow = new HashSet<>(follow);
 
-        switch (t.op()) {
+        switch (r.op()) {
           case STAR, PLUS -> {
-            List<Node> selfFirst = firstOf(t.node());
+            List<Node> selfFirst = firstOf(r.node());
             selfFirst.stream().filter(n -> !(n instanceof Empty)).forEach(innerFollow::add);
           }
           case OPTIONAL -> {}
         }
 
-        changed |= pushFollow(t.node(), innerFollow);
+        changed |= pushFollow(r.node(), innerFollow);
       }
 
       case Not not -> {}
@@ -382,9 +382,9 @@ public class PegGrammar {
 
   public boolean isPossiblyEmpty(Node n, Set<String> visited) {
     return switch (n) {
-      case Term t -> {
-        if (t.op() == Operator.OPTIONAL || t.op() == Operator.STAR) yield true;
-        yield isPossiblyEmpty(t.node(), visited);
+      case Repetition r -> {
+        if (r.op() == Operator.OPTIONAL || r.op() == Operator.STAR) yield true;
+        yield isPossiblyEmpty(r.node(), visited);
       }
       case Ident ident -> {
         if (visited.contains(ident.name())) yield false;

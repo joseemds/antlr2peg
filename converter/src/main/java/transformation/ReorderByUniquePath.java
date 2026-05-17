@@ -39,7 +39,7 @@ public class ReorderByUniquePath implements Transformation {
         yield new Sequence(children);
       }
       case Not not -> new Not(reorderNode(not.node()));
-      case Term term -> new Term(reorderNode(term.node()), term.op());
+      case Repetition rep -> new Repetition(reorderNode(rep.node()), rep.op());
       default -> node;
     };
   }

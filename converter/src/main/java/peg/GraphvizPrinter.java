@@ -56,10 +56,10 @@ public class GraphvizPrinter {
             }
             yield "Choice";
           }
-          case Term term -> {
-            String childId = printNode(term.node(), dotBuilder, counter);
+          case Repetition rep -> {
+            String childId = printNode(rep.node(), dotBuilder, counter);
             dotBuilder.append(String.format("  %s -> %s;\n", nodeId, childId));
-            yield "Term " + term.op();
+            yield "Repetition " + rep.op();
           }
           case Not not -> {
             String childId = printNode(not.node(), dotBuilder, counter);

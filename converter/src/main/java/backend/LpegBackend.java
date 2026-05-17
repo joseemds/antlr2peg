@@ -136,7 +136,7 @@ public class LpegBackend {
 
   public String printNode(Node node) {
     return switch (node) {
-      case Term term -> printTerm(term);
+      case Repetition rep -> printRepetition(rep);
       case Ident ident -> printIdent(ident);
       case Sequence seq -> printSequence(seq);
       case OrderedChoice choice -> printOrderedChoice(choice);
@@ -258,9 +258,9 @@ public class LpegBackend {
     return token.length() == 1 && Character.isUpperCase(token.charAt(0));
   }
 
-  private String printTerm(Term term) {
-    String nodeStr = printNode(term.node());
-    return "(" + nodeStr + ")" + printOperator(term.op());
+  private String printRepetition(Repetition rep) {
+    String nodeStr = printNode(rep.node());
+    return "(" + nodeStr + ")" + printOperator(rep.op());
   }
 
   private String printOperator(Operator op) {
@@ -296,9 +296,11 @@ public class LpegBackend {
         nodeStr = "neg(" + printNode(nextNode) + ")";
       }
 
-      if (node instanceof Term t && t.node() instanceof Wildcard && i + 1 < seq.nodes().size()) {
+      if (node instanceof Repetition rep
+          && rep.node() instanceof Wildcard
+          && i + 1 < seq.nodes().size()) {
         Node nextNode = seq.nodes().get(i + 1);
-        String op = printOperator(t.op());
+        String op = printOperator(rep.op());
         nodeStr = "neg(" + printNode(nextNode) + ")" + op;
       }
 

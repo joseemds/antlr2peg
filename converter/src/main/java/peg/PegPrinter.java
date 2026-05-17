@@ -16,7 +16,7 @@ public class PegPrinter {
   public String printNode(Node node) {
     return switch (node) {
       case Literal lit -> lit.content();
-      case Term term -> printTerm(term);
+      case Repetition r -> printRepetition(r);
       case Ident ident -> printIdent(ident);
       case Sequence seq -> printSequence(seq);
       case OrderedChoice choice -> printOrderedChoice(choice);
@@ -33,8 +33,8 @@ public class PegPrinter {
     return rule.name() + " <- " + printNode(rule.rhs());
   }
 
-  private String printTerm(Term term) {
-    return term.toString();
+  private String printRepetition(Repetition rep) {
+    return rep.toString();
   }
 
   private String printOperator(Operator op) {

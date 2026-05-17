@@ -130,7 +130,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
       var node = properties.get(ctx.lexerAtom());
       if (ctx.ebnfSuffix() != null) {
         var op = grammar.operatorOfString(ctx.ebnfSuffix().getText().substring(0, 1));
-        properties.put(ctx, grammar.mkTerm(node, op));
+        properties.put(ctx, grammar.mkRepetition(node, op));
       } else {
         properties.put(ctx, node);
       }
@@ -141,7 +141,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
       var choice = grammar.mkOrderedChoice(nodes);
       if (ctx.ebnfSuffix() != null) {
         var op = grammar.operatorOfString(ctx.ebnfSuffix().getText().substring(0, 1));
-        properties.put(ctx, grammar.mkTerm(choice, op));
+        properties.put(ctx, grammar.mkRepetition(choice, op));
       } else {
         properties.put(ctx, choice);
       }
@@ -248,7 +248,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
       var node = properties.get(ctx.labeledElement());
       if (ctx.ebnfSuffix() != null) {
         var op = grammar.operatorOfString(ctx.ebnfSuffix().getText());
-        properties.put(ctx, grammar.mkTerm(node, op));
+        properties.put(ctx, grammar.mkRepetition(node, op));
       } else {
         properties.put(ctx, node);
       }
@@ -257,7 +257,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
       var node = properties.get(ctx.atom());
       if (ctx.ebnfSuffix() != null) {
         var op = grammar.operatorOfString(ctx.ebnfSuffix().getText());
-        properties.put(ctx, grammar.mkTerm(node, op));
+        properties.put(ctx, grammar.mkRepetition(node, op));
       } else {
         properties.put(ctx, node);
       }
@@ -309,7 +309,7 @@ public class AntlrToPegListener extends ANTLRv4ParserBaseListener {
     var node = properties.get(ctx.block());
     if (ctx.blockSuffix() != null) {
       var op = grammar.operatorOfString(ctx.blockSuffix().getText());
-      properties.put(ctx, grammar.mkTerm(node, op));
+      properties.put(ctx, grammar.mkRepetition(node, op));
     } else {
       properties.put(ctx, node);
     }

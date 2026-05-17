@@ -9,7 +9,7 @@ public class ReorderLiteralsBySize implements Transformation {
   @Override
   public Node apply(Node node) {
     return switch (node) {
-      case Term t -> new Term(apply(t.node()), t.op());
+      case Repetition rep -> new Repetition(apply(rep.node()), rep.op());
       case Sequence seq -> {
         List<Node> transformed =
             seq.nodes().stream()

@@ -61,19 +61,19 @@ public class UrlGrammarTest {
             g.mkSequence(
                 g.mkIdent("scheme"),
                 g.mkLiteral("://"),
-                g.mkTerm(g.mkIdent("login"),   Optional.of(Operator.OPTIONAL)),
+                g.mkRepetition(g.mkIdent("login"),   Operator.OPTIONAL),
                 g.mkIdent("host"),
-                g.mkTerm(
+                g.mkRepetition(
                     g.mkSequence(g.mkLiteral(":"), g.mkIdent("port")),
-                    Optional.of(Operator.OPTIONAL)),
-                g.mkTerm(
+                    Operator.OPTIONAL),
+                g.mkRepetition(
                     g.mkSequence(
                         g.mkLiteral("/"),
-                        g.mkTerm(g.mkIdent("path"), Optional.of(Operator.OPTIONAL))),
-                    Optional.of(Operator.OPTIONAL)),
-                g.mkTerm(g.mkIdent("query"),   Optional.of(Operator.OPTIONAL)),
-                g.mkTerm(g.mkIdent("frag"),    Optional.of(Operator.OPTIONAL)),
-                g.mkTerm(g.mkIdent("WS"),      Optional.of(Operator.OPTIONAL)))));
+                        g.mkRepetition(g.mkIdent("path"), Operator.OPTIONAL)),
+                    Operator.OPTIONAL),
+                g.mkRepetition(g.mkIdent("query"),   Operator.OPTIONAL),
+                g.mkRepetition(g.mkIdent("frag"),    Operator.OPTIONAL),
+                g.mkRepetition(g.mkIdent("WS"),      Operator.OPTIONAL))));
 
         // scheme : string
         g.addRule(g.mkParsingRule("scheme", g.mkIdent("string")));
@@ -81,7 +81,7 @@ public class UrlGrammarTest {
         // host : '/'? hostname
         g.addRule(g.mkParsingRule("host",
             g.mkSequence(
-                g.mkTerm(g.mkLiteral("/"), Optional.of(Operator.OPTIONAL)),
+                g.mkRepetition(g.mkLiteral("/"), Operator.OPTIONAL),
                 g.mkIdent("hostname"))));
 
         // hostname : string | '[' v6host ']'
@@ -96,13 +96,13 @@ public class UrlGrammarTest {
         // v6host : '::'? (string | DIGITS) ((':' | '::') (string | DIGITS))*
         g.addRule(g.mkParsingRule("v6host",
             g.mkSequence(
-                g.mkTerm(g.mkLiteral("::"), Optional.of(Operator.OPTIONAL)),
+                g.mkRepetition(g.mkLiteral("::"), Operator.OPTIONAL),
                 g.mkOrderedChoice(g.mkIdent("string"), g.mkIdent("DIGITS")),
-                g.mkTerm(
+                g.mkRepetition(
                     g.mkSequence(
                         g.mkOrderedChoice(g.mkLiteral(":"), g.mkLiteral("::")),
                         g.mkOrderedChoice(g.mkIdent("string"), g.mkIdent("DIGITS"))),
-                    Optional.of(Operator.STAR)))));
+                    Operator.STAR))));
 
         // port : DIGITS
         g.addRule(g.mkParsingRule("port", g.mkIdent("DIGITS")));
@@ -111,10 +111,10 @@ public class UrlGrammarTest {
         g.addRule(g.mkParsingRule("path",
             g.mkSequence(
                 g.mkIdent("string"),
-                g.mkTerm(
+                g.mkRepetition(
                     g.mkSequence(g.mkLiteral("/"), g.mkIdent("string")),
-                    Optional.of(Operator.STAR)),
-                g.mkTerm(g.mkLiteral("/"), Optional.of(Operator.OPTIONAL)))));
+                    Operator.STAR),
+                g.mkRepetition(g.mkLiteral("/"), Operator.OPTIONAL))));
 
         // user : string
         g.addRule(g.mkParsingRule("user", g.mkIdent("string")));
@@ -123,9 +123,9 @@ public class UrlGrammarTest {
         g.addRule(g.mkParsingRule("login",
             g.mkSequence(
                 g.mkIdent("user"),
-                g.mkTerm(
+                g.mkRepetition(
                     g.mkSequence(g.mkLiteral(":"), g.mkIdent("password")),
-                    Optional.of(Operator.OPTIONAL)),
+                   Operator.OPTIONAL),
                 g.mkLiteral("@"))));
 
         // password : string
@@ -145,22 +145,22 @@ public class UrlGrammarTest {
         g.addRule(g.mkParsingRule("search",
             g.mkSequence(
                 g.mkIdent("searchparameter"),
-                g.mkTerm(
+                g.mkRepetition(
                     g.mkSequence(g.mkLiteral("&"), g.mkIdent("searchparameter")),
-                    Optional.of(Operator.STAR)))));
+                    Operator.STAR))));
 
         // searchparameter : string ('=' (string | DIGITS | HEX))?
         g.addRule(g.mkParsingRule("searchparameter",
             g.mkSequence(
                 g.mkIdent("string"),
-                g.mkTerm(
+                g.mkRepetition(
                     g.mkSequence(
                         g.mkLiteral("="),
                         g.mkOrderedChoice(
                             g.mkIdent("string"),
                             g.mkIdent("DIGITS"),
                             g.mkIdent("HEX"))),
-                    Optional.of(Operator.OPTIONAL)))));
+                    Operator.OPTIONAL))));
 
         // string : STRING | DIGITS
         g.addRule(g.mkParsingRule("string",
@@ -169,17 +169,17 @@ public class UrlGrammarTest {
 
         // DIGITS : [0-9]+
         g.addRule(g.mkLexicalRule("DIGITS",
-            g.mkTerm(g.mkCharset(g.mkRange("0", "9")), Optional.of(Operator.PLUS))));
+            g.mkRepetition(g.mkCharset(g.mkRange("0", "9")), Operator.PLUS)));
 
         // HEX : ('%' [a-fA-F0-9] [a-fA-F0-9])+
         g.addRule(g.mkLexicalRule("HEX",
-            g.mkTerm(
+            g.mkRepetition(
                 g.mkSequence(
                     g.mkLiteral("%"),
                     g.mkCharset(g.mkRange("a", "f"), g.mkRange("A", "F"), g.mkRange("0", "9")),
                     g.mkCharset(g.mkRange("a", "f"), g.mkRange("A", "F"), g.mkRange("0", "9"))
                 ),
-                Optional.of(Operator.PLUS))));
+                Operator.PLUS)));
 
         // STRING : ([a-zA-Z~0-9] | HEX) ([a-zA-Z0-9.+-] | HEX)*
         g.addRule(g.mkLexicalRule("STRING",
@@ -189,20 +189,20 @@ public class UrlGrammarTest {
                         g.mkRange("a", "z"), g.mkRange("A", "Z"),
                         g.mkRange("0", "9"), g.mkCharsetLiteral("~")),
                     g.mkIdent("HEX")),
-                g.mkTerm(
+                g.mkRepetition(
                     g.mkOrderedChoice(
                         g.mkCharset(
                             g.mkRange("a", "z"), g.mkRange("A", "Z"),
                             g.mkRange("0", "9"),
                             g.mkCharsetLiteral("."), g.mkCharsetLiteral("+"), g.mkCharsetLiteral("-")),
                         g.mkIdent("HEX")),
-                    Optional.of(Operator.STAR)))));
+                    Operator.STAR))));
 
         // WS : [\r\n]+
         g.addRule(g.mkLexicalRule("WS",
-            g.mkTerm(
+            g.mkRepetition(
                 g.mkCharset(g.mkCharsetLiteral("\r"), g.mkCharsetLiteral("\n")),
-                Optional.of(Operator.PLUS))));
+                Operator.PLUS)));
 
         g.computeFirst();
         g.computeFollowSets();

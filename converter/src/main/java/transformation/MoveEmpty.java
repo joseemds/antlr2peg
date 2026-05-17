@@ -14,7 +14,7 @@ public class MoveEmpty implements Transformation {
 
   private Node transformNode(Node n) {
     return switch (n) {
-      case Term t -> new Term(transformNode(t.node()), t.op());
+      case Repetition rep -> new Repetition(transformNode(rep.node()), rep.op());
       case Sequence seq -> {
         List<Node> transformed =
             seq.nodes().stream()
@@ -50,11 +50,11 @@ public class MoveEmpty implements Transformation {
 
   private boolean isPossiblyEmpty(Node n) {
     return switch (n) {
-      case Term t -> {
-        if (t.op() == Operator.OPTIONAL || t.op() == Operator.STAR) {
+      case Repetition rep -> {
+        if (rep.op() == Operator.OPTIONAL || rep.op() == Operator.STAR) {
           yield true;
         }
-        yield isPossiblyEmpty(t.node());
+        yield isPossiblyEmpty(rep.node());
       }
       case Ident ident -> false;
       case Sequence seq -> seq.nodes().stream().allMatch(this::isPossiblyEmpty);

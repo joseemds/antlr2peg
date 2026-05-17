@@ -48,8 +48,8 @@ public class AmbiguousChoiceDetector {
           checkNode(n, ruleName);
         }
       }
-      case Term t -> {
-        checkNode(t.node(), ruleName);
+      case Repetition rep -> {
+        checkNode(rep.node(), ruleName);
       }
       case Not not -> {
         checkNode(not.node(), ruleName);

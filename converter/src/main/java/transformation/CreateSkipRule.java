@@ -26,7 +26,7 @@ public class CreateSkipRule {
             .map(grammar::mkIdent)
             .map(i -> (Node) i)
             .collect(Collectors.toList());
-    Node rhs = grammar.mkTerm(grammar.mkOrderedChoice(skipRules), Operator.PLUS);
+    Node rhs = grammar.mkRepetition(grammar.mkOrderedChoice(skipRules), Operator.PLUS);
 
     Rule r = grammar.mkParsingRule("SKIP_", rhs);
 

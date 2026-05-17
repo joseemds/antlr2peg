@@ -77,11 +77,11 @@ public class UniqueTokenTracker {
           !oc.nodes().isEmpty()
               && oc.nodes().stream()
                   .allMatch(alt -> hasUniquePathForNode(alt, new HashSet<>(visited)));
-      case Term t -> {
-        if (t.op() == Operator.OPTIONAL || t.op() == Operator.STAR) {
+      case Repetition rep -> {
+        if (rep.op() == Operator.OPTIONAL || rep.op() == Operator.STAR) {
           yield false;
         }
-        yield hasUniquePathForNode(t.node(), visited);
+        yield hasUniquePathForNode(rep.node(), visited);
       }
       default -> false;
     };
@@ -130,7 +130,7 @@ public class UniqueTokenTracker {
           s.nodes().forEach(child -> tokens.addAll(extractDirectLexicalTokens(child)));
       case OrderedChoice oc ->
           oc.nodes().forEach(child -> tokens.addAll(extractDirectLexicalTokens(child)));
-      case Term t -> tokens.addAll(extractDirectLexicalTokens(t.node()));
+      case Repetition rep -> tokens.addAll(extractDirectLexicalTokens(rep.node()));
       default -> {}
     }
     return tokens;
@@ -155,7 +155,8 @@ public class UniqueTokenTracker {
           oc.nodes()
               .forEach(
                   child -> tokens.addAll(extractAllLexicalTokens(child, new HashSet<>(visited))));
-      case Term t -> tokens.addAll(extractAllLexicalTokens(t.node(), new HashSet<>(visited)));
+      case Repetition rep ->
+          tokens.addAll(extractAllLexicalTokens(rep.node(), new HashSet<>(visited)));
       default -> {}
     }
     return tokens;

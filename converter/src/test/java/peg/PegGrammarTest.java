@@ -107,7 +107,7 @@ public class PegGrammarTest {
         // rules:
         //   start  <- opt 'b'
         //   opt    <- 'a'?
-        Node optBody = g.mkTerm(g.mkLiteral("a"), Optional.of(Operator.OPTIONAL));
+        Node optBody = g.mkRepetition(g.mkLiteral("a"), Operator.OPTIONAL);
         g.addRule(g.mkParsingRule("opt", optBody));
         g.addRule(g.mkParsingRule("start",
             g.mkSequence(g.mkIdent("opt"), g.mkLiteral("b"))));
@@ -126,7 +126,7 @@ public class PegGrammarTest {
     @DisplayName("FIRST: optional term adds ε to first set")
     void first_optionalTermIsNullable() {
         // rule: start <- 'a'?
-        Node optA = g.mkTerm(g.mkLiteral("a"), Optional.of(Operator.OPTIONAL));
+        Node optA = g.mkRepetition(g.mkLiteral("a"), Operator.OPTIONAL);
         g.addRule(g.mkParsingRule("start", optA));
         g.computeFirst();
 
@@ -139,7 +139,7 @@ public class PegGrammarTest {
     @DisplayName("FIRST: star term adds ε to first set")
     void first_starTermIsNullable() {
         // rule: start <- 'x'*
-        Node starX = g.mkTerm(g.mkLiteral("x"), Optional.of(Operator.STAR));
+        Node starX = g.mkRepetition(g.mkLiteral("x"), Operator.STAR);
         g.addRule(g.mkParsingRule("start", starX));
         g.computeFirst();
 
@@ -152,7 +152,7 @@ public class PegGrammarTest {
     @DisplayName("FIRST: plus term does NOT add ε")
     void first_plusTermNotNullable() {
         // rule: start <- 'x'+
-        Node plusX = g.mkTerm(g.mkLiteral("x"), Optional.of(Operator.PLUS));
+        Node plusX = g.mkRepetition(g.mkLiteral("x"), Operator.PLUS);
         g.addRule(g.mkParsingRule("start", plusX));
         g.computeFirst();
 
@@ -232,7 +232,7 @@ public class PegGrammarTest {
         //   start <- expr suffix
         //   expr  <- 'e'
         //   suffix <- ';'?      (nullable)
-        Node optSemi = g.mkTerm(g.mkLiteral(";"), Optional.of(Operator.OPTIONAL));
+        Node optSemi = g.mkRepetition(g.mkLiteral(";"), Operator.OPTIONAL);
         g.addRule(g.mkParsingRule("start",
             g.mkSequence(g.mkIdent("expr"), g.mkIdent("suffix"))));
         g.addRule(g.mkParsingRule("expr", g.mkLiteral("e")));
@@ -255,9 +255,9 @@ public class PegGrammarTest {
     void follow_recursiveRule() {
         // Simulates: start <- '(' expr ')' / 'n'
         //            expr  <- start ('+' start)*
-        Node plusStart = g.mkTerm(
+        Node plusStart = g.mkRepetition(
             g.mkSequence(g.mkLiteral("+"), g.mkIdent("start")),
-            Optional.of(Operator.STAR));
+            Operator.STAR);
         g.addRule(g.mkParsingRule("start",
             g.mkOrderedChoice(
                 g.mkSequence(g.mkLiteral("("), g.mkIdent("expr"), g.mkLiteral(")")),
@@ -316,7 +316,7 @@ public class PegGrammarTest {
         // rules:
         //   start <- item*
         //   item  <- 'x'
-        Node starItem = g.mkTerm(g.mkIdent("item"), Optional.of(Operator.STAR));
+        Node starItem = g.mkRepetition(g.mkIdent("item"), Operator.STAR);
         g.addRule(g.mkParsingRule("start", starItem));
         g.addRule(g.mkParsingRule("item", g.mkLiteral("x")));
         g.computeFirst();

@@ -1,7 +1,7 @@
 package peg.node;
 
 public sealed interface Node
-    permits Term,
+    permits Repetition,
         Ident,
         Sequence,
         OrderedChoice,

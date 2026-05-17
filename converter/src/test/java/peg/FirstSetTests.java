@@ -45,17 +45,10 @@ public class FirstSetTests {
   }
 
   @Test
-  void testTermWithoutOperator() {
-    Literal a = new Literal("a");
-    Term t = new Term(a, Optional.empty());
-    assertEquals(grammar.firstOf(t), List.of(a));
-  }
-
-  @Test
   void testTermWithStar() {
     Literal a = new Literal("a");
-    Term t = new Term(a, Optional.of(Operator.STAR));
-    List<Node> result = grammar.firstOf(t);
+    Repetition rep = new Repetition(a, Operator.STAR);
+    List<Node> result = grammar.firstOf(rep);
     assertEquals(2, result.size());
     assertTrue(result.contains(a));
     assertTrue(result.stream().anyMatch(n -> n instanceof Empty));
@@ -64,16 +57,16 @@ public class FirstSetTests {
   @Test
   void testTermWithPlus() {
     Literal a = new Literal("a");
-    Term t = new Term(a, Optional.of(Operator.PLUS));
-    List<Node> result = grammar.firstOf(t);
+    Repetition rep = new Repetition(a, Operator.PLUS);
+    List<Node> result = grammar.firstOf(rep);
     assertEquals(List.of(a), result);
   }
 
   @Test
   void testTermWithOptional() {
     Literal a = new Literal("a");
-    Term t = new Term(a, Optional.of(Operator.OPTIONAL));
-    List<Node> result = grammar.firstOf(t);
+    Repetition rep = new Repetition(a, Operator.OPTIONAL);
+    List<Node> result = grammar.firstOf(rep);
     assertEquals(2, result.size());
     assertTrue(result.contains(a));
     assertTrue(result.stream().anyMatch(n -> n instanceof Empty));
@@ -82,7 +75,7 @@ public class FirstSetTests {
   @Test
   void testSequenceStarFollowedByLiteral() {
      Literal a = new Literal("a");
-    Term aStar = new Term(a, Optional.of(Operator.STAR));
+    Repetition aStar = new Repetition(a, Operator.STAR);
     Literal b = new Literal("b");
     Sequence seq = new Sequence(List.of(aStar, b));
     
@@ -95,7 +88,7 @@ public class FirstSetTests {
   @Test
   void testSequenceOptionalFollowedByLiteral() {
      Literal a = new Literal("a");
-    Term aOptional = new Term(a, Optional.of(Operator.OPTIONAL));
+    Repetition aOptional = new Repetition(a, Operator.OPTIONAL);
     Literal b = new Literal("b");
     Sequence seq = new Sequence(List.of(aOptional, b));
     
@@ -108,9 +101,9 @@ public class FirstSetTests {
   @Test
   void testSequenceAllOptional() {
      Literal a = new Literal("a");
-    Term aOptional = new Term(a, Optional.of(Operator.OPTIONAL));
+    Repetition aOptional = new Repetition(a, Operator.OPTIONAL);
     Literal b  = new Literal("b");
-    Term bStar = new Term(b, Optional.of(Operator.STAR));
+    Repetition bStar = new Repetition(b, Operator.STAR);
     Sequence seq = new Sequence(List.of(aOptional, bStar));
     
     List<Node> result = grammar.firstOf(seq);
@@ -133,7 +126,7 @@ public class FirstSetTests {
   @Test
   void testOrderedChoiceWithTerms() {
      Literal a = new Literal("a");
-    Term aStar = new Term(a, Optional.of(Operator.STAR));
+    Repetition aStar = new Repetition(a, Operator.STAR);
     Literal b = new Literal("b");
     OrderedChoice oc = new OrderedChoice(List.of(aStar, b));
     
@@ -148,9 +141,9 @@ public class FirstSetTests {
      Literal a = new Literal("a");
     Literal b = new Literal("b");
     Sequence innerSeq = new Sequence(List.of(a, b));
-    Term t = new Term(innerSeq, Optional.of(Operator.STAR));
+    Repetition rep = new Repetition(innerSeq, Operator.STAR);
     
-    List<Node> result = grammar.firstOf(t);
+    List<Node> result = grammar.firstOf(rep);
     assertTrue(result.contains(a));
     assertTrue(result.stream().anyMatch(n -> n instanceof Empty));
   }
@@ -158,9 +151,9 @@ public class FirstSetTests {
   @Test
   void testComplexSequence() {
      Literal a = new Literal("a");
-    Term aStar = new Term(a, Optional.of(Operator.STAR));
+    Repetition aStar = new Repetition(a, Operator.STAR);
     Literal b = new Literal("b");
-    Term bStar = new Term(b, Optional.of(Operator.STAR));
+    Repetition bStar = new Repetition(b, Operator.STAR);
     Literal c = new Literal("c");
     Sequence seq = new Sequence(List.of(aStar, bStar, c));
     
