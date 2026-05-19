@@ -23,6 +23,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     p.add_argument("--grammar", "-g", type=Path, required=True, help=".g4 ANTLR4 grammar file")
+    p.add_argument("--lexer", "-l", type=Path, required=True, help=".g4 ANTLR4 lexer file(If used)")
     p.add_argument("--ext", "-e", metavar="EXTENSION", required=True, help="Extension of the generated test files")
     p.add_argument("--start-rule", "-s", help="Name of the grammar start rule (auto-detected if omitted)")
     p.add_argument("--lua-parser", "-p", type=Path, default=None, help="Path to the Lua parser file (default: ./<stem>/<stem>.lua)")
@@ -60,10 +61,10 @@ def run_lua_test(lua_parser: Path, input_file: Path, verbose: bool = False) -> b
             return False
 
 
-def run_antlr_test(antlr4_grammar: Path, start_rule: str, input_file: Path, verbose: bool = False) -> bool:
+def run_antlr_test(antlr4_grammar: Path, start_rule: str, input_file: Path, lexer_file: Path = None, verbose: bool = False) -> bool:
     try:
         run_cmd(
-            ["antlr4-parse", str(antlr4_grammar), start_rule, str(input_file)],
+            ["antlr4-parse", str(antlr4_grammar), str(lexer_file) if lexer_file is not None else "" , start_rule, str(input_file)],
             verbose=verbose,
         )
         return True

@@ -14,6 +14,7 @@ from pathlib import Path
 def build_parser():
     p = argparse.ArgumentParser()
     p.add_argument("--grammar", "-g", type=Path, required=True, help=".g4 ANTLR4 grammar file")
+    p.add_argument("--lexer", "-l", type=Path, required=False, help=".g4 ANTLR4 lexer file (When used)")
     p.add_argument("--ext", "-e", metavar="EXTENSION", required=True, help="Extension for generated test files")
     p.add_argument("--out", "-o", type=Path, default=Path("/tmp"), help="Output dir (default: /tmp)")
     p.add_argument("--n-tests", "-n", type=int, default=20, help="Number of test files to generate (default: 20)")
@@ -23,14 +24,16 @@ def build_parser():
     return p
 
 
-def process_grammar(grammar_file: Path, out_dir: Path) -> Path:
+def process_grammar(grammar_file: Path, out_dir: Path, lexer_file: Path = None) -> Path:
     target_dir = out_dir / grammar_file.stem
     target_dir.mkdir(parents=True, exist_ok=True)
     cmd = [
         "grammarinator-process",
         str(grammar_file),
-        "-o", str(target_dir),
     ]
+    if lexer_file is not None:
+        cmd.append(str(lexer_file))
+    cmd += ["-o", str(target_dir)]
     print(f"Processing grammar: {' '.join(cmd)}")
     subprocess.run(cmd, check=True)
     return target_dir
@@ -75,7 +78,7 @@ def main():
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
-    process_grammar(args.grammar, args.out)
+    process_grammar(args.grammar, args.out, args.lexer)
     test_dir = generate_tests(
         grammar_file=args.grammar,
         extension=args.ext,
