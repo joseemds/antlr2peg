@@ -40,7 +40,7 @@ public class Converter {
     walker.walk(lexerListener, lexerAst);
 
     var grammarOptions = grammarListener.getGrammarOptions();
-    var lexerOptions = grammarListener.getGrammarOptions();
+    var lexerOptions = lexerListener.getGrammarOptions();
     grammarOptions.skipRules = lexerOptions.skipRules;
     grammarOptions.identifierRule = cliOptions.identifierRule;
     grammarOptions.startRule = cliOptions.startRule;
