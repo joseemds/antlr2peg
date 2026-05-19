@@ -56,10 +56,11 @@ public class FixRepetitions implements RuleTransformation {
     return switch (node) {
       case Sequence seq -> fixSequence(seq, parentRule);
       case OrderedChoice oc -> {
+        List<Node> newChildren = new ArrayList<>();
         for (Node n : oc.nodes()) {
-          fix(n, parentRule);
+          newChildren.add(fix(n, parentRule));
         }
-        yield oc;
+        yield grammar.mkOrderedChoice(newChildren);
       }
 
       case Repetition rep -> fixRep(rep, parentRule, List.of());
@@ -75,13 +76,7 @@ public class FixRepetitions implements RuleTransformation {
 
   private String getOrCreateFixedRule(
       Repetition rep, List<Node> firstOfBody, Set<Node> followOfTerm, Node context) {
-    String cacheKey = createKey(rep, followOfTerm);
-    if (fixedRepetition.containsKey(cacheKey)) {
-      return fixedRepetition.get(cacheKey);
-    }
-
     String ruleName = genName();
-    fixedRepetition.put(cacheKey, ruleName);
     Node newNode = fixRepetition(rep, firstOfBody, new ArrayList<>(followOfTerm), ruleName);
     statsTracker.bumpRepetitionsTransformed();
     Rule r = grammar.mkParsingRule(ruleName, newNode);

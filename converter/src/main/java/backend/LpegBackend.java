@@ -63,6 +63,7 @@ public class LpegBackend {
 		local re = require "relabel"
 		local P, S, V, R, utfR = lpeg.P, lpeg.S, lpeg.V, lpeg.R, lpeg.utfR
     local EMPTY = P''
+		local _idRest = R"az" + R"AZ" + R"09"
     local neg = function (pat)
      return P(1) - pat
     end
@@ -71,6 +72,11 @@ public class LpegBackend {
 		end
 		local tk = function (s)
 			return P(s) %s
+		end
+
+		local keyword = function (s)
+			return P(s) * -_idRest
+
 		end
 		local EOF = P(-1)
 
@@ -157,17 +163,19 @@ public class LpegBackend {
   }
 
   private String printRule(Rule rule) {
-    String ws = (rule.kind() == RuleKind.LEXING && this.hasSkipRules) ? " * V\"SKIP_\"^0" : "";
     this.currentRuleKind = rule.kind();
     String name = LUA_KEYWORDS.contains(rule.name()) ? "[\"" + rule.name() + "\"]" : rule.name();
-    return name + " = " + printNode(rule.rhs()) + ws;
+
+    if (rule.kind() == RuleKind.LEXING && this.hasSkipRules) {
+      return name + " = " + "(" + printNode(rule.rhs()) + ")" + "V\"SKIP\"^0";
+    }
+    return name + " = " + printNode(rule.rhs());
   }
 
   private String printLiteral(Literal lit) {
     String content = Utils.sanitizeString(lit.content());
-    // String content = lit.content();
     if (grammar.getOptions().caseInsensitive) {
-      content = "ci(" + lit.content() + ")";
+      content = "ci(" + content + ")";
     }
     ;
     String fn = this.currentRuleKind == RuleKind.PARSING ? "tk" : "P";
