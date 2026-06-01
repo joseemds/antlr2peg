@@ -1,38 +1,33 @@
 ### Dependencies
-- Lua > 5.1
+- Lua > 5.3
+- Java 21
 - lpeglabel > 1.0
-- grammarinator > 23.7
+- grammarinator == 26.1
 - antlr4
+
 
 ### Setup
 
-The project has a requirements.txt file with all python dependencies needed, to install and load it you can follow the steps:
+To build ANTLR, run, on the root folder:
 
 ```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+make deps && make jar
 ```
-Besides the python dependencies, to install the `lpeglabel` and `lua`, you can use yours system package managar or use
-`luarocks`.
 
-```bash
+
+After that, you can use the helper `antlr2peg` to run the tool.
+
+As input, an ANTLR grammar is required, which can be found at [ANTLR/grammars-v4](github.com/antlr/grammars-v4)
+
+The syntax to run antlr2peg is:
+
+```
+./antlr2peg -i grammar.g4 -o grammar.lua
+```
+
+
+To run the generated test, it is required to have lua (>= 5.3) installed together with thelpeglabel library, which can be installe with:
+
+```
 luarocks install lpeglabel
-```
-
-### Running the project
-
-To see a list of useful commands, run `make help`
-
-
-To run a parser benchmark run (inside ./converter/):
-
-```bash
-./gradlew compareParser --args="Dot --use-gen"
-```
-
-To generate a parser run (inside ./converter/):
-
-```bash
- ./gradlew run --args="-i src/main/antlr/Dot.g4 -o dot.lua"
 ```

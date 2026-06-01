@@ -8,6 +8,9 @@ OUT       ?= /tmp
 
 all: build
 
+deps:
+	cd converter && ./gradlew dependencies
+
 build:
 	cd converter && ./gradlew build -x shadowJar
 
