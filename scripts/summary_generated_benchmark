@@ -37,10 +37,10 @@ jq '
         two_way:  bucket($lua_more_twoway)
       }
     },
-    check: (
+    check: ((
       ($all_passed | length) + ($all_failed | length) + ($agree_partial | length) +
       ($antlr_more_oneway | length) + ($antlr_more_twoway | length) +
       ($lua_more_oneway | length) + ($lua_more_twoway | length)
-    ) == $total
+    ) == $total)
   }
 ' "$1"

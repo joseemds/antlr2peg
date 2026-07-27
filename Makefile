@@ -1,4 +1,4 @@
-.PHONY: all build jar benchmark gen test gen-test clean
+.PHONY: all build jar benchmark gen test gen-test clean download-grammars
 
 GRAMMAR   ?= 
 EXT       ?= 
@@ -7,6 +7,15 @@ N         ?= 50
 OUT       ?= /tmp
 
 all: build
+
+download-grammars:
+	@if [ ! -d /tmp/grammars ]; then \
+		git clone https://github.com/antlr/grammars-v4.git /tmp/grammars && \
+		cd /tmp/grammars && \
+		git checkout 55d2bd37ca9b4271ff1f5cb3868e7d58e68f5a0f; \
+	else \
+		echo "/tmp/grammars already exists; skipping clone."; \
+	fi
 
 deps:
 	cd converter && ./gradlew dependencies
@@ -17,7 +26,7 @@ build:
 jar:
 	cd converter && ./gradlew shadowJar
 
-benchmark:
+benchmark: download-grammars
 	cd converter && ./gradlew benchmark --args="grammars.json"
 
 format:

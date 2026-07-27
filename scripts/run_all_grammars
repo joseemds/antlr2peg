@@ -18,7 +18,7 @@ from pathlib import Path
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-SKIPS = ["nasm_x86_64_", "Ptx", "bdf", "chip8", "css3", "Cto", "pf", "pike", "ron", "Zig", "lolcode", "scotty"]
+SKIPS = ["nasm_x86_64_", "bdf", "chip8", "css3", "Cto", "pf", "pike", "ron", "Zig", "lolcode", "scotty"]
 TIMEOUT_SECONDS = 300 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 jq '
   to_entries as $entries |
   ($entries | length) as $total |
@@ -18,6 +20,6 @@ jq '
       count: "\($other_fail) (\(pct($other_fail))%)",
       list: ($entries | map(select(.value.error_kind != null and .value.error_kind != "LEFT_RECURSION" and .value.error_kind != "HAS_SEMANTIC_ACTION")) | map({name: .key, error_kind: .value.error_kind, error_message: .value.error_message}))
     },
-    check: ($success + $left_rec + $semantic + $other_fail) == $total
+    check: (($success + $left_rec + $semantic + $other_fail) == $total)
   }
 ' "$1"

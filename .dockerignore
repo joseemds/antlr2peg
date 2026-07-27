@@ -1,0 +1,8 @@
+.git
+.gitignore
+*.md
+converter/build
+converter/.gradle
+converter/bin
+_log
+_tmp

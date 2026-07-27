@@ -1,0 +1,2334 @@
+{
+  "abb" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "Abnf" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/Abnf.g416136194669039467305.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 24,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 26
+  },
+  "acme" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/acme.g44790184770193868330.gen.lua",
+    "choiceAmbiguities" : 16,
+    "repetitionsTransformed" : 14,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 214,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 4,
+    "rulesAFter" : 230
+  },
+  "action" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Ada2005" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Ada" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Option is not supported"
+  },
+  "Ada83" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Ada95" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "agc" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "alef" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "algol60" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "alloy" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "alpaca" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/alpaca.g46230063132853074007.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 9,
+    "rulesBefore" : 30,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 2,
+    "rulesAFter" : 34
+  },
+  "ASL" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/ASL.g41538617223405984075.gen.lua",
+    "choiceAmbiguities" : 112,
+    "repetitionsTransformed" : 6,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 223,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 5,
+    "rulesAFter" : 231
+  },
+  "ASLIntrinsic" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/ASLIntrinsicParser.g45641365106503751290.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 45,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 2,
+    "rulesAFter" : 47
+  },
+  "angelscript" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/angelscript.g417547301822404816981.gen.lua",
+    "choiceAmbiguities" : 23,
+    "repetitionsTransformed" : 9,
+    "uniquePathSwaps" : 32,
+    "rulesBefore" : 64,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 75
+  },
+  "ArangoDb" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "ARDEN" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "arithmetic" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "asm6502" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/asm6502.g41259615775016164214.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 7,
+    "rulesBefore" : 82,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 84
+  },
+  "asm8080" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/asm8080.g417975680154241487534.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 27,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 30
+  },
+  "asm8086" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/asm8086.g410964058508633480524.gen.lua",
+    "choiceAmbiguities" : 9,
+    "repetitionsTransformed" : 5,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 225,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 5,
+    "rulesAFter" : 232
+  },
+  "asmMASM" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/asmMASM.g44653616068891302340.gen.lua",
+    "choiceAmbiguities" : 11,
+    "repetitionsTransformed" : 9,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 93,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 2,
+    "rulesAFter" : 104
+  },
+  "Riscv64G" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/Riscv64G.g414133593394637174389.gen.lua",
+    "choiceAmbiguities" : 8,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 42,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 2,
+    "literalsReorder" : 0,
+    "rulesAFter" : 44
+  },
+  "asmZ80" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/asmZ80.g48727550922663844635.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 27,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 30
+  },
+  "nasm_x86_64_" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/nasm_x86_64_Parser.g49687982530955370714.gen.lua",
+    "choiceAmbiguities" : 20,
+    "repetitionsTransformed" : 7,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 2731,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 22,
+    "rulesAFter" : 2740
+  },
+  "pdp7" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/pdp7.g44423851490898458269.gen.lua",
+    "choiceAmbiguities" : 4,
+    "repetitionsTransformed" : 5,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 35,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 42
+  },
+  "PTX" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "Ptx" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/Ptx.g49368404079988969748.gen.lua",
+    "choiceAmbiguities" : 48,
+    "repetitionsTransformed" : 15,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 662,
+    "emptyRulesMoved" : 6,
+    "prefixReordered" : 0,
+    "literalsReorder" : 124,
+    "rulesAFter" : 679
+  },
+  "ASN" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "aterm" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/aterm.g47060067820758590792.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 5,
+    "rulesBefore" : 17,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 18
+  },
+  "awk" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "b" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/b.g48058579353665140558.gen.lua",
+    "choiceAmbiguities" : 12,
+    "repetitionsTransformed" : 3,
+    "uniquePathSwaps" : 39,
+    "rulesBefore" : 35,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 40
+  },
+  "jvmBasic" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/jvmBasic.g417536412677889576056.gen.lua",
+    "choiceAmbiguities" : 15,
+    "repetitionsTransformed" : 8,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 223,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 2,
+    "rulesAFter" : 233
+  },
+  "bdf" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/bdf.g416710588723669511195.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 50,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 52
+  },
+  "bibcode" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/bibcode.g4822266735538668787.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 15,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 16
+  },
+  "BibTeX" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/BibTeXParser.g42538679218590725689.gen.lua",
+    "choiceAmbiguities" : 79,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 50,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 52
+  },
+  "Bicep" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "C" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Option is not supported"
+  },
+  "calculator" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/calculator.g411578135008448978217.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 45,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 2,
+    "rulesAFter" : 47
+  },
+  "callable_" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/callable_.g413102514390777325246.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 10,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 11
+  },
+  "CapnProto" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/CapnProto.g46418909901538743673.gen.lua",
+    "choiceAmbiguities" : 18,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 26,
+    "rulesBefore" : 45,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 48
+  },
+  "CaQL" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "chip8" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/chip8.g48467253581428176418.gen.lua",
+    "choiceAmbiguities" : 50,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 58,
+    "rulesBefore" : 42,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 44
+  },
+  "clf" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/clf.g49878027305137297584.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 19,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 21
+  },
+  "CLIF" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/CLIF.g417046892188963691665.gen.lua",
+    "choiceAmbiguities" : 23,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 9,
+    "rulesBefore" : 55,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 59
+  },
+  "Clojure" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "clu" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "CMake" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/CMake.g414109668073639262517.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 18,
+    "emptyRulesMoved" : 4,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 19
+  },
+  "CodeQL" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "cookie" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/cookie.g44181849885849059793.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 13,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 14
+  },
+  "cql" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Cql" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/CqlParser.g412264096429037536175.gen.lua",
+    "choiceAmbiguities" : 205,
+    "repetitionsTransformed" : 30,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 463,
+    "emptyRulesMoved" : 2,
+    "prefixReordered" : 6,
+    "literalsReorder" : 13,
+    "rulesAFter" : 495
+  },
+  "creole" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "css3" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "CSV" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/CSV.g42163516568647125596.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 6,
+    "emptyRulesMoved" : 2,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 6
+  },
+  "ctl" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Cto" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/CtoParser.g411350060334689412466.gen.lua",
+    "choiceAmbiguities" : 24,
+    "repetitionsTransformed" : 7,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 109,
+    "emptyRulesMoved" : 4,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 118
+  },
+  "Cypher" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/CypherParser.g418100041488088493800.gen.lua",
+    "choiceAmbiguities" : 25,
+    "repetitionsTransformed" : 7,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 195,
+    "emptyRulesMoved" : 3,
+    "prefixReordered" : 0,
+    "literalsReorder" : 6,
+    "rulesAFter" : 204
+  },
+  "DiceNotation" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/DiceNotationParser.g414252477335358427767.gen.lua",
+    "choiceAmbiguities" : 4,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 18,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 19
+  },
+  "dif" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/dif.g41392684943573766800.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 15,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 18
+  },
+  "doiurl" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/doiurl.g417565334768045553919.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 16,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 18
+  },
+  "DOT" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/DOT.g48219080337042887553.gen.lua",
+    "choiceAmbiguities" : 4,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 33,
+    "emptyRulesMoved" : 2,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 35
+  },
+  "bnf" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/bnf.g411191328306198529760.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 3,
+    "rulesBefore" : 25,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 27
+  },
+  "EDIF300" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/EDIF300.g412622665930851028312.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 6,
+    "uniquePathSwaps" : 64,
+    "rulesBefore" : 843,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 850
+  },
+  "edn" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/edn.g4769512025462950878.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 38,
+    "emptyRulesMoved" : 3,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 40
+  },
+  "Elixir" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Erlang" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "brainflak" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/brainflak.g46265109876951245269.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 15,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 16
+  },
+  "brainfuck" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/brainfuck.g42093829185102532051.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 12,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 13
+  },
+  "COOL" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "lolcode" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/lolcode.g48850160698298235206.gen.lua",
+    "choiceAmbiguities" : 8,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 33,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 1,
+    "literalsReorder" : 0,
+    "rulesAFter" : 37
+  },
+  "loop" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/loop.g42473592305022330791.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 12,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 14
+  },
+  "nanofuck" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "sickbay" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/sickbay.g417696771546921420871.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 13,
+    "rulesBefore" : 12,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 14
+  },
+  "snowball" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "wheel" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/wheel.g416961891760930854875.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 6,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 7
+  },
+  "EVMB" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/EVMBParser.g44036228782155611898.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 165,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 167
+  },
+  "fasta" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/fasta.g412501772299623407634.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 13,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 14
+  },
+  "fdo91" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/fdo91.g49069144330994416968.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 3,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 13,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 17
+  },
+  "fen" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/fen.g4195460667600272768.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 20,
+    "rulesBefore" : 13,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 14
+  },
+  "FlatBuffers" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/FlatBuffers.g43461304585449705602.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 4,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 77,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 83
+  },
+  "flowmatic" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/flowmatic.g43500056445067783141.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 33,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 36
+  },
+  "focal" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/focal.g449702882068907767.gen.lua",
+    "choiceAmbiguities" : 5,
+    "repetitionsTransformed" : 3,
+    "uniquePathSwaps" : 12,
+    "rulesBefore" : 34,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 5,
+    "literalsReorder" : 6,
+    "rulesAFter" : 39
+  },
+  "fol" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "DesktopEntry" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "gedcom" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/gedcom.g42139276477111397314.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 5,
+    "uniquePathSwaps" : 11,
+    "rulesBefore" : 20,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 26
+  },
+  "gff3" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/gff3.g412079966562938335383.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 21,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 21
+  },
+  "GLSL" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "gml" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/gml.g413850430648842958042.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 16,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 17
+  },
+  "DGS" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "gtin" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/gtin.g415505809260916928175.gen.lua",
+    "choiceAmbiguities" : 19,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 49,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 50
+  },
+  "guido" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/guido.g417596147957965783200.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 36,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 39
+  },
+  "guitartab" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/guitartab.g43199697340928334947.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 22,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 23
+  },
+  "HTML" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "HyperTalk" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "ICalendar" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/ICalendar.g44228990455463089349.gen.lua",
+    "choiceAmbiguities" : 610,
+    "repetitionsTransformed" : 7,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 449,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 1,
+    "literalsReorder" : 2,
+    "rulesAFter" : 457
+  },
+  "icon" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "IDL" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "inf" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/inf.g4769632003677905033.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 11,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 13
+  },
+  "informix" : {
+    "status" : "failure",
+    "error_kind" : "MISSING_RULE",
+    "error_message" : "Rule with name CHARACTER not found"
+  },
+  "IRI" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported UTF8 with more then 4 chars"
+  },
+  "iso8601" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/iso8601.g414807937984029567097.gen.lua",
+    "choiceAmbiguities" : 110,
+    "repetitionsTransformed" : 14,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 107,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 4,
+    "rulesAFter" : 122
+  },
+  "istc" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/istc.g46988690663534721113.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 8,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 10
+  },
+  "itn" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/itn.g416098638638915320871.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 9,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 10
+  },
+  "jam" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/jam.g415504178829557062926.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 20,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 22
+  },
+  "janus" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/janus.g45585767017106193057.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 20,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 2,
+    "literalsReorder" : 0,
+    "rulesAFter" : 23
+  },
+  "Java" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Option is not supported"
+  },
+  "Java20" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Java8" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "JPA" : {
+    "status" : "failure",
+    "error_kind" : "MISSING_RULE",
+    "error_message" : "Rule with name TRIM_CHARACTER not found"
+  },
+  "JSON" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/JSON.g47046357792619724672.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 9,
+    "rulesBefore" : 14,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 16
+  },
+  "JSON5" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "karel" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/karel.g49215664296986025159.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 14,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 17
+  },
+  "KQuery" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/KQuery.g412545602648282851763.gen.lua",
+    "choiceAmbiguities" : 59,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 112,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 1,
+    "literalsReorder" : 5,
+    "rulesAFter" : 115
+  },
+  "krl" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "lambda" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/lambda.g415384760350436423928.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 7,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 8
+  },
+  "Lark" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/LarkParser.g415925891502600134122.gen.lua",
+    "choiceAmbiguities" : 5,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 6,
+    "rulesBefore" : 48,
+    "emptyRulesMoved" : 3,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 50
+  },
+  "lcc" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/lcc.g413847095921570253101.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 4,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 11,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 16
+  },
+  "Less" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "limbo" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "lisa" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/lisa.g412824192825910872813.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 3,
+    "uniquePathSwaps" : 15,
+    "rulesBefore" : 38,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 6,
+    "rulesAFter" : 43
+  },
+  "LLVMIR" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "logo" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/logo.g414660226735776119613.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 6,
+    "uniquePathSwaps" : 12,
+    "rulesBefore" : 44,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 10,
+    "rulesAFter" : 52
+  },
+  "lrc" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "ltl" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Lucene" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "matlab" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "McKeemanForm" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/McKeemanForm.g415141722618600678650.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 4,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 15,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 19
+  },
+  "mdx" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/mdx.g4892219789966746683.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 103,
+    "emptyRulesMoved" : 2,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 106
+  },
+  "memcached_protocol" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "metamath" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/metamath.g48976340260710767101.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 31,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 33
+  },
+  "metric" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/metric.g43176906499141439005.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 28,
+    "rulesBefore" : 10,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 13
+  },
+  "microc" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "modelica" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/modelica.g413969049480034348728.gen.lua",
+    "choiceAmbiguities" : 17,
+    "repetitionsTransformed" : 5,
+    "uniquePathSwaps" : 26,
+    "rulesBefore" : 91,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 1,
+    "literalsReorder" : 3,
+    "rulesAFter" : 98
+  },
+  "molecule" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/molecule.g415003373571430624761.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 11,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 14
+  },
+  "moo" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/moo.g413677380415581295040.gen.lua",
+    "choiceAmbiguities" : 7,
+    "repetitionsTransformed" : 7,
+    "uniquePathSwaps" : 17,
+    "rulesBefore" : 77,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 4,
+    "rulesAFter" : 86
+  },
+  "morsecode" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/morsecode.g41052816380944506437.gen.lua",
+    "choiceAmbiguities" : 306,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 42,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 43
+  },
+  "mps" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/mps.g412136306220075727916.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 7,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 41,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 50
+  },
+  "muddb" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/muddb.g43743827993754259597.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 25,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 25
+  },
+  "mumath" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/mumath.g411967723693048622837.gen.lua",
+    "choiceAmbiguities" : 6,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 57,
+    "emptyRulesMoved" : 3,
+    "prefixReordered" : 0,
+    "literalsReorder" : 4,
+    "rulesAFter" : 61
+  },
+  "mumps" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/mumps.g41399476097028243642.gen.lua",
+    "choiceAmbiguities" : 4,
+    "repetitionsTransformed" : 11,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 122,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 2,
+    "literalsReorder" : 1,
+    "rulesAFter" : 134
+  },
+  "MuParser" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "newick" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/newick.g47684274641253370422.gen.lua",
+    "choiceAmbiguities" : 4,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 13,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 1,
+    "literalsReorder" : 0,
+    "rulesAFter" : 14
+  },
+  "oberon" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/oberon.g45323312260720080251.gen.lua",
+    "choiceAmbiguities" : 5,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 22,
+    "rulesBefore" : 97,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 101
+  },
+  "OCL" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "orwell" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/orwell.g412578555772180470473.gen.lua",
+    "choiceAmbiguities" : 40,
+    "repetitionsTransformed" : 11,
+    "uniquePathSwaps" : 5,
+    "rulesBefore" : 68,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 6,
+    "literalsReorder" : 1,
+    "rulesAFter" : 81
+  },
+  "p" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/p.g412952928865745145139.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 7,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 8
+  },
+  "parkingsign" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/parkingsign.g45418335431036440228.gen.lua",
+    "choiceAmbiguities" : 20,
+    "repetitionsTransformed" : 7,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 81,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 1,
+    "literalsReorder" : 8,
+    "rulesAFter" : 90
+  },
+  "pascal" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/pascal.g411982795448835500846.gen.lua",
+    "choiceAmbiguities" : 9,
+    "repetitionsTransformed" : 5,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 178,
+    "emptyRulesMoved" : 3,
+    "prefixReordered" : 1,
+    "literalsReorder" : 7,
+    "rulesAFter" : 185
+  },
+  "pbm" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/pbm.g410442812800882406340.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 10,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 11
+  },
+  "PCRE" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/PCRE.g4116892152548110182.gen.lua",
+    "choiceAmbiguities" : 81,
+    "repetitionsTransformed" : 3,
+    "uniquePathSwaps" : 31,
+    "rulesBefore" : 145,
+    "emptyRulesMoved" : 2,
+    "prefixReordered" : 0,
+    "literalsReorder" : 7,
+    "rulesAFter" : 148
+  },
+  "pdn" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/pdn.g411038397261509566381.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 3,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 18,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 22
+  },
+  "PeopleCode" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "pf" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/pf.g45791473088162149153.gen.lua",
+    "choiceAmbiguities" : 47,
+    "repetitionsTransformed" : 8,
+    "uniquePathSwaps" : 106,
+    "rulesBefore" : 100,
+    "emptyRulesMoved" : 10,
+    "prefixReordered" : 0,
+    "literalsReorder" : 8,
+    "rulesAFter" : 110
+  },
+  "pii" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/pii.g411175852781250948212.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 11,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 12
+  },
+  "pike" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/pike.g48198306374494166366.gen.lua",
+    "choiceAmbiguities" : 28,
+    "repetitionsTransformed" : 6,
+    "uniquePathSwaps" : 57,
+    "rulesBefore" : 71,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 79
+  },
+  "pl0" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/pl0.g43426136071080851994.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 13,
+    "rulesBefore" : 61,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 62
+  },
+  "ply" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/ply.g417856738317389299786.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 3,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 21,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 26
+  },
+  "postalcode" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/postalcode.g44419082764244128377.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 4,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 5
+  },
+  "PowerBuilder" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "prolog" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "PromQL" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "propcalc" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/propcalc.g411274000175968307249.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 19,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 20
+  },
+  "Properties" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "Protobuf2" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/Protobuf2.g415314440458248302674.gen.lua",
+    "choiceAmbiguities" : 45,
+    "repetitionsTransformed" : 4,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 135,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 141
+  },
+  "Protobuf3" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Option is not supported"
+  },
+  "PROV_N" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "Python" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Option is not supported"
+  },
+  "qif" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "quakemap" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/quakemap.g49590865787010825165.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 13,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 15
+  },
+  "BSL" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "ISL" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "recfile" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/recfile.g416200282076491642359.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 10,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 11
+  },
+  "redcode" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/redcode.g413651720222567286801.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 35,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 37
+  },
+  "refal" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Rego" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/RegoParser.g49616833564896236117.gen.lua",
+    "choiceAmbiguities" : 12,
+    "repetitionsTransformed" : 8,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 88,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 98
+  },
+  "domain" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/domain.g47799211340283765618.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 8,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 8
+  },
+  "filter" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/filter.g44778978543502239016.gen.lua",
+    "choiceAmbiguities" : 4,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 3,
+    "rulesBefore" : 23,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 1,
+    "literalsReorder" : 1,
+    "rulesAFter" : 25
+  },
+  "datetime" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/datetime.g41819587615740345739.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 3,
+    "rulesBefore" : 15,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 17
+  },
+  "emailaddress" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "robotwar" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/robotwar.g49833242877622534308.gen.lua",
+    "choiceAmbiguities" : 5,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 9,
+    "rulesBefore" : 61,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 3,
+    "rulesAFter" : 64
+  },
+  "romannumerals" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "ron" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/ron.g47858103902983117409.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 6,
+    "uniquePathSwaps" : 7,
+    "rulesBefore" : 21,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 29
+  },
+  "rpn" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/rpn.g412658901801297006118.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 28,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 30
+  },
+  "Corundum" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Scala" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "scotty" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/scotty.g415281113840282919269.gen.lua",
+    "choiceAmbiguities" : 6,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 11,
+    "rulesBefore" : 12,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 1,
+    "literalsReorder" : 0,
+    "rulesAFter" : 14
+  },
+  "Scss" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "SemanticVersion" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "sexpression" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/sexpression.g4102348584083113267.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 13,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 14
+  },
+  "sgf" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/sgf.g412408426576418602468.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 14,
+    "rulesBefore" : 22,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 26
+  },
+  "sici" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/sici.g47072248256950021854.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 17,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 18
+  },
+  "sieve" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/sieve.g410864118871192877133.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 3,
+    "rulesBefore" : 30,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 33
+  },
+  "Smalltalk" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/Smalltalk.g41752086292492427928.gen.lua",
+    "choiceAmbiguities" : 30,
+    "repetitionsTransformed" : 23,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 80,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 104
+  },
+  "smiles" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/smiles.g49396989134352439342.gen.lua",
+    "choiceAmbiguities" : 336,
+    "repetitionsTransformed" : 3,
+    "uniquePathSwaps" : 13,
+    "rulesBefore" : 77,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 6,
+    "literalsReorder" : 4,
+    "rulesAFter" : 80
+  },
+  "SMTLIBv2" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "snobol" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/snobol.g4961468058341821887.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 4,
+    "uniquePathSwaps" : 3,
+    "rulesBefore" : 88,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 94
+  },
+  "Sparql" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "Spass" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "SPL" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Athena" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Derby" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Drill" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Hive" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/HiveParser.g415991411869967543556.gen.lua",
+    "choiceAmbiguities" : 366,
+    "repetitionsTransformed" : 34,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 928,
+    "emptyRulesMoved" : 8,
+    "prefixReordered" : 2,
+    "literalsReorder" : 41,
+    "rulesAFter" : 964
+  },
+  "InformixSQL" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/InformixSQLParser.g417342280751883747185.gen.lua",
+    "choiceAmbiguities" : 139,
+    "repetitionsTransformed" : 13,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 250,
+    "emptyRulesMoved" : 5,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 265
+  },
+  "MariaDB" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "MySql" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Phoenix" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Snowflake" : {
+    "status" : "failure",
+    "error_kind" : "MISSING_RULE",
+    "error_message" : "Rule with name DATABASE<db_name> not found"
+  },
+  "SQLite" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Trino" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "TSql" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "star" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "stellaris" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/stellaris.g4458980800957816944.gen.lua",
+    "choiceAmbiguities" : 4,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 4,
+    "rulesBefore" : 18,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 20
+  },
+  "SUOKIF" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/SUOKIF.g416724921858115205945.gen.lua",
+    "choiceAmbiguities" : 21,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 5,
+    "rulesBefore" : 32,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 34
+  },
+  "SwiftFin" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "szf" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/szf.g414183809387943770136.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 12,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 14
+  },
+  "tcp" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/tcp.g417293267303741817963.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 14,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 15
+  },
+  "Teal" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "telephone" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/telephone.g418422305656420180039.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 10,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 11
+  },
+  "terraform" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Thrift" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/Thrift.g414603469320901525473.gen.lua",
+    "choiceAmbiguities" : 3,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 9,
+    "rulesBefore" : 60,
+    "emptyRulesMoved" : 3,
+    "prefixReordered" : 0,
+    "literalsReorder" : 4,
+    "rulesAFter" : 62
+  },
+  "tiny" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "tinybasic" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/tinybasic.g416672159974039819532.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 11,
+    "rulesBefore" : 16,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 18
+  },
+  "tinyc" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "tinymud" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/tinymud.g413562040528459628772.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 67,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 8,
+    "rulesAFter" : 71
+  },
+  "tnsnames" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "tnt" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Toml" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "trac" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/trac.g45174531043396721067.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 10,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 11
+  },
+  "tsv" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/tsv.g46349779782014195741.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 8,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 8
+  },
+  "ttm" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/ttm.g4501256086055863093.gen.lua",
+    "choiceAmbiguities" : 1,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 13,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 14
+  },
+  "turing" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "TURTLE" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "Graphemes" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported u with > 4 chars or UTf8 marks"
+  },
+  "UnrealAngelscript" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "Upnp" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "url" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/url.g416437683601452511722.gen.lua",
+    "choiceAmbiguities" : 2,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 20,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 22
+  },
+  "useragent" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/useragent.g42440647331590205883.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 8,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 9
+  },
+  "VisualBasic6" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "vba" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "vba_cc" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "vba_like" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "SystemVerilog" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "Verilog" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "vhdl" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "vmf" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/vmf.g410203758823367138778.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 1,
+    "rulesBefore" : 9,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 10
+  },
+  "Wat" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/WatParser.g411212266693912870532.gen.lua",
+    "choiceAmbiguities" : 405,
+    "repetitionsTransformed" : 20,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 172,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 2,
+    "rulesAFter" : 194
+  },
+  "WavefrontOBJ" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/WavefrontOBJ.g48060129667824431338.gen.lua",
+    "choiceAmbiguities" : 9,
+    "repetitionsTransformed" : 8,
+    "uniquePathSwaps" : 47,
+    "rulesBefore" : 55,
+    "emptyRulesMoved" : 2,
+    "prefixReordered" : 0,
+    "literalsReorder" : 6,
+    "rulesAFter" : 65
+  },
+  "WebIDL" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/WebIDL.g4560949802233464449.gen.lua",
+    "choiceAmbiguities" : 27,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 7,
+    "rulesBefore" : 120,
+    "emptyRulesMoved" : 26,
+    "prefixReordered" : 0,
+    "literalsReorder" : 7,
+    "rulesAFter" : 122
+  },
+  "wkt" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/wkt.g49129071695626751847.gen.lua",
+    "choiceAmbiguities" : 16,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 74,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 75
+  },
+  "wktcrsv1" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/wktcrsv1.g411518399906141271655.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 2,
+    "uniquePathSwaps" : 2,
+    "rulesBefore" : 53,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 0,
+    "literalsReorder" : 1,
+    "rulesAFter" : 57
+  },
+  "wln" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/wln.g412969798310172908202.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 29,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 32
+  },
+  "Wren" : {
+    "status" : "failure",
+    "error_kind" : "LEFT_RECURSION",
+    "error_message" : "Left recursion is not supported"
+  },
+  "XML" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "xpath" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Unsupported UTF8 with more then 4 chars"
+  },
+  "regex" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "xyz" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/xyz.g46651417438244863597.gen.lua",
+    "choiceAmbiguities" : 0,
+    "repetitionsTransformed" : 1,
+    "uniquePathSwaps" : 0,
+    "rulesBefore" : 11,
+    "emptyRulesMoved" : 0,
+    "prefixReordered" : 0,
+    "literalsReorder" : 0,
+    "rulesAFter" : 13
+  },
+  "Yara" : {
+    "status" : "failure",
+    "error_kind" : "HAS_SEMANTIC_ACTION",
+    "error_message" : "Grammar contains semantic actions, which are not supported (Lexer with multiple modes)"
+  },
+  "Zig" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/ZigParser.g49691373010450662690.gen.lua",
+    "choiceAmbiguities" : 39,
+    "repetitionsTransformed" : 54,
+    "uniquePathSwaps" : 28,
+    "rulesBefore" : 223,
+    "emptyRulesMoved" : 3,
+    "prefixReordered" : 0,
+    "literalsReorder" : 7,
+    "rulesAFter" : 279
+  },
+  "datalog" : {
+    "status" : "success",
+    "output" : "/var/folders/rj/xmyztz655mdg0v6mwpgcvkhc0000gn/T/datalog.g410703009167644539322.gen.lua",
+    "choiceAmbiguities" : 18,
+    "repetitionsTransformed" : 0,
+    "uniquePathSwaps" : 13,
+    "rulesBefore" : 20,
+    "emptyRulesMoved" : 1,
+    "prefixReordered" : 4,
+    "literalsReorder" : 0,
+    "rulesAFter" : 22
+  }
+}

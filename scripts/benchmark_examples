@@ -4,9 +4,9 @@
 Run Lua parser tests against grammars-v4 examples.
 
 Usage:
-    run_lua_tests.py grammars.json results.json
-    run_lua_tests.py grammars.json results.json --only abb csv
-    run_lua_tests.py grammars.json results.json --verbose
+    benchmark_examples grammars.json results.json
+    benchmark_examples grammars.json results.json --only abb csv
+    benchmark_examples grammars.json results.json --verbose
 """
 import argparse
 import json
@@ -28,7 +28,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Only run these grammar names (default: all)",
     )
     p.add_argument(
-        "--base-dir", type=Path, default=Path("."),
+        "--base-dir", type=Path, default=Path("/tmp/grammars"),
         help="Base directory that grammar paths are relative to (default: cwd)",
     )
     p.add_argument(
