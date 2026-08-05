@@ -145,7 +145,7 @@ def run_grammar(
 ) -> GrammarResult:
     res = GrammarResult(name=name)
 
-    files = sorted(input_dir.glob(f"*.{ext}"))
+    files = sorted(input_dir.glob(f"*.mut.{ext}"))
     if not files:
         print(f"  [WARN] No *.{ext} files in {input_dir}", file=sys.stderr)
         return res

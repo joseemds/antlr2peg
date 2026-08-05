@@ -1,0 +1,3688 @@
+{
+  "meta": {
+    "timestamp": "2026-08-05T17:09:50.625738+00:00",
+    "grammars_processed": 135,
+    "grammars_skipped": [
+      "abb",
+      "action",
+      "Ada2005",
+      "Ada",
+      "Ada83",
+      "Ada95",
+      "agc",
+      "alef",
+      "algol60",
+      "alloy",
+      "ArangoDb",
+      "ARDEN",
+      "arithmetic",
+      "nasm_x86_64_",
+      "PTX",
+      "ASN",
+      "awk",
+      "bdf",
+      "Bicep",
+      "C",
+      "CaQL",
+      "chip8",
+      "Clojure",
+      "clu",
+      "CodeQL",
+      "cql",
+      "creole",
+      "css3",
+      "ctl",
+      "Cto",
+      "Elixir",
+      "Erlang",
+      "COOL",
+      "lolcode",
+      "nanofuck",
+      "snowball",
+      "fol",
+      "DesktopEntry",
+      "GLSL",
+      "DGS",
+      "HTML",
+      "HyperTalk",
+      "icon",
+      "IDL",
+      "informix",
+      "IRI",
+      "Java",
+      "Java20",
+      "Java8",
+      "JPA",
+      "JSON5",
+      "krl",
+      "Less",
+      "limbo",
+      "LLVMIR",
+      "lrc",
+      "ltl",
+      "Lucene",
+      "matlab",
+      "memcached_protocol",
+      "microc",
+      "MuParser",
+      "OCL",
+      "PeopleCode",
+      "pf",
+      "pike",
+      "PowerBuilder",
+      "prolog",
+      "PromQL",
+      "Properties",
+      "Protobuf3",
+      "PROV_N",
+      "Python",
+      "qif",
+      "BSL",
+      "ISL",
+      "refal",
+      "emailaddress",
+      "romannumerals",
+      "ron",
+      "Corundum",
+      "Scala",
+      "scotty",
+      "Scss",
+      "SemanticVersion",
+      "SMTLIBv2",
+      "Sparql",
+      "Spass",
+      "SPL",
+      "Athena",
+      "Derby",
+      "Drill",
+      "MariaDB",
+      "MySql",
+      "Phoenix",
+      "Snowflake",
+      "SQLite",
+      "Trino",
+      "TSql",
+      "star",
+      "SwiftFin",
+      "Teal",
+      "terraform",
+      "tiny",
+      "tinyc",
+      "tnsnames",
+      "tnt",
+      "Toml",
+      "turing",
+      "TURTLE",
+      "Graphemes",
+      "UnrealAngelscript",
+      "Upnp",
+      "VisualBasic6",
+      "vba",
+      "vba_cc",
+      "vba_like",
+      "SystemVerilog",
+      "Verilog",
+      "vhdl",
+      "Wren",
+      "XML",
+      "xpath",
+      "regex",
+      "Yara",
+      "Zig"
+    ],
+    "setup_failures": [
+      {
+        "name": "Ptx",
+        "reason": "not found: input dir ../../mestrado/generated_tests/all_gen_mutated/Ptx/gen"
+      },
+      {
+        "name": "Cypher",
+        "reason": "not found: input dir ../../mestrado/generated_tests/all_gen_mutated/CypherParser/gen"
+      }
+    ]
+  },
+  "grammars": [
+    {
+      "name": "ASLIntrinsic",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 96,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_19.mut.aslintrinsic",
+          "test_56.mut.aslintrinsic",
+          "test_7.mut.aslintrinsic",
+          "test_77.mut.aslintrinsic"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "ASL",
+      "total": 0,
+      "antlr_passed": 0,
+      "antlr_reject": 0,
+      "lua_passed": 0,
+      "lua_rejected": 0,
+      "both_accept": 0,
+      "both_reject": 0,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "Abnf",
+      "total": 100,
+      "antlr_passed": 11,
+      "antlr_reject": 89,
+      "lua_passed": 12,
+      "lua_rejected": 88,
+      "both_accept": 11,
+      "both_reject": 88,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_38.mut.abnf"
+        ]
+      }
+    },
+    {
+      "name": "alpaca",
+      "total": 100,
+      "antlr_passed": 12,
+      "antlr_reject": 88,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 88,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_2.mut.alpaca",
+          "test_28.mut.alpaca",
+          "test_43.mut.alpaca",
+          "test_64.mut.alpaca",
+          "test_72.mut.alpaca",
+          "test_77.mut.alpaca",
+          "test_83.mut.alpaca",
+          "test_85.mut.alpaca",
+          "test_90.mut.alpaca",
+          "test_93.mut.alpaca",
+          "test_96.mut.alpaca",
+          "test_98.mut.alpaca"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "ASL",
+      "total": 100,
+      "antlr_passed": 9,
+      "antlr_reject": 91,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 91,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_10.mut.asl",
+          "test_13.mut.asl",
+          "test_20.mut.asl",
+          "test_34.mut.asl",
+          "test_5.mut.asl",
+          "test_52.mut.asl",
+          "test_7.mut.asl",
+          "test_9.mut.asl",
+          "test_98.mut.asl"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "acme",
+      "total": 100,
+      "antlr_passed": 2,
+      "antlr_reject": 98,
+      "lua_passed": 2,
+      "lua_rejected": 98,
+      "both_accept": 2,
+      "both_reject": 98,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "asm6502",
+      "total": 100,
+      "antlr_passed": 25,
+      "antlr_reject": 75,
+      "lua_passed": 19,
+      "lua_rejected": 81,
+      "both_accept": 17,
+      "both_reject": 73,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_11.mut.asm6502",
+          "test_16.mut.asm6502",
+          "test_18.mut.asm6502",
+          "test_25.mut.asm6502",
+          "test_36.mut.asm6502",
+          "test_77.mut.asm6502",
+          "test_82.mut.asm6502",
+          "test_92.mut.asm6502"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_33.mut.asm6502",
+          "test_70.mut.asm6502"
+        ]
+      }
+    },
+    {
+      "name": "asm8080",
+      "total": 100,
+      "antlr_passed": 33,
+      "antlr_reject": 67,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 67,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_10.mut.asm8080",
+          "test_13.mut.asm8080",
+          "test_14.mut.asm8080",
+          "test_17.mut.asm8080",
+          "test_18.mut.asm8080",
+          "test_23.mut.asm8080",
+          "test_24.mut.asm8080",
+          "test_32.mut.asm8080",
+          "test_34.mut.asm8080",
+          "test_37.mut.asm8080",
+          "test_39.mut.asm8080",
+          "test_40.mut.asm8080",
+          "test_46.mut.asm8080",
+          "test_47.mut.asm8080",
+          "test_48.mut.asm8080",
+          "test_50.mut.asm8080",
+          "test_53.mut.asm8080",
+          "test_54.mut.asm8080",
+          "test_57.mut.asm8080",
+          "test_62.mut.asm8080",
+          "test_63.mut.asm8080",
+          "test_65.mut.asm8080",
+          "test_68.mut.asm8080",
+          "test_71.mut.asm8080",
+          "test_72.mut.asm8080",
+          "test_78.mut.asm8080",
+          "test_8.mut.asm8080",
+          "test_85.mut.asm8080",
+          "test_86.mut.asm8080",
+          "test_87.mut.asm8080",
+          "test_88.mut.asm8080",
+          "test_93.mut.asm8080",
+          "test_98.mut.asm8080"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "asmMASM",
+      "total": 100,
+      "antlr_passed": 35,
+      "antlr_reject": 65,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 65,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_11.mut.asmmasm",
+          "test_14.mut.asmmasm",
+          "test_15.mut.asmmasm",
+          "test_17.mut.asmmasm",
+          "test_20.mut.asmmasm",
+          "test_24.mut.asmmasm",
+          "test_27.mut.asmmasm",
+          "test_29.mut.asmmasm",
+          "test_3.mut.asmmasm",
+          "test_30.mut.asmmasm",
+          "test_33.mut.asmmasm",
+          "test_34.mut.asmmasm",
+          "test_37.mut.asmmasm",
+          "test_47.mut.asmmasm",
+          "test_51.mut.asmmasm",
+          "test_53.mut.asmmasm",
+          "test_56.mut.asmmasm",
+          "test_58.mut.asmmasm",
+          "test_59.mut.asmmasm",
+          "test_6.mut.asmmasm",
+          "test_63.mut.asmmasm",
+          "test_64.mut.asmmasm",
+          "test_65.mut.asmmasm",
+          "test_74.mut.asmmasm",
+          "test_76.mut.asmmasm",
+          "test_78.mut.asmmasm",
+          "test_83.mut.asmmasm",
+          "test_84.mut.asmmasm",
+          "test_87.mut.asmmasm",
+          "test_88.mut.asmmasm",
+          "test_89.mut.asmmasm",
+          "test_9.mut.asmmasm",
+          "test_90.mut.asmmasm",
+          "test_91.mut.asmmasm",
+          "test_96.mut.asmmasm"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "Riscv64G",
+      "total": 100,
+      "antlr_passed": 18,
+      "antlr_reject": 82,
+      "lua_passed": 17,
+      "lua_rejected": 83,
+      "both_accept": 14,
+      "both_reject": 79,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_50.mut.riscv64g",
+          "test_82.mut.riscv64g",
+          "test_86.mut.riscv64g",
+          "test_90.mut.riscv64g"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_47.mut.riscv64g",
+          "test_55.mut.riscv64g",
+          "test_87.mut.riscv64g"
+        ]
+      }
+    },
+    {
+      "name": "asmZ80",
+      "total": 100,
+      "antlr_passed": 40,
+      "antlr_reject": 60,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 60,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_1.mut.asmz80",
+          "test_11.mut.asmz80",
+          "test_17.mut.asmz80",
+          "test_18.mut.asmz80",
+          "test_19.mut.asmz80",
+          "test_2.mut.asmz80",
+          "test_22.mut.asmz80",
+          "test_26.mut.asmz80",
+          "test_3.mut.asmz80",
+          "test_30.mut.asmz80",
+          "test_31.mut.asmz80",
+          "test_34.mut.asmz80",
+          "test_36.mut.asmz80",
+          "test_39.mut.asmz80",
+          "test_4.mut.asmz80",
+          "test_43.mut.asmz80",
+          "test_44.mut.asmz80",
+          "test_46.mut.asmz80",
+          "test_48.mut.asmz80",
+          "test_51.mut.asmz80",
+          "test_54.mut.asmz80",
+          "test_56.mut.asmz80",
+          "test_57.mut.asmz80",
+          "test_60.mut.asmz80",
+          "test_62.mut.asmz80",
+          "test_64.mut.asmz80",
+          "test_67.mut.asmz80",
+          "test_68.mut.asmz80",
+          "test_73.mut.asmz80",
+          "test_74.mut.asmz80",
+          "test_78.mut.asmz80",
+          "test_8.mut.asmz80",
+          "test_80.mut.asmz80",
+          "test_83.mut.asmz80",
+          "test_86.mut.asmz80",
+          "test_9.mut.asmz80",
+          "test_90.mut.asmz80",
+          "test_93.mut.asmz80",
+          "test_95.mut.asmz80",
+          "test_99.mut.asmz80"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "pdp7",
+      "total": 100,
+      "antlr_passed": 63,
+      "antlr_reject": 37,
+      "lua_passed": 48,
+      "lua_rejected": 52,
+      "both_accept": 36,
+      "both_reject": 25,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_10.mut.pdp7",
+          "test_11.mut.pdp7",
+          "test_16.mut.pdp7",
+          "test_19.mut.pdp7",
+          "test_20.mut.pdp7",
+          "test_24.mut.pdp7",
+          "test_27.mut.pdp7",
+          "test_31.mut.pdp7",
+          "test_35.mut.pdp7",
+          "test_36.mut.pdp7",
+          "test_38.mut.pdp7",
+          "test_39.mut.pdp7",
+          "test_4.mut.pdp7",
+          "test_45.mut.pdp7",
+          "test_50.mut.pdp7",
+          "test_51.mut.pdp7",
+          "test_52.mut.pdp7",
+          "test_66.mut.pdp7",
+          "test_69.mut.pdp7",
+          "test_73.mut.pdp7",
+          "test_74.mut.pdp7",
+          "test_8.mut.pdp7",
+          "test_86.mut.pdp7",
+          "test_87.mut.pdp7",
+          "test_88.mut.pdp7",
+          "test_91.mut.pdp7",
+          "test_96.mut.pdp7"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_1.mut.pdp7",
+          "test_37.mut.pdp7",
+          "test_42.mut.pdp7",
+          "test_43.mut.pdp7",
+          "test_46.mut.pdp7",
+          "test_53.mut.pdp7",
+          "test_55.mut.pdp7",
+          "test_56.mut.pdp7",
+          "test_61.mut.pdp7",
+          "test_75.mut.pdp7",
+          "test_83.mut.pdp7",
+          "test_94.mut.pdp7"
+        ]
+      }
+    },
+    {
+      "name": "aterm",
+      "total": 100,
+      "antlr_passed": 27,
+      "antlr_reject": 73,
+      "lua_passed": 20,
+      "lua_rejected": 80,
+      "both_accept": 20,
+      "both_reject": 73,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_33.mut.aterm",
+          "test_62.mut.aterm",
+          "test_68.mut.aterm",
+          "test_70.mut.aterm",
+          "test_71.mut.aterm",
+          "test_81.mut.aterm",
+          "test_96.mut.aterm"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "b",
+      "total": 100,
+      "antlr_passed": 36,
+      "antlr_reject": 64,
+      "lua_passed": 32,
+      "lua_rejected": 68,
+      "both_accept": 31,
+      "both_reject": 63,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_12.mut.b",
+          "test_17.mut.b",
+          "test_26.mut.b",
+          "test_7.mut.b",
+          "test_80.mut.b"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_11.mut.b"
+        ]
+      }
+    },
+    {
+      "name": "bibcode",
+      "total": 100,
+      "antlr_passed": 17,
+      "antlr_reject": 83,
+      "lua_passed": 17,
+      "lua_rejected": 83,
+      "both_accept": 17,
+      "both_reject": 83,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "BibTeX",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 6,
+      "lua_rejected": 94,
+      "both_accept": 0,
+      "both_reject": 94,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_18.mut.bibtex",
+          "test_39.mut.bibtex",
+          "test_49.mut.bibtex",
+          "test_70.mut.bibtex",
+          "test_91.mut.bibtex",
+          "test_97.mut.bibtex"
+        ]
+      }
+    },
+    {
+      "name": "jvmBasic",
+      "total": 100,
+      "antlr_passed": 49,
+      "antlr_reject": 51,
+      "lua_passed": 37,
+      "lua_rejected": 63,
+      "both_accept": 36,
+      "both_reject": 50,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_16.mut.jvmbasic",
+          "test_17.mut.jvmbasic",
+          "test_48.mut.jvmbasic",
+          "test_55.mut.jvmbasic",
+          "test_58.mut.jvmbasic",
+          "test_60.mut.jvmbasic",
+          "test_69.mut.jvmbasic",
+          "test_71.mut.jvmbasic",
+          "test_78.mut.jvmbasic",
+          "test_80.mut.jvmbasic",
+          "test_88.mut.jvmbasic",
+          "test_95.mut.jvmbasic",
+          "test_98.mut.jvmbasic"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_9.mut.jvmbasic"
+        ]
+      }
+    },
+    {
+      "name": "calculator",
+      "total": 100,
+      "antlr_passed": 18,
+      "antlr_reject": 82,
+      "lua_passed": 21,
+      "lua_rejected": 79,
+      "both_accept": 18,
+      "both_reject": 79,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_16.mut.calculator",
+          "test_38.mut.calculator",
+          "test_43.mut.calculator"
+        ]
+      }
+    },
+    {
+      "name": "callable_",
+      "total": 100,
+      "antlr_passed": 9,
+      "antlr_reject": 91,
+      "lua_passed": 11,
+      "lua_rejected": 89,
+      "both_accept": 9,
+      "both_reject": 89,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_68.mut.callable_",
+          "test_75.mut.callable_"
+        ]
+      }
+    },
+    {
+      "name": "clf",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 1,
+      "lua_rejected": 99,
+      "both_accept": 0,
+      "both_reject": 95,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_14.mut.clf",
+          "test_36.mut.clf",
+          "test_41.mut.clf",
+          "test_71.mut.clf"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_47.mut.clf"
+        ]
+      }
+    },
+    {
+      "name": "CLIF",
+      "total": 100,
+      "antlr_passed": 80,
+      "antlr_reject": 20,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 20,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_0.mut.clif",
+          "test_1.mut.clif",
+          "test_10.mut.clif",
+          "test_11.mut.clif",
+          "test_12.mut.clif",
+          "test_13.mut.clif",
+          "test_14.mut.clif",
+          "test_15.mut.clif",
+          "test_16.mut.clif",
+          "test_17.mut.clif",
+          "test_18.mut.clif",
+          "test_19.mut.clif",
+          "test_2.mut.clif",
+          "test_20.mut.clif",
+          "test_21.mut.clif",
+          "test_22.mut.clif",
+          "test_23.mut.clif",
+          "test_24.mut.clif",
+          "test_25.mut.clif",
+          "test_26.mut.clif",
+          "test_27.mut.clif",
+          "test_28.mut.clif",
+          "test_3.mut.clif",
+          "test_30.mut.clif",
+          "test_31.mut.clif",
+          "test_32.mut.clif",
+          "test_33.mut.clif",
+          "test_34.mut.clif",
+          "test_35.mut.clif",
+          "test_37.mut.clif",
+          "test_38.mut.clif",
+          "test_4.mut.clif",
+          "test_40.mut.clif",
+          "test_42.mut.clif",
+          "test_43.mut.clif",
+          "test_44.mut.clif",
+          "test_45.mut.clif",
+          "test_49.mut.clif",
+          "test_5.mut.clif",
+          "test_50.mut.clif",
+          "test_51.mut.clif",
+          "test_52.mut.clif",
+          "test_54.mut.clif",
+          "test_55.mut.clif",
+          "test_56.mut.clif",
+          "test_58.mut.clif",
+          "test_60.mut.clif",
+          "test_62.mut.clif",
+          "test_64.mut.clif",
+          "test_65.mut.clif",
+          "test_67.mut.clif",
+          "test_68.mut.clif",
+          "test_69.mut.clif",
+          "test_70.mut.clif",
+          "test_71.mut.clif",
+          "test_72.mut.clif",
+          "test_73.mut.clif",
+          "test_74.mut.clif",
+          "test_75.mut.clif",
+          "test_78.mut.clif",
+          "test_79.mut.clif",
+          "test_8.mut.clif",
+          "test_80.mut.clif",
+          "test_81.mut.clif",
+          "test_82.mut.clif",
+          "test_83.mut.clif",
+          "test_85.mut.clif",
+          "test_86.mut.clif",
+          "test_87.mut.clif",
+          "test_88.mut.clif",
+          "test_89.mut.clif",
+          "test_9.mut.clif",
+          "test_90.mut.clif",
+          "test_91.mut.clif",
+          "test_92.mut.clif",
+          "test_93.mut.clif",
+          "test_95.mut.clif",
+          "test_96.mut.clif",
+          "test_97.mut.clif",
+          "test_99.mut.clif"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "CMake",
+      "total": 100,
+      "antlr_passed": 33,
+      "antlr_reject": 67,
+      "lua_passed": 32,
+      "lua_rejected": 68,
+      "both_accept": 32,
+      "both_reject": 67,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_94.mut.cmake"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "asm8086",
+      "total": 100,
+      "antlr_passed": 14,
+      "antlr_reject": 86,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 86,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_2.mut.asm8086",
+          "test_39.mut.asm8086",
+          "test_40.mut.asm8086",
+          "test_43.mut.asm8086",
+          "test_46.mut.asm8086",
+          "test_49.mut.asm8086",
+          "test_50.mut.asm8086",
+          "test_59.mut.asm8086",
+          "test_6.mut.asm8086",
+          "test_62.mut.asm8086",
+          "test_75.mut.asm8086",
+          "test_85.mut.asm8086",
+          "test_89.mut.asm8086",
+          "test_95.mut.asm8086"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "cookie",
+      "total": 100,
+      "antlr_passed": 34,
+      "antlr_reject": 66,
+      "lua_passed": 34,
+      "lua_rejected": 66,
+      "both_accept": 34,
+      "both_reject": 66,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "Cql",
+      "total": 100,
+      "antlr_passed": 15,
+      "antlr_reject": 85,
+      "lua_passed": 15,
+      "lua_rejected": 85,
+      "both_accept": 15,
+      "both_reject": 85,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "CSV",
+      "total": 100,
+      "antlr_passed": 13,
+      "antlr_reject": 87,
+      "lua_passed": 13,
+      "lua_rejected": 87,
+      "both_accept": 13,
+      "both_reject": 87,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "DiceNotation",
+      "total": 100,
+      "antlr_passed": 22,
+      "antlr_reject": 78,
+      "lua_passed": 22,
+      "lua_rejected": 78,
+      "both_accept": 22,
+      "both_reject": 78,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "dif",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 4,
+      "lua_rejected": 96,
+      "both_accept": 4,
+      "both_reject": 96,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "doiurl",
+      "total": 100,
+      "antlr_passed": 29,
+      "antlr_reject": 71,
+      "lua_passed": 60,
+      "lua_rejected": 40,
+      "both_accept": 29,
+      "both_reject": 40,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_1.mut.doiurl",
+          "test_12.mut.doiurl",
+          "test_13.mut.doiurl",
+          "test_18.mut.doiurl",
+          "test_25.mut.doiurl",
+          "test_28.mut.doiurl",
+          "test_29.mut.doiurl",
+          "test_30.mut.doiurl",
+          "test_34.mut.doiurl",
+          "test_35.mut.doiurl",
+          "test_4.mut.doiurl",
+          "test_47.mut.doiurl",
+          "test_48.mut.doiurl",
+          "test_50.mut.doiurl",
+          "test_51.mut.doiurl",
+          "test_54.mut.doiurl",
+          "test_56.mut.doiurl",
+          "test_59.mut.doiurl",
+          "test_6.mut.doiurl",
+          "test_63.mut.doiurl",
+          "test_65.mut.doiurl",
+          "test_69.mut.doiurl",
+          "test_70.mut.doiurl",
+          "test_76.mut.doiurl",
+          "test_80.mut.doiurl",
+          "test_82.mut.doiurl",
+          "test_84.mut.doiurl",
+          "test_86.mut.doiurl",
+          "test_87.mut.doiurl",
+          "test_9.mut.doiurl",
+          "test_90.mut.doiurl"
+        ]
+      }
+    },
+    {
+      "name": "DOT",
+      "total": 100,
+      "antlr_passed": 10,
+      "antlr_reject": 90,
+      "lua_passed": 8,
+      "lua_rejected": 92,
+      "both_accept": 8,
+      "both_reject": 90,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_48.mut.dot",
+          "test_91.mut.dot"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "bnf",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 4,
+      "lua_rejected": 96,
+      "both_accept": 4,
+      "both_reject": 96,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "EDIF300",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "brainflak",
+      "total": 100,
+      "antlr_passed": 15,
+      "antlr_reject": 85,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 85,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_0.mut.brainflak",
+          "test_13.mut.brainflak",
+          "test_17.mut.brainflak",
+          "test_19.mut.brainflak",
+          "test_22.mut.brainflak",
+          "test_25.mut.brainflak",
+          "test_34.mut.brainflak",
+          "test_45.mut.brainflak",
+          "test_62.mut.brainflak",
+          "test_64.mut.brainflak",
+          "test_66.mut.brainflak",
+          "test_71.mut.brainflak",
+          "test_89.mut.brainflak",
+          "test_95.mut.brainflak",
+          "test_99.mut.brainflak"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "brainfuck",
+      "total": 100,
+      "antlr_passed": 63,
+      "antlr_reject": 37,
+      "lua_passed": 100,
+      "lua_rejected": 0,
+      "both_accept": 63,
+      "both_reject": 0,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_12.mut.brainfuck",
+          "test_2.mut.brainfuck",
+          "test_24.mut.brainfuck",
+          "test_26.mut.brainfuck",
+          "test_27.mut.brainfuck",
+          "test_29.mut.brainfuck",
+          "test_32.mut.brainfuck",
+          "test_33.mut.brainfuck",
+          "test_35.mut.brainfuck",
+          "test_4.mut.brainfuck",
+          "test_41.mut.brainfuck",
+          "test_43.mut.brainfuck",
+          "test_44.mut.brainfuck",
+          "test_49.mut.brainfuck",
+          "test_51.mut.brainfuck",
+          "test_56.mut.brainfuck",
+          "test_58.mut.brainfuck",
+          "test_59.mut.brainfuck",
+          "test_6.mut.brainfuck",
+          "test_65.mut.brainfuck",
+          "test_66.mut.brainfuck",
+          "test_68.mut.brainfuck",
+          "test_69.mut.brainfuck",
+          "test_7.mut.brainfuck",
+          "test_71.mut.brainfuck",
+          "test_73.mut.brainfuck",
+          "test_74.mut.brainfuck",
+          "test_8.mut.brainfuck",
+          "test_83.mut.brainfuck",
+          "test_87.mut.brainfuck",
+          "test_88.mut.brainfuck",
+          "test_9.mut.brainfuck",
+          "test_91.mut.brainfuck",
+          "test_93.mut.brainfuck",
+          "test_95.mut.brainfuck",
+          "test_98.mut.brainfuck",
+          "test_99.mut.brainfuck"
+        ]
+      }
+    },
+    {
+      "name": "edn",
+      "total": 100,
+      "antlr_passed": 61,
+      "antlr_reject": 39,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 39,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_1.mut.edn",
+          "test_10.mut.edn",
+          "test_11.mut.edn",
+          "test_12.mut.edn",
+          "test_14.mut.edn",
+          "test_15.mut.edn",
+          "test_16.mut.edn",
+          "test_17.mut.edn",
+          "test_20.mut.edn",
+          "test_21.mut.edn",
+          "test_23.mut.edn",
+          "test_26.mut.edn",
+          "test_27.mut.edn",
+          "test_29.mut.edn",
+          "test_3.mut.edn",
+          "test_30.mut.edn",
+          "test_34.mut.edn",
+          "test_36.mut.edn",
+          "test_37.mut.edn",
+          "test_38.mut.edn",
+          "test_39.mut.edn",
+          "test_41.mut.edn",
+          "test_46.mut.edn",
+          "test_47.mut.edn",
+          "test_48.mut.edn",
+          "test_5.mut.edn",
+          "test_50.mut.edn",
+          "test_51.mut.edn",
+          "test_52.mut.edn",
+          "test_53.mut.edn",
+          "test_54.mut.edn",
+          "test_55.mut.edn",
+          "test_56.mut.edn",
+          "test_57.mut.edn",
+          "test_6.mut.edn",
+          "test_61.mut.edn",
+          "test_62.mut.edn",
+          "test_63.mut.edn",
+          "test_67.mut.edn",
+          "test_68.mut.edn",
+          "test_69.mut.edn",
+          "test_7.mut.edn",
+          "test_70.mut.edn",
+          "test_71.mut.edn",
+          "test_72.mut.edn",
+          "test_73.mut.edn",
+          "test_78.mut.edn",
+          "test_79.mut.edn",
+          "test_8.mut.edn",
+          "test_80.mut.edn",
+          "test_83.mut.edn",
+          "test_85.mut.edn",
+          "test_86.mut.edn",
+          "test_87.mut.edn",
+          "test_88.mut.edn",
+          "test_9.mut.edn",
+          "test_92.mut.edn",
+          "test_96.mut.edn",
+          "test_97.mut.edn",
+          "test_98.mut.edn",
+          "test_99.mut.edn"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "angelscript",
+      "total": 100,
+      "antlr_passed": 6,
+      "antlr_reject": 94,
+      "lua_passed": 6,
+      "lua_rejected": 94,
+      "both_accept": 4,
+      "both_reject": 92,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_62.mut.angelscript",
+          "test_70.mut.angelscript"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_65.mut.angelscript",
+          "test_78.mut.angelscript"
+        ]
+      }
+    },
+    {
+      "name": "loop",
+      "total": 100,
+      "antlr_passed": 6,
+      "antlr_reject": 94,
+      "lua_passed": 6,
+      "lua_rejected": 94,
+      "both_accept": 6,
+      "both_reject": 94,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "sickbay",
+      "total": 100,
+      "antlr_passed": 9,
+      "antlr_reject": 91,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 91,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_15.mut.sickbay",
+          "test_22.mut.sickbay",
+          "test_54.mut.sickbay",
+          "test_6.mut.sickbay",
+          "test_60.mut.sickbay",
+          "test_64.mut.sickbay",
+          "test_67.mut.sickbay",
+          "test_88.mut.sickbay",
+          "test_92.mut.sickbay"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "wheel",
+      "total": 100,
+      "antlr_passed": 85,
+      "antlr_reject": 15,
+      "lua_passed": 93,
+      "lua_rejected": 7,
+      "both_accept": 85,
+      "both_reject": 7,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_33.mut.wheel",
+          "test_34.mut.wheel",
+          "test_46.mut.wheel",
+          "test_51.mut.wheel",
+          "test_64.mut.wheel",
+          "test_68.mut.wheel",
+          "test_94.mut.wheel",
+          "test_97.mut.wheel"
+        ]
+      }
+    },
+    {
+      "name": "EVMB",
+      "total": 100,
+      "antlr_passed": 2,
+      "antlr_reject": 98,
+      "lua_passed": 1,
+      "lua_rejected": 99,
+      "both_accept": 1,
+      "both_reject": 98,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_87.mut.evmb"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "fasta",
+      "total": 100,
+      "antlr_passed": 24,
+      "antlr_reject": 76,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 76,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_10.mut.fasta",
+          "test_18.mut.fasta",
+          "test_19.mut.fasta",
+          "test_21.mut.fasta",
+          "test_29.mut.fasta",
+          "test_3.mut.fasta",
+          "test_33.mut.fasta",
+          "test_34.mut.fasta",
+          "test_35.mut.fasta",
+          "test_42.mut.fasta",
+          "test_45.mut.fasta",
+          "test_50.mut.fasta",
+          "test_51.mut.fasta",
+          "test_58.mut.fasta",
+          "test_6.mut.fasta",
+          "test_60.mut.fasta",
+          "test_62.mut.fasta",
+          "test_66.mut.fasta",
+          "test_67.mut.fasta",
+          "test_69.mut.fasta",
+          "test_76.mut.fasta",
+          "test_77.mut.fasta",
+          "test_82.mut.fasta",
+          "test_96.mut.fasta"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "fdo91",
+      "total": 100,
+      "antlr_passed": 30,
+      "antlr_reject": 70,
+      "lua_passed": 19,
+      "lua_rejected": 81,
+      "both_accept": 19,
+      "both_reject": 70,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_14.mut.fdo91",
+          "test_20.mut.fdo91",
+          "test_27.mut.fdo91",
+          "test_40.mut.fdo91",
+          "test_43.mut.fdo91",
+          "test_76.mut.fdo91",
+          "test_77.mut.fdo91",
+          "test_8.mut.fdo91",
+          "test_82.mut.fdo91",
+          "test_91.mut.fdo91",
+          "test_93.mut.fdo91"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "fen",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "FlatBuffers",
+      "total": 100,
+      "antlr_passed": 7,
+      "antlr_reject": 93,
+      "lua_passed": 5,
+      "lua_rejected": 95,
+      "both_accept": 5,
+      "both_reject": 93,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_17.mut.flatbuffers",
+          "test_42.mut.flatbuffers"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "flowmatic",
+      "total": 100,
+      "antlr_passed": 5,
+      "antlr_reject": 95,
+      "lua_passed": 5,
+      "lua_rejected": 95,
+      "both_accept": 5,
+      "both_reject": 95,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "gedcom",
+      "total": 100,
+      "antlr_passed": 37,
+      "antlr_reject": 63,
+      "lua_passed": 56,
+      "lua_rejected": 44,
+      "both_accept": 37,
+      "both_reject": 44,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_24.mut.gedcom",
+          "test_26.mut.gedcom",
+          "test_28.mut.gedcom",
+          "test_31.mut.gedcom",
+          "test_34.mut.gedcom",
+          "test_42.mut.gedcom",
+          "test_43.mut.gedcom",
+          "test_46.mut.gedcom",
+          "test_47.mut.gedcom",
+          "test_48.mut.gedcom",
+          "test_53.mut.gedcom",
+          "test_55.mut.gedcom",
+          "test_56.mut.gedcom",
+          "test_59.mut.gedcom",
+          "test_65.mut.gedcom",
+          "test_82.mut.gedcom",
+          "test_85.mut.gedcom",
+          "test_89.mut.gedcom",
+          "test_93.mut.gedcom"
+        ]
+      }
+    },
+    {
+      "name": "focal",
+      "total": 100,
+      "antlr_passed": 8,
+      "antlr_reject": 92,
+      "lua_passed": 9,
+      "lua_rejected": 91,
+      "both_accept": 5,
+      "both_reject": 88,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_23.mut.focal",
+          "test_70.mut.focal",
+          "test_78.mut.focal"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_14.mut.focal",
+          "test_17.mut.focal",
+          "test_36.mut.focal",
+          "test_86.mut.focal"
+        ]
+      }
+    },
+    {
+      "name": "gff3",
+      "total": 100,
+      "antlr_passed": 1,
+      "antlr_reject": 99,
+      "lua_passed": 1,
+      "lua_rejected": 99,
+      "both_accept": 1,
+      "both_reject": 99,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "gml",
+      "total": 100,
+      "antlr_passed": 24,
+      "antlr_reject": 76,
+      "lua_passed": 26,
+      "lua_rejected": 74,
+      "both_accept": 20,
+      "both_reject": 70,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_12.mut.gml",
+          "test_4.mut.gml",
+          "test_40.mut.gml",
+          "test_84.mut.gml"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_15.mut.gml",
+          "test_25.mut.gml",
+          "test_34.mut.gml",
+          "test_5.mut.gml",
+          "test_86.mut.gml",
+          "test_98.mut.gml"
+        ]
+      }
+    },
+    {
+      "name": "gtin",
+      "total": 100,
+      "antlr_passed": 36,
+      "antlr_reject": 64,
+      "lua_passed": 20,
+      "lua_rejected": 80,
+      "both_accept": 20,
+      "both_reject": 64,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_15.mut.gtin",
+          "test_16.mut.gtin",
+          "test_2.mut.gtin",
+          "test_20.mut.gtin",
+          "test_28.mut.gtin",
+          "test_30.mut.gtin",
+          "test_31.mut.gtin",
+          "test_35.mut.gtin",
+          "test_39.mut.gtin",
+          "test_44.mut.gtin",
+          "test_53.mut.gtin",
+          "test_7.mut.gtin",
+          "test_73.mut.gtin",
+          "test_81.mut.gtin",
+          "test_84.mut.gtin",
+          "test_92.mut.gtin"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "guitartab",
+      "total": 100,
+      "antlr_passed": 63,
+      "antlr_reject": 37,
+      "lua_passed": 61,
+      "lua_rejected": 39,
+      "both_accept": 61,
+      "both_reject": 37,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_44.mut.guitartab",
+          "test_62.mut.guitartab"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "guido",
+      "total": 100,
+      "antlr_passed": 8,
+      "antlr_reject": 92,
+      "lua_passed": 14,
+      "lua_rejected": 86,
+      "both_accept": 8,
+      "both_reject": 86,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_0.mut.guido",
+          "test_30.mut.guido",
+          "test_31.mut.guido",
+          "test_33.mut.guido",
+          "test_81.mut.guido",
+          "test_86.mut.guido"
+        ]
+      }
+    },
+    {
+      "name": "inf",
+      "total": 100,
+      "antlr_passed": 32,
+      "antlr_reject": 68,
+      "lua_passed": 26,
+      "lua_rejected": 74,
+      "both_accept": 25,
+      "both_reject": 67,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_29.mut.inf",
+          "test_36.mut.inf",
+          "test_40.mut.inf",
+          "test_52.mut.inf",
+          "test_67.mut.inf",
+          "test_71.mut.inf",
+          "test_76.mut.inf"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_4.mut.inf"
+        ]
+      }
+    },
+    {
+      "name": "ICalendar",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "iso8601",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "istc",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "itn",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "jam",
+      "total": 100,
+      "antlr_passed": 27,
+      "antlr_reject": 73,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 73,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_0.mut.jam",
+          "test_1.mut.jam",
+          "test_14.mut.jam",
+          "test_37.mut.jam",
+          "test_38.mut.jam",
+          "test_45.mut.jam",
+          "test_46.mut.jam",
+          "test_47.mut.jam",
+          "test_48.mut.jam",
+          "test_49.mut.jam",
+          "test_50.mut.jam",
+          "test_53.mut.jam",
+          "test_54.mut.jam",
+          "test_56.mut.jam",
+          "test_58.mut.jam",
+          "test_60.mut.jam",
+          "test_62.mut.jam",
+          "test_69.mut.jam",
+          "test_71.mut.jam",
+          "test_74.mut.jam",
+          "test_75.mut.jam",
+          "test_81.mut.jam",
+          "test_82.mut.jam",
+          "test_84.mut.jam",
+          "test_90.mut.jam",
+          "test_95.mut.jam",
+          "test_96.mut.jam"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "janus",
+      "total": 100,
+      "antlr_passed": 5,
+      "antlr_reject": 95,
+      "lua_passed": 2,
+      "lua_rejected": 98,
+      "both_accept": 1,
+      "both_reject": 94,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_13.mut.janus",
+          "test_40.mut.janus",
+          "test_58.mut.janus",
+          "test_75.mut.janus"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_93.mut.janus"
+        ]
+      }
+    },
+    {
+      "name": "JSON",
+      "total": 100,
+      "antlr_passed": 10,
+      "antlr_reject": 90,
+      "lua_passed": 10,
+      "lua_rejected": 90,
+      "both_accept": 10,
+      "both_reject": 90,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "karel",
+      "total": 100,
+      "antlr_passed": 3,
+      "antlr_reject": 97,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 97,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_27.mut.karel",
+          "test_48.mut.karel",
+          "test_57.mut.karel"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "KQuery",
+      "total": 100,
+      "antlr_passed": 2,
+      "antlr_reject": 98,
+      "lua_passed": 1,
+      "lua_rejected": 99,
+      "both_accept": 1,
+      "both_reject": 98,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_93.mut.kquery"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "lambda",
+      "total": 100,
+      "antlr_passed": 18,
+      "antlr_reject": 82,
+      "lua_passed": 18,
+      "lua_rejected": 82,
+      "both_accept": 18,
+      "both_reject": 82,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "Lark",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 96,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_13.mut.lark",
+          "test_4.mut.lark",
+          "test_51.mut.lark",
+          "test_61.mut.lark"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "lcc",
+      "total": 100,
+      "antlr_passed": 1,
+      "antlr_reject": 99,
+      "lua_passed": 1,
+      "lua_rejected": 99,
+      "both_accept": 1,
+      "both_reject": 99,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "lisa",
+      "total": 100,
+      "antlr_passed": 16,
+      "antlr_reject": 84,
+      "lua_passed": 16,
+      "lua_rejected": 84,
+      "both_accept": 16,
+      "both_reject": 84,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "McKeemanForm",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "metamath",
+      "total": 100,
+      "antlr_passed": 24,
+      "antlr_reject": 76,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 76,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_11.mut.metamath",
+          "test_15.mut.metamath",
+          "test_16.mut.metamath",
+          "test_2.mut.metamath",
+          "test_24.mut.metamath",
+          "test_26.mut.metamath",
+          "test_29.mut.metamath",
+          "test_3.mut.metamath",
+          "test_32.mut.metamath",
+          "test_33.mut.metamath",
+          "test_34.mut.metamath",
+          "test_4.mut.metamath",
+          "test_44.mut.metamath",
+          "test_53.mut.metamath",
+          "test_57.mut.metamath",
+          "test_73.mut.metamath",
+          "test_80.mut.metamath",
+          "test_82.mut.metamath",
+          "test_87.mut.metamath",
+          "test_90.mut.metamath",
+          "test_92.mut.metamath",
+          "test_93.mut.metamath",
+          "test_96.mut.metamath",
+          "test_99.mut.metamath"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "mdx",
+      "total": 100,
+      "antlr_passed": 7,
+      "antlr_reject": 93,
+      "lua_passed": 1,
+      "lua_rejected": 99,
+      "both_accept": 1,
+      "both_reject": 93,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_17.mut.mdx",
+          "test_29.mut.mdx",
+          "test_3.mut.mdx",
+          "test_48.mut.mdx",
+          "test_51.mut.mdx",
+          "test_56.mut.mdx"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "logo",
+      "total": 100,
+      "antlr_passed": 23,
+      "antlr_reject": 77,
+      "lua_passed": 9,
+      "lua_rejected": 91,
+      "both_accept": 2,
+      "both_reject": 70,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_0.mut.logo",
+          "test_13.mut.logo",
+          "test_18.mut.logo",
+          "test_2.mut.logo",
+          "test_34.mut.logo",
+          "test_36.mut.logo",
+          "test_41.mut.logo",
+          "test_47.mut.logo",
+          "test_5.mut.logo",
+          "test_61.mut.logo",
+          "test_65.mut.logo",
+          "test_70.mut.logo",
+          "test_71.mut.logo",
+          "test_72.mut.logo",
+          "test_8.mut.logo",
+          "test_88.mut.logo",
+          "test_90.mut.logo",
+          "test_94.mut.logo",
+          "test_95.mut.logo",
+          "test_98.mut.logo",
+          "test_99.mut.logo"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_53.mut.logo",
+          "test_56.mut.logo",
+          "test_6.mut.logo",
+          "test_60.mut.logo",
+          "test_7.mut.logo",
+          "test_74.mut.logo",
+          "test_87.mut.logo"
+        ]
+      }
+    },
+    {
+      "name": "metric",
+      "total": 100,
+      "antlr_passed": 12,
+      "antlr_reject": 88,
+      "lua_passed": 12,
+      "lua_rejected": 88,
+      "both_accept": 12,
+      "both_reject": 88,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "modelica",
+      "total": 100,
+      "antlr_passed": 7,
+      "antlr_reject": 93,
+      "lua_passed": 5,
+      "lua_rejected": 95,
+      "both_accept": 5,
+      "both_reject": 93,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_2.mut.modelica",
+          "test_37.mut.modelica"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "molecule",
+      "total": 100,
+      "antlr_passed": 13,
+      "antlr_reject": 87,
+      "lua_passed": 1,
+      "lua_rejected": 99,
+      "both_accept": 1,
+      "both_reject": 87,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_10.mut.molecule",
+          "test_18.mut.molecule",
+          "test_25.mut.molecule",
+          "test_26.mut.molecule",
+          "test_35.mut.molecule",
+          "test_4.mut.molecule",
+          "test_45.mut.molecule",
+          "test_46.mut.molecule",
+          "test_74.mut.molecule",
+          "test_77.mut.molecule",
+          "test_95.mut.molecule",
+          "test_97.mut.molecule"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "moo",
+      "total": 100,
+      "antlr_passed": 6,
+      "antlr_reject": 94,
+      "lua_passed": 4,
+      "lua_rejected": 96,
+      "both_accept": 3,
+      "both_reject": 93,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_5.mut.moo",
+          "test_54.mut.moo",
+          "test_74.mut.moo"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_99.mut.moo"
+        ]
+      }
+    },
+    {
+      "name": "morsecode",
+      "total": 100,
+      "antlr_passed": 9,
+      "antlr_reject": 91,
+      "lua_passed": 9,
+      "lua_rejected": 91,
+      "both_accept": 9,
+      "both_reject": 91,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "mps",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 7,
+      "lua_rejected": 93,
+      "both_accept": 4,
+      "both_reject": 93,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_61.mut.mps",
+          "test_62.mut.mps",
+          "test_9.mut.mps"
+        ]
+      }
+    },
+    {
+      "name": "muddb",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "mumps",
+      "total": 100,
+      "antlr_passed": 29,
+      "antlr_reject": 71,
+      "lua_passed": 62,
+      "lua_rejected": 38,
+      "both_accept": 29,
+      "both_reject": 38,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_0.mut.mumps",
+          "test_11.mut.mumps",
+          "test_13.mut.mumps",
+          "test_14.mut.mumps",
+          "test_21.mut.mumps",
+          "test_22.mut.mumps",
+          "test_23.mut.mumps",
+          "test_3.mut.mumps",
+          "test_30.mut.mumps",
+          "test_37.mut.mumps",
+          "test_38.mut.mumps",
+          "test_39.mut.mumps",
+          "test_4.mut.mumps",
+          "test_40.mut.mumps",
+          "test_43.mut.mumps",
+          "test_44.mut.mumps",
+          "test_47.mut.mumps",
+          "test_5.mut.mumps",
+          "test_57.mut.mumps",
+          "test_6.mut.mumps",
+          "test_60.mut.mumps",
+          "test_69.mut.mumps",
+          "test_70.mut.mumps",
+          "test_71.mut.mumps",
+          "test_74.mut.mumps",
+          "test_75.mut.mumps",
+          "test_77.mut.mumps",
+          "test_79.mut.mumps",
+          "test_85.mut.mumps",
+          "test_86.mut.mumps",
+          "test_89.mut.mumps",
+          "test_91.mut.mumps",
+          "test_96.mut.mumps"
+        ]
+      }
+    },
+    {
+      "name": "newick",
+      "total": 100,
+      "antlr_passed": 28,
+      "antlr_reject": 72,
+      "lua_passed": 20,
+      "lua_rejected": 80,
+      "both_accept": 20,
+      "both_reject": 72,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_15.mut.newick",
+          "test_31.mut.newick",
+          "test_5.mut.newick",
+          "test_51.mut.newick",
+          "test_59.mut.newick",
+          "test_85.mut.newick",
+          "test_86.mut.newick",
+          "test_99.mut.newick"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "oberon",
+      "total": 100,
+      "antlr_passed": 1,
+      "antlr_reject": 99,
+      "lua_passed": 2,
+      "lua_rejected": 98,
+      "both_accept": 1,
+      "both_reject": 98,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_5.mut.oberon"
+        ]
+      }
+    },
+    {
+      "name": "p",
+      "total": 100,
+      "antlr_passed": 33,
+      "antlr_reject": 67,
+      "lua_passed": 27,
+      "lua_rejected": 73,
+      "both_accept": 27,
+      "both_reject": 67,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_11.mut.p",
+          "test_20.mut.p",
+          "test_22.mut.p",
+          "test_5.mut.p",
+          "test_78.mut.p",
+          "test_98.mut.p"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "orwell",
+      "total": 100,
+      "antlr_passed": 10,
+      "antlr_reject": 90,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 90,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_12.mut.orwell",
+          "test_14.mut.orwell",
+          "test_31.mut.orwell",
+          "test_50.mut.orwell",
+          "test_55.mut.orwell",
+          "test_63.mut.orwell",
+          "test_78.mut.orwell",
+          "test_8.mut.orwell",
+          "test_83.mut.orwell",
+          "test_94.mut.orwell"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "parkingsign",
+      "total": 100,
+      "antlr_passed": 1,
+      "antlr_reject": 99,
+      "lua_passed": 1,
+      "lua_rejected": 99,
+      "both_accept": 1,
+      "both_reject": 99,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "pascal",
+      "total": 100,
+      "antlr_passed": 7,
+      "antlr_reject": 93,
+      "lua_passed": 2,
+      "lua_rejected": 98,
+      "both_accept": 2,
+      "both_reject": 93,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_15.mut.pascal",
+          "test_23.mut.pascal",
+          "test_35.mut.pascal",
+          "test_60.mut.pascal",
+          "test_74.mut.pascal"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "mumath",
+      "total": 100,
+      "antlr_passed": 7,
+      "antlr_reject": 93,
+      "lua_passed": 2,
+      "lua_rejected": 98,
+      "both_accept": 0,
+      "both_reject": 91,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_10.mut.mumath",
+          "test_17.mut.mumath",
+          "test_21.mut.mumath",
+          "test_39.mut.mumath",
+          "test_50.mut.mumath",
+          "test_55.mut.mumath",
+          "test_87.mut.mumath"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_1.mut.mumath",
+          "test_72.mut.mumath"
+        ]
+      }
+    },
+    {
+      "name": "pbm",
+      "total": 100,
+      "antlr_passed": 20,
+      "antlr_reject": 80,
+      "lua_passed": 40,
+      "lua_rejected": 60,
+      "both_accept": 20,
+      "both_reject": 60,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_13.mut.pbm",
+          "test_15.mut.pbm",
+          "test_2.mut.pbm",
+          "test_22.mut.pbm",
+          "test_26.mut.pbm",
+          "test_3.mut.pbm",
+          "test_37.mut.pbm",
+          "test_43.mut.pbm",
+          "test_44.mut.pbm",
+          "test_49.mut.pbm",
+          "test_58.mut.pbm",
+          "test_60.mut.pbm",
+          "test_62.mut.pbm",
+          "test_68.mut.pbm",
+          "test_7.mut.pbm",
+          "test_78.mut.pbm",
+          "test_81.mut.pbm",
+          "test_86.mut.pbm",
+          "test_88.mut.pbm",
+          "test_90.mut.pbm"
+        ]
+      }
+    },
+    {
+      "name": "pdn",
+      "total": 100,
+      "antlr_passed": 14,
+      "antlr_reject": 86,
+      "lua_passed": 16,
+      "lua_rejected": 84,
+      "both_accept": 14,
+      "both_reject": 84,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_10.mut.pdn",
+          "test_82.mut.pdn"
+        ]
+      }
+    },
+    {
+      "name": "pii",
+      "total": 100,
+      "antlr_passed": 5,
+      "antlr_reject": 95,
+      "lua_passed": 5,
+      "lua_rejected": 95,
+      "both_accept": 5,
+      "both_reject": 95,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "ply",
+      "total": 100,
+      "antlr_passed": 6,
+      "antlr_reject": 94,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 94,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_3.mut.ply",
+          "test_38.mut.ply",
+          "test_55.mut.ply",
+          "test_73.mut.ply",
+          "test_74.mut.ply",
+          "test_97.mut.ply"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "pl0",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 4,
+      "lua_rejected": 96,
+      "both_accept": 4,
+      "both_reject": 96,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "postalcode",
+      "total": 100,
+      "antlr_passed": 10,
+      "antlr_reject": 90,
+      "lua_passed": 10,
+      "lua_rejected": 90,
+      "both_accept": 10,
+      "both_reject": 90,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "propcalc",
+      "total": 100,
+      "antlr_passed": 8,
+      "antlr_reject": 92,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 92,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_30.mut.propcalc",
+          "test_32.mut.propcalc",
+          "test_42.mut.propcalc",
+          "test_54.mut.propcalc",
+          "test_56.mut.propcalc",
+          "test_84.mut.propcalc",
+          "test_86.mut.propcalc",
+          "test_91.mut.propcalc"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "quakemap",
+      "total": 100,
+      "antlr_passed": 22,
+      "antlr_reject": 78,
+      "lua_passed": 22,
+      "lua_rejected": 78,
+      "both_accept": 22,
+      "both_reject": 78,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "recfile",
+      "total": 100,
+      "antlr_passed": 26,
+      "antlr_reject": 74,
+      "lua_passed": 26,
+      "lua_rejected": 74,
+      "both_accept": 26,
+      "both_reject": 74,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "Protobuf2",
+      "total": 100,
+      "antlr_passed": 10,
+      "antlr_reject": 90,
+      "lua_passed": 7,
+      "lua_rejected": 93,
+      "both_accept": 7,
+      "both_reject": 90,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_17.mut.protobuf2",
+          "test_24.mut.protobuf2",
+          "test_43.mut.protobuf2"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "redcode",
+      "total": 100,
+      "antlr_passed": 35,
+      "antlr_reject": 65,
+      "lua_passed": 33,
+      "lua_rejected": 67,
+      "both_accept": 33,
+      "both_reject": 65,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_19.mut.redcode",
+          "test_36.mut.redcode"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "PCRE",
+      "total": 100,
+      "antlr_passed": 25,
+      "antlr_reject": 75,
+      "lua_passed": 99,
+      "lua_rejected": 1,
+      "both_accept": 25,
+      "both_reject": 1,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_0.mut.pcre",
+          "test_1.mut.pcre",
+          "test_10.mut.pcre",
+          "test_11.mut.pcre",
+          "test_12.mut.pcre",
+          "test_14.mut.pcre",
+          "test_15.mut.pcre",
+          "test_16.mut.pcre",
+          "test_17.mut.pcre",
+          "test_18.mut.pcre",
+          "test_19.mut.pcre",
+          "test_2.mut.pcre",
+          "test_20.mut.pcre",
+          "test_23.mut.pcre",
+          "test_24.mut.pcre",
+          "test_28.mut.pcre",
+          "test_29.mut.pcre",
+          "test_31.mut.pcre",
+          "test_32.mut.pcre",
+          "test_34.mut.pcre",
+          "test_35.mut.pcre",
+          "test_36.mut.pcre",
+          "test_37.mut.pcre",
+          "test_38.mut.pcre",
+          "test_39.mut.pcre",
+          "test_40.mut.pcre",
+          "test_41.mut.pcre",
+          "test_42.mut.pcre",
+          "test_43.mut.pcre",
+          "test_44.mut.pcre",
+          "test_45.mut.pcre",
+          "test_47.mut.pcre",
+          "test_49.mut.pcre",
+          "test_50.mut.pcre",
+          "test_51.mut.pcre",
+          "test_53.mut.pcre",
+          "test_55.mut.pcre",
+          "test_56.mut.pcre",
+          "test_57.mut.pcre",
+          "test_58.mut.pcre",
+          "test_6.mut.pcre",
+          "test_60.mut.pcre",
+          "test_61.mut.pcre",
+          "test_62.mut.pcre",
+          "test_63.mut.pcre",
+          "test_64.mut.pcre",
+          "test_66.mut.pcre",
+          "test_67.mut.pcre",
+          "test_68.mut.pcre",
+          "test_69.mut.pcre",
+          "test_7.mut.pcre",
+          "test_70.mut.pcre",
+          "test_71.mut.pcre",
+          "test_73.mut.pcre",
+          "test_75.mut.pcre",
+          "test_76.mut.pcre",
+          "test_77.mut.pcre",
+          "test_78.mut.pcre",
+          "test_80.mut.pcre",
+          "test_82.mut.pcre",
+          "test_83.mut.pcre",
+          "test_85.mut.pcre",
+          "test_86.mut.pcre",
+          "test_88.mut.pcre",
+          "test_89.mut.pcre",
+          "test_9.mut.pcre",
+          "test_90.mut.pcre",
+          "test_92.mut.pcre",
+          "test_93.mut.pcre",
+          "test_94.mut.pcre",
+          "test_96.mut.pcre",
+          "test_97.mut.pcre",
+          "test_98.mut.pcre",
+          "test_99.mut.pcre"
+        ]
+      }
+    },
+    {
+      "name": "domain",
+      "total": 100,
+      "antlr_passed": 36,
+      "antlr_reject": 64,
+      "lua_passed": 4,
+      "lua_rejected": 96,
+      "both_accept": 4,
+      "both_reject": 64,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_0.mut.domain",
+          "test_12.mut.domain",
+          "test_15.mut.domain",
+          "test_16.mut.domain",
+          "test_18.mut.domain",
+          "test_22.mut.domain",
+          "test_23.mut.domain",
+          "test_24.mut.domain",
+          "test_30.mut.domain",
+          "test_33.mut.domain",
+          "test_34.mut.domain",
+          "test_35.mut.domain",
+          "test_38.mut.domain",
+          "test_39.mut.domain",
+          "test_4.mut.domain",
+          "test_41.mut.domain",
+          "test_43.mut.domain",
+          "test_48.mut.domain",
+          "test_50.mut.domain",
+          "test_55.mut.domain",
+          "test_64.mut.domain",
+          "test_65.mut.domain",
+          "test_66.mut.domain",
+          "test_71.mut.domain",
+          "test_72.mut.domain",
+          "test_82.mut.domain",
+          "test_86.mut.domain",
+          "test_87.mut.domain",
+          "test_88.mut.domain",
+          "test_91.mut.domain",
+          "test_93.mut.domain",
+          "test_96.mut.domain"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "Rego",
+      "total": 100,
+      "antlr_passed": 1,
+      "antlr_reject": 99,
+      "lua_passed": 1,
+      "lua_rejected": 99,
+      "both_accept": 1,
+      "both_reject": 99,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "filter",
+      "total": 100,
+      "antlr_passed": 5,
+      "antlr_reject": 95,
+      "lua_passed": 4,
+      "lua_rejected": 96,
+      "both_accept": 4,
+      "both_reject": 95,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_50.mut.filter"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "datetime",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 96,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_15.mut.datetime",
+          "test_57.mut.datetime",
+          "test_71.mut.datetime",
+          "test_96.mut.datetime"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "robotwar",
+      "total": 100,
+      "antlr_passed": 53,
+      "antlr_reject": 47,
+      "lua_passed": 52,
+      "lua_rejected": 48,
+      "both_accept": 51,
+      "both_reject": 46,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_3.mut.robotwar",
+          "test_82.mut.robotwar"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_74.mut.robotwar"
+        ]
+      }
+    },
+    {
+      "name": "rpn",
+      "total": 100,
+      "antlr_passed": 88,
+      "antlr_reject": 12,
+      "lua_passed": 88,
+      "lua_rejected": 12,
+      "both_accept": 88,
+      "both_reject": 12,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "sexpression",
+      "total": 100,
+      "antlr_passed": 15,
+      "antlr_reject": 85,
+      "lua_passed": 15,
+      "lua_rejected": 85,
+      "both_accept": 15,
+      "both_reject": 85,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "sgf",
+      "total": 100,
+      "antlr_passed": 5,
+      "antlr_reject": 95,
+      "lua_passed": 4,
+      "lua_rejected": 96,
+      "both_accept": 1,
+      "both_reject": 92,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_5.mut.sgf",
+          "test_51.mut.sgf",
+          "test_67.mut.sgf",
+          "test_95.mut.sgf"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_34.mut.sgf",
+          "test_39.mut.sgf",
+          "test_82.mut.sgf"
+        ]
+      }
+    },
+    {
+      "name": "sici",
+      "total": 100,
+      "antlr_passed": 2,
+      "antlr_reject": 98,
+      "lua_passed": 2,
+      "lua_rejected": 98,
+      "both_accept": 2,
+      "both_reject": 98,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "sieve",
+      "total": 100,
+      "antlr_passed": 7,
+      "antlr_reject": 93,
+      "lua_passed": 11,
+      "lua_rejected": 89,
+      "both_accept": 7,
+      "both_reject": 89,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_44.mut.sieve",
+          "test_73.mut.sieve",
+          "test_85.mut.sieve",
+          "test_94.mut.sieve"
+        ]
+      }
+    },
+    {
+      "name": "Smalltalk",
+      "total": 100,
+      "antlr_passed": 15,
+      "antlr_reject": 85,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 85,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_15.mut.smalltalk",
+          "test_17.mut.smalltalk",
+          "test_2.mut.smalltalk",
+          "test_20.mut.smalltalk",
+          "test_25.mut.smalltalk",
+          "test_44.mut.smalltalk",
+          "test_45.mut.smalltalk",
+          "test_48.mut.smalltalk",
+          "test_55.mut.smalltalk",
+          "test_62.mut.smalltalk",
+          "test_66.mut.smalltalk",
+          "test_73.mut.smalltalk",
+          "test_80.mut.smalltalk",
+          "test_83.mut.smalltalk",
+          "test_89.mut.smalltalk"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "smiles",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "snobol",
+      "total": 100,
+      "antlr_passed": 37,
+      "antlr_reject": 63,
+      "lua_passed": 46,
+      "lua_rejected": 54,
+      "both_accept": 37,
+      "both_reject": 54,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_12.mut.snobol",
+          "test_18.mut.snobol",
+          "test_4.mut.snobol",
+          "test_41.mut.snobol",
+          "test_42.mut.snobol",
+          "test_49.mut.snobol",
+          "test_57.mut.snobol",
+          "test_89.mut.snobol",
+          "test_92.mut.snobol"
+        ]
+      }
+    },
+    {
+      "name": "InformixSQL",
+      "total": 100,
+      "antlr_passed": 10,
+      "antlr_reject": 90,
+      "lua_passed": 10,
+      "lua_rejected": 90,
+      "both_accept": 10,
+      "both_reject": 90,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "stellaris",
+      "total": 100,
+      "antlr_passed": 20,
+      "antlr_reject": 80,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 80,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_16.mut.stellaris",
+          "test_2.mut.stellaris",
+          "test_24.mut.stellaris",
+          "test_26.mut.stellaris",
+          "test_3.mut.stellaris",
+          "test_30.mut.stellaris",
+          "test_36.mut.stellaris",
+          "test_40.mut.stellaris",
+          "test_50.mut.stellaris",
+          "test_58.mut.stellaris",
+          "test_64.mut.stellaris",
+          "test_65.mut.stellaris",
+          "test_66.mut.stellaris",
+          "test_77.mut.stellaris",
+          "test_82.mut.stellaris",
+          "test_89.mut.stellaris",
+          "test_90.mut.stellaris",
+          "test_94.mut.stellaris",
+          "test_95.mut.stellaris",
+          "test_98.mut.stellaris"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "SUOKIF",
+      "total": 100,
+      "antlr_passed": 21,
+      "antlr_reject": 79,
+      "lua_passed": 27,
+      "lua_rejected": 73,
+      "both_accept": 21,
+      "both_reject": 73,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_19.mut.suokif",
+          "test_22.mut.suokif",
+          "test_35.mut.suokif",
+          "test_56.mut.suokif",
+          "test_57.mut.suokif",
+          "test_81.mut.suokif"
+        ]
+      }
+    },
+    {
+      "name": "szf",
+      "total": 100,
+      "antlr_passed": 9,
+      "antlr_reject": 91,
+      "lua_passed": 9,
+      "lua_rejected": 91,
+      "both_accept": 9,
+      "both_reject": 91,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "tcp",
+      "total": 100,
+      "antlr_passed": 93,
+      "antlr_reject": 7,
+      "lua_passed": 64,
+      "lua_rejected": 36,
+      "both_accept": 64,
+      "both_reject": 7,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_15.mut.tcp",
+          "test_16.mut.tcp",
+          "test_18.mut.tcp",
+          "test_2.mut.tcp",
+          "test_20.mut.tcp",
+          "test_21.mut.tcp",
+          "test_24.mut.tcp",
+          "test_26.mut.tcp",
+          "test_27.mut.tcp",
+          "test_3.mut.tcp",
+          "test_31.mut.tcp",
+          "test_32.mut.tcp",
+          "test_34.mut.tcp",
+          "test_49.mut.tcp",
+          "test_53.mut.tcp",
+          "test_55.mut.tcp",
+          "test_58.mut.tcp",
+          "test_65.mut.tcp",
+          "test_66.mut.tcp",
+          "test_75.mut.tcp",
+          "test_76.mut.tcp",
+          "test_78.mut.tcp",
+          "test_83.mut.tcp",
+          "test_85.mut.tcp",
+          "test_86.mut.tcp",
+          "test_88.mut.tcp",
+          "test_9.mut.tcp",
+          "test_96.mut.tcp",
+          "test_97.mut.tcp"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "telephone",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 6,
+      "lua_rejected": 94,
+      "both_accept": 4,
+      "both_reject": 94,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_18.mut.telephone",
+          "test_64.mut.telephone"
+        ]
+      }
+    },
+    {
+      "name": "Thrift",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 4,
+      "lua_rejected": 96,
+      "both_accept": 3,
+      "both_reject": 95,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_3.mut.thrift"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_65.mut.thrift"
+        ]
+      }
+    },
+    {
+      "name": "tinybasic",
+      "total": 100,
+      "antlr_passed": 10,
+      "antlr_reject": 90,
+      "lua_passed": 10,
+      "lua_rejected": 90,
+      "both_accept": 10,
+      "both_reject": 90,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "tinymud",
+      "total": 100,
+      "antlr_passed": 11,
+      "antlr_reject": 89,
+      "lua_passed": 23,
+      "lua_rejected": 77,
+      "both_accept": 11,
+      "both_reject": 77,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_0.mut.tinymud",
+          "test_23.mut.tinymud",
+          "test_28.mut.tinymud",
+          "test_37.mut.tinymud",
+          "test_38.mut.tinymud",
+          "test_42.mut.tinymud",
+          "test_45.mut.tinymud",
+          "test_54.mut.tinymud",
+          "test_57.mut.tinymud",
+          "test_6.mut.tinymud",
+          "test_8.mut.tinymud",
+          "test_85.mut.tinymud"
+        ]
+      }
+    },
+    {
+      "name": "trac",
+      "total": 100,
+      "antlr_passed": 7,
+      "antlr_reject": 93,
+      "lua_passed": 100,
+      "lua_rejected": 0,
+      "both_accept": 7,
+      "both_reject": 0,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_0.mut.trac",
+          "test_1.mut.trac",
+          "test_11.mut.trac",
+          "test_12.mut.trac",
+          "test_13.mut.trac",
+          "test_15.mut.trac",
+          "test_16.mut.trac",
+          "test_17.mut.trac",
+          "test_18.mut.trac",
+          "test_19.mut.trac",
+          "test_2.mut.trac",
+          "test_21.mut.trac",
+          "test_22.mut.trac",
+          "test_23.mut.trac",
+          "test_24.mut.trac",
+          "test_25.mut.trac",
+          "test_26.mut.trac",
+          "test_27.mut.trac",
+          "test_28.mut.trac",
+          "test_29.mut.trac",
+          "test_3.mut.trac",
+          "test_30.mut.trac",
+          "test_31.mut.trac",
+          "test_32.mut.trac",
+          "test_33.mut.trac",
+          "test_34.mut.trac",
+          "test_35.mut.trac",
+          "test_36.mut.trac",
+          "test_37.mut.trac",
+          "test_38.mut.trac",
+          "test_39.mut.trac",
+          "test_4.mut.trac",
+          "test_40.mut.trac",
+          "test_41.mut.trac",
+          "test_42.mut.trac",
+          "test_43.mut.trac",
+          "test_44.mut.trac",
+          "test_46.mut.trac",
+          "test_48.mut.trac",
+          "test_49.mut.trac",
+          "test_5.mut.trac",
+          "test_50.mut.trac",
+          "test_51.mut.trac",
+          "test_52.mut.trac",
+          "test_53.mut.trac",
+          "test_54.mut.trac",
+          "test_55.mut.trac",
+          "test_56.mut.trac",
+          "test_57.mut.trac",
+          "test_58.mut.trac",
+          "test_59.mut.trac",
+          "test_6.mut.trac",
+          "test_60.mut.trac",
+          "test_61.mut.trac",
+          "test_62.mut.trac",
+          "test_64.mut.trac",
+          "test_65.mut.trac",
+          "test_66.mut.trac",
+          "test_67.mut.trac",
+          "test_68.mut.trac",
+          "test_69.mut.trac",
+          "test_7.mut.trac",
+          "test_70.mut.trac",
+          "test_71.mut.trac",
+          "test_72.mut.trac",
+          "test_73.mut.trac",
+          "test_74.mut.trac",
+          "test_75.mut.trac",
+          "test_76.mut.trac",
+          "test_77.mut.trac",
+          "test_78.mut.trac",
+          "test_79.mut.trac",
+          "test_8.mut.trac",
+          "test_80.mut.trac",
+          "test_81.mut.trac",
+          "test_82.mut.trac",
+          "test_83.mut.trac",
+          "test_84.mut.trac",
+          "test_85.mut.trac",
+          "test_86.mut.trac",
+          "test_87.mut.trac",
+          "test_89.mut.trac",
+          "test_9.mut.trac",
+          "test_90.mut.trac",
+          "test_91.mut.trac",
+          "test_92.mut.trac",
+          "test_93.mut.trac",
+          "test_94.mut.trac",
+          "test_95.mut.trac",
+          "test_96.mut.trac",
+          "test_97.mut.trac",
+          "test_98.mut.trac",
+          "test_99.mut.trac"
+        ]
+      }
+    },
+    {
+      "name": "tsv",
+      "total": 100,
+      "antlr_passed": 3,
+      "antlr_reject": 97,
+      "lua_passed": 3,
+      "lua_rejected": 97,
+      "both_accept": 3,
+      "both_reject": 97,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "ttm",
+      "total": 100,
+      "antlr_passed": 24,
+      "antlr_reject": 76,
+      "lua_passed": 100,
+      "lua_rejected": 0,
+      "both_accept": 24,
+      "both_reject": 0,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_0.mut.ttm",
+          "test_1.mut.ttm",
+          "test_10.mut.ttm",
+          "test_11.mut.ttm",
+          "test_12.mut.ttm",
+          "test_13.mut.ttm",
+          "test_14.mut.ttm",
+          "test_16.mut.ttm",
+          "test_17.mut.ttm",
+          "test_19.mut.ttm",
+          "test_2.mut.ttm",
+          "test_20.mut.ttm",
+          "test_21.mut.ttm",
+          "test_22.mut.ttm",
+          "test_23.mut.ttm",
+          "test_25.mut.ttm",
+          "test_28.mut.ttm",
+          "test_3.mut.ttm",
+          "test_30.mut.ttm",
+          "test_32.mut.ttm",
+          "test_33.mut.ttm",
+          "test_34.mut.ttm",
+          "test_35.mut.ttm",
+          "test_36.mut.ttm",
+          "test_37.mut.ttm",
+          "test_38.mut.ttm",
+          "test_39.mut.ttm",
+          "test_4.mut.ttm",
+          "test_40.mut.ttm",
+          "test_41.mut.ttm",
+          "test_43.mut.ttm",
+          "test_45.mut.ttm",
+          "test_46.mut.ttm",
+          "test_47.mut.ttm",
+          "test_49.mut.ttm",
+          "test_5.mut.ttm",
+          "test_50.mut.ttm",
+          "test_52.mut.ttm",
+          "test_53.mut.ttm",
+          "test_54.mut.ttm",
+          "test_55.mut.ttm",
+          "test_57.mut.ttm",
+          "test_58.mut.ttm",
+          "test_59.mut.ttm",
+          "test_60.mut.ttm",
+          "test_61.mut.ttm",
+          "test_62.mut.ttm",
+          "test_64.mut.ttm",
+          "test_65.mut.ttm",
+          "test_66.mut.ttm",
+          "test_67.mut.ttm",
+          "test_68.mut.ttm",
+          "test_69.mut.ttm",
+          "test_7.mut.ttm",
+          "test_71.mut.ttm",
+          "test_74.mut.ttm",
+          "test_75.mut.ttm",
+          "test_77.mut.ttm",
+          "test_78.mut.ttm",
+          "test_8.mut.ttm",
+          "test_82.mut.ttm",
+          "test_83.mut.ttm",
+          "test_84.mut.ttm",
+          "test_85.mut.ttm",
+          "test_86.mut.ttm",
+          "test_87.mut.ttm",
+          "test_88.mut.ttm",
+          "test_89.mut.ttm",
+          "test_9.mut.ttm",
+          "test_90.mut.ttm",
+          "test_91.mut.ttm",
+          "test_92.mut.ttm",
+          "test_96.mut.ttm",
+          "test_97.mut.ttm",
+          "test_98.mut.ttm",
+          "test_99.mut.ttm"
+        ]
+      }
+    },
+    {
+      "name": "url",
+      "total": 100,
+      "antlr_passed": 0,
+      "antlr_reject": 100,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 100,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "useragent",
+      "total": 100,
+      "antlr_passed": 28,
+      "antlr_reject": 72,
+      "lua_passed": 28,
+      "lua_rejected": 72,
+      "both_accept": 28,
+      "both_reject": 72,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "vmf",
+      "total": 100,
+      "antlr_passed": 21,
+      "antlr_reject": 79,
+      "lua_passed": 0,
+      "lua_rejected": 100,
+      "both_accept": 0,
+      "both_reject": 79,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_0.mut.vmf",
+          "test_10.mut.vmf",
+          "test_27.mut.vmf",
+          "test_35.mut.vmf",
+          "test_38.mut.vmf",
+          "test_4.mut.vmf",
+          "test_47.mut.vmf",
+          "test_51.mut.vmf",
+          "test_52.mut.vmf",
+          "test_55.mut.vmf",
+          "test_60.mut.vmf",
+          "test_64.mut.vmf",
+          "test_73.mut.vmf",
+          "test_8.mut.vmf",
+          "test_81.mut.vmf",
+          "test_82.mut.vmf",
+          "test_83.mut.vmf",
+          "test_89.mut.vmf",
+          "test_9.mut.vmf",
+          "test_92.mut.vmf",
+          "test_97.mut.vmf"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "Wat",
+      "total": 100,
+      "antlr_passed": 7,
+      "antlr_reject": 93,
+      "lua_passed": 4,
+      "lua_rejected": 96,
+      "both_accept": 0,
+      "both_reject": 89,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_12.mut.wat",
+          "test_34.mut.wat",
+          "test_42.mut.wat",
+          "test_64.mut.wat",
+          "test_9.mut.wat",
+          "test_90.mut.wat",
+          "test_98.mut.wat"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_44.mut.wat",
+          "test_68.mut.wat",
+          "test_7.mut.wat",
+          "test_92.mut.wat"
+        ]
+      }
+    },
+    {
+      "name": "CapnProto",
+      "total": 100,
+      "antlr_passed": 8,
+      "antlr_reject": 92,
+      "lua_passed": 7,
+      "lua_rejected": 93,
+      "both_accept": 6,
+      "both_reject": 91,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_22.mut.capnproto",
+          "test_67.mut.capnproto"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_58.mut.capnproto"
+        ]
+      }
+    },
+    {
+      "name": "WavefrontOBJ",
+      "total": 100,
+      "antlr_passed": 13,
+      "antlr_reject": 87,
+      "lua_passed": 79,
+      "lua_rejected": 21,
+      "both_accept": 13,
+      "both_reject": 21,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_0.mut.wavefrontobj",
+          "test_1.mut.wavefrontobj",
+          "test_10.mut.wavefrontobj",
+          "test_12.mut.wavefrontobj",
+          "test_13.mut.wavefrontobj",
+          "test_15.mut.wavefrontobj",
+          "test_17.mut.wavefrontobj",
+          "test_2.mut.wavefrontobj",
+          "test_20.mut.wavefrontobj",
+          "test_22.mut.wavefrontobj",
+          "test_23.mut.wavefrontobj",
+          "test_24.mut.wavefrontobj",
+          "test_27.mut.wavefrontobj",
+          "test_28.mut.wavefrontobj",
+          "test_29.mut.wavefrontobj",
+          "test_3.mut.wavefrontobj",
+          "test_30.mut.wavefrontobj",
+          "test_31.mut.wavefrontobj",
+          "test_33.mut.wavefrontobj",
+          "test_34.mut.wavefrontobj",
+          "test_36.mut.wavefrontobj",
+          "test_37.mut.wavefrontobj",
+          "test_4.mut.wavefrontobj",
+          "test_40.mut.wavefrontobj",
+          "test_41.mut.wavefrontobj",
+          "test_43.mut.wavefrontobj",
+          "test_44.mut.wavefrontobj",
+          "test_46.mut.wavefrontobj",
+          "test_47.mut.wavefrontobj",
+          "test_48.mut.wavefrontobj",
+          "test_49.mut.wavefrontobj",
+          "test_5.mut.wavefrontobj",
+          "test_52.mut.wavefrontobj",
+          "test_53.mut.wavefrontobj",
+          "test_54.mut.wavefrontobj",
+          "test_56.mut.wavefrontobj",
+          "test_58.mut.wavefrontobj",
+          "test_6.mut.wavefrontobj",
+          "test_62.mut.wavefrontobj",
+          "test_63.mut.wavefrontobj",
+          "test_64.mut.wavefrontobj",
+          "test_66.mut.wavefrontobj",
+          "test_67.mut.wavefrontobj",
+          "test_68.mut.wavefrontobj",
+          "test_7.mut.wavefrontobj",
+          "test_72.mut.wavefrontobj",
+          "test_74.mut.wavefrontobj",
+          "test_75.mut.wavefrontobj",
+          "test_76.mut.wavefrontobj",
+          "test_77.mut.wavefrontobj",
+          "test_78.mut.wavefrontobj",
+          "test_79.mut.wavefrontobj",
+          "test_80.mut.wavefrontobj",
+          "test_83.mut.wavefrontobj",
+          "test_84.mut.wavefrontobj",
+          "test_85.mut.wavefrontobj",
+          "test_86.mut.wavefrontobj",
+          "test_88.mut.wavefrontobj",
+          "test_90.mut.wavefrontobj",
+          "test_91.mut.wavefrontobj",
+          "test_92.mut.wavefrontobj",
+          "test_93.mut.wavefrontobj",
+          "test_94.mut.wavefrontobj",
+          "test_95.mut.wavefrontobj",
+          "test_96.mut.wavefrontobj",
+          "test_98.mut.wavefrontobj"
+        ]
+      }
+    },
+    {
+      "name": "WebIDL",
+      "total": 100,
+      "antlr_passed": 9,
+      "antlr_reject": 91,
+      "lua_passed": 3,
+      "lua_rejected": 97,
+      "both_accept": 3,
+      "both_reject": 91,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_4.mut.webidl",
+          "test_44.mut.webidl",
+          "test_45.mut.webidl",
+          "test_67.mut.webidl",
+          "test_74.mut.webidl",
+          "test_75.mut.webidl"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "wkt",
+      "total": 100,
+      "antlr_passed": 8,
+      "antlr_reject": 92,
+      "lua_passed": 9,
+      "lua_rejected": 91,
+      "both_accept": 8,
+      "both_reject": 91,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": [
+          "test_28.mut.wkt"
+        ]
+      }
+    },
+    {
+      "name": "wktcrsv1",
+      "total": 100,
+      "antlr_passed": 32,
+      "antlr_reject": 68,
+      "lua_passed": 32,
+      "lua_rejected": 68,
+      "both_accept": 32,
+      "both_reject": 68,
+      "sets_agree": true,
+      "divergences": {
+        "antlr_pass_lua_fail": [],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "wln",
+      "total": 100,
+      "antlr_passed": 7,
+      "antlr_reject": 93,
+      "lua_passed": 47,
+      "lua_rejected": 53,
+      "both_accept": 3,
+      "both_reject": 49,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_2.mut.wln",
+          "test_37.mut.wln",
+          "test_49.mut.wln",
+          "test_82.mut.wln"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_0.mut.wln",
+          "test_1.mut.wln",
+          "test_10.mut.wln",
+          "test_12.mut.wln",
+          "test_18.mut.wln",
+          "test_23.mut.wln",
+          "test_24.mut.wln",
+          "test_27.mut.wln",
+          "test_28.mut.wln",
+          "test_30.mut.wln",
+          "test_34.mut.wln",
+          "test_38.mut.wln",
+          "test_4.mut.wln",
+          "test_41.mut.wln",
+          "test_43.mut.wln",
+          "test_44.mut.wln",
+          "test_45.mut.wln",
+          "test_5.mut.wln",
+          "test_52.mut.wln",
+          "test_53.mut.wln",
+          "test_55.mut.wln",
+          "test_58.mut.wln",
+          "test_6.mut.wln",
+          "test_63.mut.wln",
+          "test_64.mut.wln",
+          "test_65.mut.wln",
+          "test_67.mut.wln",
+          "test_7.mut.wln",
+          "test_70.mut.wln",
+          "test_72.mut.wln",
+          "test_73.mut.wln",
+          "test_77.mut.wln",
+          "test_78.mut.wln",
+          "test_81.mut.wln",
+          "test_83.mut.wln",
+          "test_87.mut.wln",
+          "test_88.mut.wln",
+          "test_9.mut.wln",
+          "test_90.mut.wln",
+          "test_92.mut.wln",
+          "test_94.mut.wln",
+          "test_95.mut.wln",
+          "test_97.mut.wln",
+          "test_98.mut.wln"
+        ]
+      }
+    },
+    {
+      "name": "xyz",
+      "total": 100,
+      "antlr_passed": 29,
+      "antlr_reject": 71,
+      "lua_passed": 23,
+      "lua_rejected": 77,
+      "both_accept": 14,
+      "both_reject": 62,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_0.mut.xyz",
+          "test_25.mut.xyz",
+          "test_29.mut.xyz",
+          "test_31.mut.xyz",
+          "test_33.mut.xyz",
+          "test_45.mut.xyz",
+          "test_50.mut.xyz",
+          "test_59.mut.xyz",
+          "test_64.mut.xyz",
+          "test_70.mut.xyz",
+          "test_72.mut.xyz",
+          "test_73.mut.xyz",
+          "test_78.mut.xyz",
+          "test_90.mut.xyz",
+          "test_93.mut.xyz"
+        ],
+        "lua_pass_antlr_fail": [
+          "test_10.mut.xyz",
+          "test_14.mut.xyz",
+          "test_28.mut.xyz",
+          "test_36.mut.xyz",
+          "test_38.mut.xyz",
+          "test_56.mut.xyz",
+          "test_62.mut.xyz",
+          "test_88.mut.xyz",
+          "test_97.mut.xyz"
+        ]
+      }
+    },
+    {
+      "name": "datalog",
+      "total": 100,
+      "antlr_passed": 14,
+      "antlr_reject": 86,
+      "lua_passed": 12,
+      "lua_rejected": 88,
+      "both_accept": 12,
+      "both_reject": 86,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_64.mut.datalog",
+          "test_71.mut.datalog"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    },
+    {
+      "name": "Hive",
+      "total": 100,
+      "antlr_passed": 4,
+      "antlr_reject": 96,
+      "lua_passed": 3,
+      "lua_rejected": 97,
+      "both_accept": 3,
+      "both_reject": 96,
+      "sets_agree": false,
+      "divergences": {
+        "antlr_pass_lua_fail": [
+          "test_49.mut.hive"
+        ],
+        "lua_pass_antlr_fail": []
+      }
+    }
+  ]
+}
